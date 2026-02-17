@@ -115,6 +115,92 @@ function isAllowedFirebaseUser(user) {
   return !!email && allowed.includes(email);
 }
 
+function updateFirebaseAuthUI() {
+  const box = document.getElementById('firebase-auth-box');
+  const statusEl = document.getElementById('firebase-auth-status');
+  const loginBtn = document.getElementById('firebase-login-btn');
+  const logoutBtn = document.getElementById('firebase-logout-btn');
+  if (!box || !statusEl || !loginBtn || !logoutBtn) return;
+
+  if (!firebaseEnabled()) {
+    box.style.display = 'none';
+    return;
+  }
+
+  box.style.display = 'block';
+
+  const user = currentFirebaseUser();
+  if (!user) {
+    statusEl.textContent = 'Não logado. Faça login para publicar.';
+    loginBtn.disabled = false;
+    logoutBtn.disabled = true;
+    return;
+  }
+
+  const email = String(user.email || '').trim();
+  if (!isAllowedFirebaseUser(user)) {
+    statusEl.textContent = `Conta não autorizada: ${email || '(sem email)'}`;
+    loginBtn.disabled = false;
+    logoutBtn.disabled = false;
+    return;
+  }
+
+  statusEl.textContent = `Logado: ${email || '(sem email)'}`;
+  loginBtn.disabled = true;
+  logoutBtn.disabled = false;
+}
+
+function setupFirebaseAuthUI() {
+  const box = document.getElementById('firebase-auth-box');
+  const loginBtn = document.getElementById('firebase-login-btn');
+  const logoutBtn = document.getElementById('firebase-logout-btn');
+  if (!box || !loginBtn || !logoutBtn) return;
+
+  if (!firebaseEnabled()) {
+    box.style.display = 'none';
+    return;
+  }
+
+  ensureFirebaseInit();
+  updateFirebaseAuthUI();
+
+  if (!loginBtn.__bound) {
+    loginBtn.__bound = true;
+    loginBtn.addEventListener('click', async () => {
+      try {
+        logLine('Abrindo login Google (Firebase)...', 'info');
+        await requireFirebaseLogin();
+        logLine('✓ Login concluído (Firebase).', 'success');
+      } catch (e) {
+        logLine(`✗ Login falhou: ${e?.message || e}`, 'error');
+        alert(e?.message || String(e || 'Falha no login'));
+      } finally {
+        updateFirebaseAuthUI();
+      }
+    });
+  }
+
+  if (!logoutBtn.__bound) {
+    logoutBtn.__bound = true;
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        if (!__fbAuth) return;
+        await __fbAuth.signOut();
+        logLine('Sessão encerrada (Firebase).', 'info');
+      } catch (e) {
+        logLine(`Logout falhou: ${e?.message || e}`, 'error');
+      } finally {
+        updateFirebaseAuthUI();
+      }
+    });
+  }
+
+  if (__fbAuth && !__fbAuth.__uiHooked) {
+    __fbAuth.__uiHooked = true;
+    __fbAuth.onAuthStateChanged(() => updateFirebaseAuthUI());
+  }
+}
+
 async function requireFirebaseLogin() {
   if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado (SDK/config)');
 
@@ -3328,6 +3414,7 @@ function showPage(pageName) {
     setTimeout(() => {
       window.diagnoseAdmin();
       setupAdminSidebar();
+      setupFirebaseAuthUI();
     }, 100);
   }
 }
