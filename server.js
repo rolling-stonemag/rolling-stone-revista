@@ -5,16 +5,94 @@ const crypto = require('crypto');
 
 const app = express();
 
+app.set('trust proxy', true);
+
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
 
+const PERSIST_DIR = process.env.PERSIST_DIR ? path.resolve(String(process.env.PERSIST_DIR)) : '';
+const PUBLIC_BASE_URL = String(process.env.PUBLIC_BASE_URL || '').trim();
+const CORS_ORIGIN_RAW = String(process.env.CORS_ORIGIN || '').trim();
+
 const ROOT_DIR = __dirname;
-const DATA_DIR = path.join(ROOT_DIR, 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
-const COVER_FILE = path.join(DATA_DIR, 'cover.json');
-const UPLOAD_DIR = path.join(ROOT_DIR, 'assets', 'uploads');
+const SEED_DATA_DIR = path.join(ROOT_DIR, 'data');
+const RUNTIME_DATA_DIR = PERSIST_DIR ? path.join(PERSIST_DIR, 'data') : path.join(ROOT_DIR, 'data');
+const DB_FILE = path.join(RUNTIME_DATA_DIR, 'db.json');
+const COVER_FILE = path.join(RUNTIME_DATA_DIR, 'cover.json');
+const UPLOAD_DIR = PERSIST_DIR ? path.join(PERSIST_DIR, 'uploads') : path.join(ROOT_DIR, 'assets', 'uploads');
 
 app.use(express.json({ limit: '25mb' }));
+
+function normalizeBaseUrl(value) {
+  const raw = String(value || '').trim();
+  return raw.replace(/\/+$/, '');
+}
+
+function getPublicBaseUrl(req) {
+  const envBase = normalizeBaseUrl(PUBLIC_BASE_URL);
+  if (envBase) return envBase;
+
+  const proto = String(req.get('x-forwarded-proto') || req.protocol || 'http').split(',')[0].trim();
+  const host = String(req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim();
+  if (!host) return '';
+  return `${proto}://${host}`;
+}
+
+function absolutizeUrl(req, maybeUrl) {
+  const raw = String(maybeUrl || '').trim();
+  if (!raw) return raw;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (raw.startsWith('data:') || raw.startsWith('blob:') || raw.startsWith('#')) return raw;
+  if (raw.startsWith('/')) {
+    const base = getPublicBaseUrl(req);
+    return base ? `${base}${raw}` : raw;
+  }
+  return raw;
+}
+
+function withAbsoluteMediaUrls(req, item) {
+  if (!item || typeof item !== 'object') return item;
+  const out = { ...item };
+  if (Object.prototype.hasOwnProperty.call(out, 'coverImageUrl')) out.coverImageUrl = absolutizeUrl(req, out.coverImageUrl);
+  if (Object.prototype.hasOwnProperty.call(out, 'heroImageUrl')) out.heroImageUrl = absolutizeUrl(req, out.heroImageUrl);
+  return out;
+}
+
+function parseCorsOrigins(raw) {
+  const value = String(raw || '').trim();
+  if (!value) return null;
+  if (value === '*') return '*';
+  const parts = value.split(',').map(s => s.trim()).filter(Boolean);
+  return new Set(parts);
+}
+
+const DEFAULT_CORS_ORIGINS = new Set([
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'https://matteusgsilva15-hue.github.io'
+]);
+
+const CORS_ORIGINS = parseCorsOrigins(CORS_ORIGIN_RAW) || DEFAULT_CORS_ORIGINS;
+
+app.use((req, res, next) => {
+  const origin = String(req.headers.origin || '').trim();
+
+  if (CORS_ORIGINS === '*') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (origin && CORS_ORIGINS instanceof Set && CORS_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-ADMIN-TOKEN');
+  res.setHeader('Access-Control-Max-Age', '600');
+
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  return next();
+});
 
 function sendError(res, status, message) {
   return res.status(status).json({ success: false, error: message });
@@ -157,10 +235,10 @@ function mapSeedChart(item) {
 async function initDbIfMissing() {
   if (await exists(DB_FILE)) return;
 
-  const seedCritics = await readJson(path.join(DATA_DIR, 'critics.json'), []);
-  const seedNews = await readJson(path.join(DATA_DIR, 'news.json'), []);
-  const seedInterviews = await readJson(path.join(DATA_DIR, 'interviews.json'), []);
-  const seedCharts = await readJson(path.join(DATA_DIR, 'charts.json'), []);
+  const seedCritics = await readJson(path.join(SEED_DATA_DIR, 'critics.json'), []);
+  const seedNews = await readJson(path.join(SEED_DATA_DIR, 'news.json'), []);
+  const seedInterviews = await readJson(path.join(SEED_DATA_DIR, 'interviews.json'), []);
+  const seedCharts = await readJson(path.join(SEED_DATA_DIR, 'charts.json'), []);
 
   const items = [];
   for (const c of Array.isArray(seedCritics) ? seedCritics : []) items.push(mapSeedCritic(c));
@@ -218,6 +296,7 @@ function parseDataUrl(dataUrl) {
 }
 
 // Serve static files
+app.use('/assets/uploads', express.static(UPLOAD_DIR));
 app.use('/assets', express.static(path.join(ROOT_DIR, 'assets')));
 app.use('/css', express.static(path.join(ROOT_DIR, 'css')));
 app.use('/js', express.static(path.join(ROOT_DIR, 'js')));
@@ -250,7 +329,8 @@ app.post('/uploadImage', requireAdmin, async (req, res) => {
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
   await fs.writeFile(path.join(UPLOAD_DIR, unique), buffer);
 
-  return res.json({ success: true, url: `/assets/uploads/${unique}` });
+  const relative = `/assets/uploads/${unique}`;
+  return res.json({ success: true, url: absolutizeUrl(req, relative) });
 });
 
 app.post('/publish', requireAdmin, async (req, res) => {
@@ -283,7 +363,7 @@ app.post('/publish', requireAdmin, async (req, res) => {
   db.items.push(item);
   await saveDb(db);
 
-  return res.json({ success: true, item });
+  return res.json({ success: true, item: withAbsoluteMediaUrls(req, item) });
 });
 
 app.post('/update', requireAdmin, async (req, res) => {
@@ -317,7 +397,7 @@ app.post('/update', requireAdmin, async (req, res) => {
 
   db.items[index] = item;
   await saveDb(db);
-  return res.json({ success: true, item });
+  return res.json({ success: true, item: withAbsoluteMediaUrls(req, item) });
 });
 
 app.post('/delete', requireAdmin, async (req, res) => {
@@ -350,7 +430,7 @@ app.get('/list', async (req, res) => {
     .filter(i => i && i.type === type)
     .sort(sortByPublishedDesc);
 
-  return res.json({ success: true, items });
+  return res.json({ success: true, items: items.map(i => withAbsoluteMediaUrls(req, i)) });
 });
 
 app.get('/item', async (req, res) => {
@@ -362,7 +442,7 @@ app.get('/item', async (req, res) => {
   const item = db.items.find(i => i && i.type === type && String(i.id) === id);
   if (!item) return sendError(res, 404, 'Not found');
 
-  return res.json({ success: true, item });
+  return res.json({ success: true, item: withAbsoluteMediaUrls(req, item) });
 });
 
 app.get('/latest', async (req, res) => {
@@ -374,7 +454,7 @@ app.get('/latest', async (req, res) => {
     .sort(sortByPublishedDesc)
     .slice(0, limit);
 
-  return res.json({ success: true, items });
+  return res.json({ success: true, items: items.map(i => withAbsoluteMediaUrls(req, i)) });
 });
 
 app.post('/updateCover', requireAdmin, async (req, res) => {
@@ -393,13 +473,13 @@ app.post('/updateCover', requireAdmin, async (req, res) => {
   }
 
   await writeJsonAtomic(COVER_FILE, cover);
-  return res.json({ success: true, cover });
+  return res.json({ success: true, cover: withAbsoluteMediaUrls(req, cover) });
 });
 
 app.get('/cover', async (req, res) => {
   const cover = await readJson(COVER_FILE, null);
   if (!cover) return res.json({ success: true, cover: null });
-  return res.json({ success: true, cover });
+  return res.json({ success: true, cover: withAbsoluteMediaUrls(req, cover) });
 });
 
 app.post('/deleteDemo', requireAdmin, async (req, res) => {

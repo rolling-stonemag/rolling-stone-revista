@@ -20,6 +20,37 @@ const CONFIG = {
   MAX_RETRIES: 3
 };
 
+const API_BASE_STORAGE_KEY = 'rollingstone_api_base';
+
+function normalizeApiBase(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  return raw.replace(/\/+$/, '');
+}
+
+function initApiBaseFromRuntime() {
+  try {
+    const qs = new URLSearchParams(window.location.search || '');
+    const fromQs = qs.get('api') || qs.get('apiBase') || '';
+    const fromLs = localStorage.getItem(API_BASE_STORAGE_KEY) || '';
+
+    const next = normalizeApiBase(fromQs || fromLs || CONFIG.API_BASE);
+    CONFIG.API_BASE = next;
+
+    if (fromQs) {
+      try { localStorage.setItem(API_BASE_STORAGE_KEY, next); } catch {}
+    }
+
+    if (isDebugMode()) {
+      console.log('[CONFIG] API_BASE =', CONFIG.API_BASE || '(same origin)');
+    }
+  } catch {
+    // ignore
+  }
+}
+
+initApiBaseFromRuntime();
+
 // ==========================================
 // A2) ADMIN STATE (Edit / Manager)
 // ==========================================
