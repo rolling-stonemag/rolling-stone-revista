@@ -674,6 +674,14 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
       },
       allowedEmails: ["matteusgsilva15@gmail.com"]
     };
+
+    // Cloudinary (opcional): usado para upload de imagens sem Firebase Storage.
+    // Preencha cloudName + uploadPreset (unsigned). Se deixar vazio, será ignorado.
+    window.ROLLINGSTONE_CLOUDINARY = {
+      cloudName: "",
+      uploadPreset: "",
+      folder: "rollingstone"
+    };
   </script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>

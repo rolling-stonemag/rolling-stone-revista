@@ -59,6 +59,10 @@ const FIREBASE_RUNTIME = (window.ROLLINGSTONE_FIREBASE && window.ROLLINGSTONE_FI
   ? window.ROLLINGSTONE_FIREBASE
   : null;
 
+const CLOUDINARY_RUNTIME = (window.ROLLINGSTONE_CLOUDINARY && (window.ROLLINGSTONE_CLOUDINARY.cloudName || window.ROLLINGSTONE_CLOUDINARY.uploadPreset))
+  ? window.ROLLINGSTONE_CLOUDINARY
+  : null;
+
 let __fbInited = false;
 let __fbAuth = null;
 let __fbDb = null;
@@ -74,6 +78,12 @@ function isFirebaseConfigured() {
 
 function firebaseEnabled() {
   return isFirebaseConfigured() && isFirebaseSdkLoaded();
+}
+
+function cloudinaryEnabled() {
+  const cn = String(CLOUDINARY_RUNTIME && CLOUDINARY_RUNTIME.cloudName ? CLOUDINARY_RUNTIME.cloudName : '').trim();
+  const preset = String(CLOUDINARY_RUNTIME && CLOUDINARY_RUNTIME.uploadPreset ? CLOUDINARY_RUNTIME.uploadPreset : '').trim();
+  return !!(cn && preset);
 }
 
 function firebaseAllowedEmails() {
@@ -237,6 +247,34 @@ function fbCollectionForType(type) {
 function sanitizeStorageName(name) {
   const raw = String(name || 'file').trim();
   return raw.replace(/[^a-z0-9._-]+/gi, '_').slice(0, 80) || 'file';
+}
+
+async function cloudinaryUploadDataUrl(filename, dataUrl) {
+  if (!cloudinaryEnabled()) throw new Error('Cloudinary não configurado');
+
+  const cloudName = String(CLOUDINARY_RUNTIME.cloudName || '').trim();
+  const uploadPreset = String(CLOUDINARY_RUNTIME.uploadPreset || '').trim();
+  const folder = String(CLOUDINARY_RUNTIME.folder || '').trim();
+
+  const safe = sanitizeStorageName(filename);
+  const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
+
+  const form = new FormData();
+  form.append('file', String(dataUrl || ''));
+  form.append('upload_preset', uploadPreset);
+  if (folder) form.append('folder', folder);
+  form.append('context', `alt=${safe}|caption=${safe}`);
+
+  const resp = await fetch(url, { method: 'POST', body: form });
+  const json = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = (json && (json.error && json.error.message)) ? json.error.message : `Cloudinary upload falhou (HTTP ${resp.status})`;
+    throw new Error(msg);
+  }
+
+  const outUrl = String(json && (json.secure_url || json.url) ? (json.secure_url || json.url) : '').trim();
+  if (!outUrl) throw new Error('Cloudinary não retornou URL');
+  return outUrl;
 }
 
 async function firebaseUploadDataUrl(filename, dataUrl) {
@@ -1765,8 +1803,19 @@ async function uploadImage(fileInput) {
         logLine(`Uploading image: ${file.name}`, 'info');
 
         if (firebaseEnabled()) {
-          const url = await firebaseUploadDataUrl(file.name, String(base64));
-          logLine(`Image uploaded (Firebase): ${file.name}`, 'success');
+          try {
+            const url = await firebaseUploadDataUrl(file.name, String(base64));
+            logLine(`Image uploaded (Firebase): ${file.name}`, 'success');
+            resolve(url);
+            return;
+          } catch (e) {
+            logLine(`Firebase Storage indisponível. Tentando alternativa… (${e?.message || e})`, 'warning');
+          }
+        }
+
+        if (cloudinaryEnabled()) {
+          const url = await cloudinaryUploadDataUrl(file.name, String(base64));
+          logLine(`Image uploaded (Cloudinary): ${file.name}`, 'success');
           resolve(url);
           return;
         }
