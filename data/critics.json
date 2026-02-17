@@ -1,0 +1,46 @@
+[
+  {
+    "type": "critic",
+    "title": "The New Abnormal",
+    "artist": "The Strokes",
+    "score": "8.2",
+    "content": "A triumphant return from the NYC indie rock legends. Bold, confident, and packed with unforgettable hooks that showcase their mastery of modern rock songwriting.",
+    "author": "Rob Sheffield",
+    "image_id": "none",
+    "date": "2026-02-11T10:00:00.000Z",
+    "__backendId": "critic_001"
+  },
+  {
+    "type": "critic",
+    "title": "Renaissance",
+    "artist": "Beyoncé",
+    "score": "9.1",
+    "content": "Beyoncé's dance odyssey is a masterclass in reinvention. House-inflected production paired with her incomparable vocals creates something both timeless and immediately now.",
+    "author": "Angie Martoccio",
+    "image_id": "none",
+    "date": "2026-02-09T14:30:00.000Z",
+    "__backendId": "critic_002"
+  },
+  {
+    "type": "critic",
+    "title": "Midnights",
+    "artist": "Taylor Swift",
+    "score": "7.5",
+    "content": "An introspective exploration of sleepless nights and emotional turbulence. Swift balances vulnerability with pop sensibilities in this deeply personal work.",
+    "author": "Rob Sheffield",
+    "image_id": "none",
+    "date": "2026-02-07T09:15:00.000Z",
+    "__backendId": "critic_003"
+  },
+  {
+    "type": "critic",
+    "title": "Un Verano Sin Ti",
+    "artist": "Bad Bunny",
+    "score": "8.8",
+    "content": "Bad Bunny delivers a sun-soaked masterpiece that transcends language barriers. Infectious rhythms meet heartfelt lyrics in this genre-defying album.",
+    "author": "Suzy Exposito",
+    "image_id": "none",
+    "date": "2026-02-05T16:45:00.000Z",
+    "__backendId": "critic_004"
+  }
+]

@@ -1,0 +1,51 @@
+NOVA ESTRUTURA ADMIN COM SIDEBAR
+
+Esta é a estrutura HTML que substituirá o conteúdo de #page-admin:
+
+<div class="page" id="page-admin">
+  <div class="admin-workspace">
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <h2 class="admin-sidebar-title">Admin Panel</h2>
+      </div>
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-section-title">Publish</div>
+        <button class="admin-sidebar-link active" data-admin-section="review">⭐ Review</button>
+        <button class="admin-sidebar-link" data-admin-section="news">📰 News</button>
+        <button class="admin-sidebar-link" data-admin-section="interview">🎤 Interview</button>
+        <button class="admin-sidebar-link" data-admin-section="chart">🎵 Chart</button>
+        <button class="admin-sidebar-link" data-admin-section="cover">🖼️ Cover</button>
+      </div>
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-section-title">Manage</div>
+        <button class="admin-sidebar-link" data-admin-section="posts">📂 Posts</button>
+      </div>
+      <div class="admin-sidebar-section">
+        <div class="admin-sidebar-section-title">Demo</div>
+        <button class="admin-sidebar-link" data-admin-section="demo">🎬 Demo</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="admin-main">
+      <!-- ADMIN PANELS (cada um corresponde a um item da sidebar) -->
+      
+      <!-- REVIEW PANEL (default active) -->
+      <div class="admin-panel active" id="admin-panel-review">
+        [CONTEÚDO DO FORM DE REVIEW]
+      </div>
+
+      <!-- NEWS PANEL -->
+      <div class="admin-panel" id="admin-panel-news">
+        [CONTEÚDO DO FORM DE NEWS]
+      </div>
+
+      <!-- Similar para interview, chart, cover, posts, demo -->
+    </div>
+  </div>
+</div>
+
+A implementar no app.js:
+- showAdminPanel(section) para navegação
+- Corrigir charts demo (sem "same", mínimo 10 entries)

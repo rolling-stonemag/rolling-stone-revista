@@ -1,0 +1,654 @@
+﻿<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolling Stone Editorial CMS</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&amp;family=Lora:ital,wght@0,400;0,600;0,700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+</head>
+ <body class="h-full">
+  <div class="cms-wrapper">
+   <div class="cms-container">
+    <div class="hero-header" id="hero-header">
+     <div class="hero-content"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Rolling_Stone_logo.svg" alt="Rolling Stone" class="hero-logo" loading="lazy" onerror="this.alt='ROLLING STONE';">
+     </div>
+    </div>
+    <nav class="footer-nav" id="nav-bar">
+     <div class="nav-links" id="nav-links"><button type="button" class="nav-btn active" data-page="home">Home</button> <button type="button" class="nav-btn" data-page="critics">Critics</button> <button type="button" class="nav-btn" data-page="news">News</button> <button type="button" class="nav-btn" data-page="interviews">Interviews</button> <button type="button" class="nav-btn" data-page="charts">Charts</button> <button type="button" class="nav-btn" data-page="admin">Admin</button>
+     </div>
+    </nav>
+    <div class="main-pages">
+     <div class="page active" id="page-home">
+      <div class="page-content">
+       <div class="current-issue">
+        <div class="issue-cover" id="issue-cover">
+         [Capa da Revista]
+        </div>
+        <div class="issue-info">
+         <h2>Current Issue</h2>
+         <div class="issue-number" id="issue-number">
+          47
+         </div>
+         <div class="issue-date" id="issue-date">
+          February 2025
+         </div>
+         <p class="issue-description" id="issue-description">The definitive voice in rock, pop, country and music culture.</p>
+        </div>
+       </div>
+       <div class="featured-section">
+        <h2 class="featured-title">This Week's Selection</h2>
+        <div class="posts-grid" id="latest-grid"></div>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-critics">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">Album Reviews</h1>
+       <p class="page-subtitle">Our latest critical takes on new releases</p>
+      </div>
+      <div class="page-content">
+       <div class="critics-compact-grid" id="critics-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-critic-review">
+      <div class="page-content"><button class="critic-review-back-btn" onclick="backToCritics()">← Back to Reviews</button>
+       <div class="critic-review-page" id="critic-review-wrapper"></div>
+      </div>
+     </div>
+     <div class="page" id="page-news">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">Breaking News</h1>
+       <p class="page-subtitle">Industry updates and announcements</p>
+      </div>
+      <div class="page-content">
+       <div class="feed" id="news-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-news-article">
+      <div class="page-content">
+      <div class="news-article-wrapper" id="news-article-wrapper"><button class="article-back-btn" onclick="goToNewsListing()">← Back to News</button>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-interviews">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">In Conversation</h1>
+       <p class="page-subtitle">Exclusive interviews with artists and industry leaders</p>
+      </div>
+      <div class="page-content">
+       <div class="feed" id="interviews-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-interviews-article">
+      <div class="page-content">
+      <div class="news-article-wrapper" id="interviews-article-wrapper"><button class="article-back-btn" onclick="goToInterviewsListing()">← Back to Interviews</button>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-charts">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">The Hot 15</h1>
+       <p class="page-subtitle">This week's definitive ranking</p>
+      </div>
+      <div class="page-content">
+       <div id="charts-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-admin">
+      <div class="admin-workspace">
+       <!-- ADMIN SIDEBAR -->
+       <div class="admin-sidebar">
+        <div class="admin-sidebar-header">
+         <h2 class="admin-sidebar-title">Admin Panel</h2>
+         <div style="background: #16a34a; color: white; padding: 0.35rem 0.75rem; font-family: 'Courier New', monospace; font-size: 0.65rem; font-weight: bold; margin-top: 0.5rem; border-radius: 0.25rem; display: inline-block;">✓ NEW</div>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Publish</div>
+         <button class="admin-sidebar-link active" data-admin-section="review">★ Review</button>
+         <button class="admin-sidebar-link" data-admin-section="news">📰 News</button>
+         <button class="admin-sidebar-link" data-admin-section="interview">🎤 Interview</button>
+         <button class="admin-sidebar-link" data-admin-section="chart">🎵 Chart</button>
+         <button class="admin-sidebar-link" data-admin-section="cover">🖼️ Cover</button>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Manage</div>
+         <button class="admin-sidebar-link" data-admin-section="posts">📂 Posts</button>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Demo</div>
+         <button class="admin-sidebar-link" data-admin-section="demo">🎬 Demo</button>
+        </div>
+        
+        <!-- Admin Log in Sidebar -->
+        <div style="margin: 1rem; padding: 0.75rem; background: #0a0a0a; border-radius: 0.25rem; border: 1px solid #333; flex-shrink: 0;">
+         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <div style="font-size: 0.7rem; font-weight: 700; color: #ef4444; letter-spacing: 0.05em;">ADMIN LOG</div>
+          <button type="button" onclick="clearAdminLog()" style="padding: 0.2rem 0.5rem; background: #1a1a1a; color: #666; border: none; border-radius: 0.2rem; font-size: 0.65rem; cursor: pointer;">Clear</button>
+         </div>
+         <div id="admin-log" style="max-height: 150px; overflow-y: auto; font-size: 0.7rem; font-family: 'Courier New', monospace; color: #666; line-height: 1.4;">
+          <div style="color: #6b7280;">Ready...</div>
+         </div>
+        </div>
+       </div>
+
+       <!-- ADMIN MAIN CONTENT -->
+       <div class="admin-main">
+        
+        <!-- PANEL: REVIEW -->
+        <div class="admin-panel active" id="admin-panel-review">
+         <div style="padding: 2.5rem;">
+          <div style="margin-bottom: 2rem;">
+           <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">★ Publish Critic Review</h1>
+           <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish album reviews</p>
+          </div>
+          <form id="critic-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-image">Album Cover Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="critic-image">📸 Click to select image</label> <input type="file" class="file-input" id="critic-image" accept="image/*">
+                <div class="image-preview" id="critic-preview">
+                 <img id="critic-preview-img" src="">
+                </div>
+               </div>
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-image-url">Album Cover Image URL (Optional)</label> <input type="url" class="form-input" id="critic-image-url" placeholder="https://...">
+               <p class="form-input-hint">Optional — paste an image URL instead of uploading a file</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Album Header
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-album">Album Title</label> <input type="text" class="form-input" id="critic-album" placeholder="Album title appears as large serif headline" required>
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-artist">Artist Name</label> <input type="text" class="form-input" id="critic-artist" placeholder="Artist name appears below title" required>
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-score">Score (0-10)</label> <input type="number" class="form-input" id="critic-score" placeholder="8.5" step="0.1" min="0" max="10" required>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Review Content
+              </div>
+                <div class="form-group"><label class="form-label" for="critic-subheadline">Subheadline (Optional)</label> <input type="text" class="form-input" id="critic-subheadline" placeholder="Short italic deck under the headline (optional)">
+                 <p class="form-input-hint">Optional — appears under the title on the full review page</p>
+                </div>
+                <div class="form-group"><label class="form-label" for="critic-review">Review Body</label> <textarea class="form-textarea" id="critic-review" placeholder="Write the review. Use double line breaks to create paragraphs." required></textarea>
+               <p class="form-input-hint">The first letter will be styled as a large red drop cap.</p>
+              </div>
+                <div class="form-group"><label class="form-label" for="critic-quote">Pull Quote (Optional)</label> <textarea class="form-textarea" id="critic-quote" placeholder="Optional — highlight a key line" style="min-height: 90px;"></textarea>
+                 <p class="form-input-hint">Optional — shown as a highlighted quote block in the full review</p>
+                </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-author">Author Name</label> <input type="text" class="form-input" id="critic-author" placeholder="Your name" required>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="critic-btn" onclick="publishCritic(event)" style="margin-top: 2rem;">Publish Review</button>
+            <div class="status-message" id="critic-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: NEWS -->
+         <div class="admin-panel" id="admin-panel-news">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">📰 Publish News Article</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish news articles</p>
+           </div>
+           <form id="news-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="news-image">Article Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="news-image">📸 Click to select image</label> <input type="file" class="file-input" id="news-image" accept="image/*">
+                <div class="image-preview" id="news-preview">
+                 <img id="news-preview-img" src="">
+                </div>
+               </div>
+              </div>
+              <div class="form-group"><label class="form-label" for="news-image-url">Article Image URL (Optional)</label> <input type="url" class="form-input" id="news-image-url" placeholder="https://...">
+               <p class="form-input-hint">Optional — paste an image URL instead of uploading a file</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Article Header
+              </div>
+              <div class="form-group"><label class="form-label" for="news-category">Category Label</label> <select class="form-select" id="news-category" required> <option value="">Select category</option> <option value="BREAKING">BREAKING</option> <option value="EXCLUSIVE">EXCLUSIVE</option> <option value="UPDATE">UPDATE</option> <option value="DEVELOPING">DEVELOPING</option> <option value="FEATURE">FEATURE</option> </select>
+               <p class="form-input-hint">📌 Appears as bold uppercase label above the headline (e.g., BREAKING, EXCLUSIVE)</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="news-headline">Headline</label> <input type="text" class="form-input" id="news-headline" placeholder="e.g., Taylor Swift Announces Massive Stadium Tour" required>
+               <p class="form-input-hint">💡 Large serif font, centered, bold — the main story title</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="news-subtitle">Subtitle</label> <input type="text" class="form-input" id="news-subtitle" placeholder="e.g., The Eras Tour will span 52 dates across North America" required>
+               <p class="form-input-hint">✍️ Italic, lighter weight — supporting context for the headline</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Article Content
+              </div>
+              <div class="form-group"><label class="form-label" for="news-content">Article Body</label> <textarea class="form-textarea" id="news-content" placeholder="e.g., Taylor Swift has announced her most ambitious tour yet, spanning multiple eras of her discography. Fans can expect to hear hits from 'Fearless' all the way to 'Midnights' in a three-hour extravaganza.
+
+Use double line breaks to create new paragraphs. Each paragraph will have proper spacing." required style="min-height: 180px;"></textarea>
+               <p class="form-input-hint">🅰️ First letter automatically becomes a large drop cap — write naturally, separate paragraphs with double line breaks</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Highlight Quote (Optional)
+              </div>
+              <div class="form-group"><label class="form-label" for="news-quote">Pull Quote</label> <textarea class="form-textarea" id="news-quote" placeholder="e.g., I've said everything I need to say with this character" style="min-height: 90px;"></textarea>
+               <p class="form-input-hint">💬 Optional — highlight a key insight or memorable quote in a styled block</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="news-author">Author Name</label> <input type="text" class="form-input" id="news-author" placeholder="e.g., Sarah Mitchell" required>
+               <p class="form-input-hint">✒️ Byline attribution — appears below headline</p>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="news-btn" onclick="publishNews(event)" style="margin-top: 2rem;">Publish Article</button>
+            <div class="status-message" id="news-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!--PANEL: INTERVIEW -->
+         <div class="admin-panel" id="admin-panel-interview">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎤 Publish Interview</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish interviews</p>
+           </div>
+           <form id="interview-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-image">Interview Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="interview-image">📸 Click to select image</label> <input type="file" class="file-input" id="interview-image" accept="image/*">
+                <div class="image-preview" id="interview-preview">
+                 <img id="interview-preview-img" src="">
+                </div>
+               </div>
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-image-url">Interview Image URL (Optional)</label> <input type="url" class="form-input" id="interview-image-url" placeholder="https://...">
+               <p class="form-input-hint">Optional — paste an image URL instead of uploading a file</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Interview Header
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-guest">Guest Name</label> <input type="text" class="form-input" id="interview-guest" placeholder="e.g., Billie Eilish" required>
+               <p class="form-input-hint">🎤 The artist or person being interviewed</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-title">Interview Title</label> <input type="text" class="form-input" id="interview-title" placeholder="e.g., Billie Eilish on Growing Up in Public" required>
+               <p class="form-input-hint">💡 Large serif headline — the main interview title</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-subtitle">Subtitle</label> <input type="text" class="form-input" id="interview-subtitle" placeholder="e.g., The pop icon discusses her evolution and new creative direction" required>
+               <p class="form-input-hint">✍️ Italic tagline — supporting context</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Interview Content
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-content">Interview Body</label> <textarea class="form-textarea" id="interview-content" placeholder="Narrative example:
+Five years after 'When We All Fall Asleep,' Billie Eilish reflects on fame, mental health, and artistic growth.
+
+Q&A example (optional):
+Q: What changed the most in the last year?
+
+A: I stopped trying to be perfect.
+
+Use double line breaks to create new paragraphs." required style="min-height: 180px;"></textarea>
+               <p class="form-input-hint">🅰️ Drop cap applies to the first narrative paragraph; lines starting with Q: / A: render as styled Q&A blocks</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Key Quote (Optional)
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-quote">Key Quote</label> <textarea class="form-textarea" id="interview-quote" placeholder="e.g., I'm not the same person I was at 17. This album is about accepting change." style="min-height: 90px;"></textarea>
+               <p class="form-input-hint">💬 Optional — featured quote from the guest in a styled highlight block</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-author">Author Name</label> <input type="text" class="form-input" id="interview-author" placeholder="e.g., Amanda Foster" required>
+               <p class="form-input-hint">✒️ Interviewer byline — appears below headline</p>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="interview-btn" onclick="publishInterview(event)" style="margin-top: 2rem;">Publish Interview</button>
+            <div class="status-message" id="interview-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: CHART -->
+         <div class="admin-panel" id="admin-panel-chart">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎵 Publish Chart</h1>
+              <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the Hot 15 chart (15 songs)</p>
+           </div>
+           <form id="chart-form">
+              <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0; margin-bottom: 1.5rem;">
+               <div class="form-section-divider">Chart Meta</div>
+               <div class="form-group"><label class="form-label" for="chart-title">Chart Title</label> <input type="text" class="form-input" id="chart-title" placeholder="The Hot 15" value="The Hot 15" required>
+               </div>
+               <div class="form-group"><label class="form-label" for="chart-issue">Issue Number</label> <input type="text" class="form-input" id="chart-issue" placeholder="47">
+                <p class="form-input-hint">Optional — leave blank to use the current year</p>
+               </div>
+               <div class="form-group"><label class="form-label" for="chart-date">Chart Date</label> <input type="date" class="form-input" id="chart-date">
+                <p class="form-input-hint">Optional — leave blank to use today</p>
+               </div>
+              </div>
+                  <p class="form-input-hint" style="margin-bottom: 1rem;">📈 Movement: <b>Auto</b> calcula com base no <b>Prev #</b>. Se Prev # estiver vazio, vira <b>NEW</b>.</p>
+
+                <div class="form-group"><label class="form-label" for="chart-song-1">Song #1</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-1" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-1" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-1" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-2">Song #2</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-2" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-2" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-2" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-3">Song #3</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-3" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-3" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-3" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-4">Song #4</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-4" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-4" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-4" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-5">Song #5</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-5" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-5" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-5" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-6">Song #6</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-6" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-6" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-6" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-7">Song #7</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-7" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-7" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-7" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-8">Song #8</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-8" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-8" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-8" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-9">Song #9</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-9" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-9" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-9" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-10">Song #10</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-10" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-10" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-10" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-11">Song #11</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-11" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-11" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-11" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-12">Song #12</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-12" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-12" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-12" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-13">Song #13</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-13" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-13" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-13" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-14">Song #14</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-14" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-14" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-14" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+                <div class="form-group"><label class="form-label" for="chart-song-15">Song #15</label>
+                  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                    <input type="text" class="form-input" id="chart-song-15" placeholder="Title - Artist" required style="flex: 1 1 340px;">
+                    <select class="form-select" id="chart-move-15" style="width: 170px;"><option value="auto" selected>Auto</option><option value="same">Same</option><option value="up">Up</option><option value="down">Down</option><option value="new">New</option><option value="reentry">Re-entry</option></select>
+                    <input type="number" class="form-input" id="chart-last-15" placeholder="Prev #" min="1" max="99" style="width: 120px;">
+                  </div>
+                </div>
+
+                <button type="button" class="form-btn" id="chart-btn" onclick="publishChart(event)">Publish</button>
+            <div class="status-message" id="chart-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: COVER -->
+         <div class="admin-panel" id="admin-panel-cover">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🖼️ Update Cover</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the magazine cover image and details</p>
+           </div>
+           <form id="cover-form">
+            <div class="form-group"><label class="form-label" for="cover-image">Upload Cover Image</label>
+             <div class="file-input-wrapper"><label class="file-input-label" for="cover-image">📸 Click to select image</label> <input type="file" class="file-input" id="cover-image" accept="image/*">
+              <div class="image-preview" id="cover-preview">
+               <img id="cover-preview-img" src="">
+              </div>
+             </div>
+            </div>
+              <div class="form-group"><label class="form-label" for="cover-image-url">Cover Image URL (Optional)</label> <input type="url" class="form-input" id="cover-image-url" placeholder="https://...">
+               <p class="form-input-hint">Optional — paste an image URL instead of uploading a file</p>
+              </div>
+            <div class="form-group"><label class="form-label" for="cover-issue">Issue Number</label> <input type="text" class="form-input" id="cover-issue" placeholder="47" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="cover-date">Issue Date</label> <input type="text" class="form-input" id="cover-date" placeholder="February 2025" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="cover-description">Description</label> <textarea class="form-textarea" id="cover-description" placeholder="Issue description..." required></textarea>
+            </div><button type="button" class="form-btn" id="cover-btn" onclick="publishCover(event)">Update Cover</button>
+            <div class="status-message" id="cover-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: POSTS -->
+         <div class="admin-panel" id="admin-panel-posts">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">📂 Manage Posts</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">View and manage published content</p>
+           </div>
+           <div class="posts-management-tabs"><button type="button" class="posts-management-tab-btn active" data-filter="all">All</button> <button type="button" class="posts-management-tab-btn" data-filter="critic">Critics</button> <button type="button" class="posts-management-tab-btn" data-filter="news">News</button> <button type="button" class="posts-management-tab-btn" data-filter="interview">Interviews</button> <button type="button" class="posts-management-tab-btn" data-filter="chart">Charts</button>
+           </div>
+           <div class="posts-list" id="posts-management-list"></div>
+
+             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
+              <div class="form-section-divider">Backup / Restore (Browser)</div>
+              <p class="form-input-hint">No GitHub Pages, publicar salva só no seu navegador. Use Export para não perder (backup) e Import para restaurar em outra máquina/navegador.</p>
+
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem;">
+               <button type="button" class="form-btn" id="local-export-btn" style="width: auto; padding: 0.8rem 1rem;">Export JSON</button>
+               <label class="file-input-label" for="local-import-file" style="width: auto; padding: 0.8rem 1rem; border-style: solid;">Import JSON</label>
+               <input type="file" class="file-input" id="local-import-file" accept="application/json">
+               <button type="button" class="form-btn" id="local-clear-btn" style="width: auto; padding: 0.8rem 1rem; background: #111;">Clear Local</button>
+              </div>
+
+              <div class="status-message" id="local-backup-status" style="margin-top: 0.75rem;"></div>
+             </div>
+          </div>
+         </div>
+
+         <!-- PANEL: DEMO -->
+         <div class="admin-panel" id="admin-panel-demo">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎬 Demo Content</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Test and seed the site with demo content</p>
+           </div>
+
+           <!-- Demo Manager -->
+           <div class="demo-manager" id="demo-manager" style="display: none;">
+            <div class="demo-manager-header">
+             <span style="font-size: 1.2rem;">🎬</span>
+             <span class="demo-manager-title">Demo Content Manager</span>
+            </div>
+            <div class="demo-stats">
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-critics">0</div>
+              <div class="demo-stat-label">Critics</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-news">0</div>
+              <div class="demo-stat-label">News</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-interviews">0</div>
+              <div class="demo-stat-label">Interviews</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-charts">0</div>
+              <div class="demo-stat-label">Charts</div>
+             </div>
+            </div>
+            <div class="demo-progress" id="demo-progress">
+             <div class="demo-progress-bar" id="demo-progress-bar" style="width: 0%;">0%</div>
+            </div>
+            <div class="demo-log" id="demo-log">
+             <div class="demo-log-entry">
+              <span class="demo-log-time">--:--:--</span>
+              <span>Ready to publish demo content...</span>
+             </div>
+            </div>
+            <button type="button" class="form-btn" onclick="deleteDemoContent()" style="background: linear-gradient(135deg, #dc2626, #ef4444); margin-top: 0;">🗑️ Delete All Demo Content</button>
+           </div>
+
+           <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="form-card data-load">
+             <div class="form-card-title" style="color: #16a34a; display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem 0;"><span style="font-size: 1.3rem;">🚀</span> <span>Publish Demo Content</span>
+             </div>
+             <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">Creates demo posts in all sections for layout testing.</p>
+             <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+              <button type="button" class="form-btn" id="demo-publish-btn" onclick="openDemoModal()" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); margin-top: 0;">🎬 Run Test Publish</button>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+
+        </div><!-- end admin-main -->
+       </div><!-- end admin-workspace -->
+      </div><!-- end #page-admin -->
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- Demo Publish Modal -->
+  <div class="demo-modal-overlay" id="demo-modal-overlay" onclick="closeDemoModalOnOverlay(event)">
+   <div class="demo-modal" onclick="event.stopPropagation()">
+    <div class="demo-modal-header">
+    <h2 class="demo-modal-title">🎬 Publish Demo Content</h2>
+     <p class="demo-modal-subtitle">Choose how to populate your site with test content</p>
+    </div>
+    <div class="demo-modal-body">
+     <div class="demo-option" onclick="selectDemoOption('single')">
+      <div class="demo-option-header">
+      <span class="demo-option-icon">📄</span>
+       <span class="demo-option-title">1 Item per Section</span>
+      </div>
+      <p class="demo-option-desc">Publishes one critic review, one news article, one interview, and one chart</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('multiple')">
+      <div class="demo-option-header">
+      <span class="demo-option-icon">📚</span>
+       <span class="demo-option-title">3 Items per Section</span>
+      </div>
+      <p class="demo-option-desc">Publishes three items in each section for a fuller layout preview</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('dryrun')">
+      <div class="demo-option-header">
+      <span class="demo-option-icon">👁️</span>
+       <span class="demo-option-title">Dry Run (Preview Only)</span>
+      </div>
+      <p class="demo-option-desc">Simulates publishing and shows console logs without actually creating content</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('reset')" style="border-color: #dc2626;">
+      <div class="demo-option-header">
+      <span class="demo-option-icon">🗑️</span>
+       <span class="demo-option-title" style="color: #dc2626;">Reset Demo Content</span>
+      </div>
+      <p class="demo-option-desc">Deletes all demo posts (marked with isDemo: true)</p>
+     </div>
+    </div>
+    <div class="demo-modal-footer">
+     <button class="demo-modal-btn secondary" onclick="closeDemoModal()">Cancel</button>
+    </div>
+   </div>
+  </div>
+
+  <script defer src="js/app.js"></script>
+ </body>
+</html>
+

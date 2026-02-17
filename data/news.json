@@ -1,0 +1,38 @@
+[
+  {
+    "type": "news",
+    "category": "Breaking",
+    "title": "Arctic Monkeys Announce World Tour",
+    "subtitle": "Sheffield rockers set to perform across 40+ cities in 2025",
+    "content": "Arctic Monkeys have announced an extensive world tour following the success of their latest album. The tour will span five continents and include performances at major festivals and venue shows. Fans can expect a mix of classic hits and new material from their critically acclaimed recent release.",
+    "quote": "This is going to be our most ambitious tour yet",
+    "author": "Jon Dolan",
+    "image_id": "none",
+    "date": "2026-02-12T08:00:00.000Z",
+    "__backendId": "news_001"
+  },
+  {
+    "type": "news",
+    "category": "Exclusive",
+    "title": "Adele Talks New Album and Las Vegas Residency",
+    "subtitle": "The British superstar opens up about upcoming projects",
+    "content": "In an exclusive interview, Adele discusses her highly anticipated fourth studio album and confirms she will be returning to Las Vegas for an extended residency. She promises fans an even more intimate experience than her previous performances, with new arrangements and special guests.",
+    "quote": "I want to push myself creatively in ways I've never done before",
+    "author": "Brittany Spanos",
+    "image_id": "none",
+    "date": "2026-02-10T11:20:00.000Z",
+    "__backendId": "news_002"
+  },
+  {
+    "type": "news",
+    "category": "Update",
+    "title": "Grammy Awards 2026: Complete Winners List",
+    "subtitle": "Record-breaking night sees diverse array of artists honored",
+    "content": "The 68th Annual Grammy Awards delivered surprises and historic moments. Taylor Swift became the first artist to win Album of the Year four times, while newcomers swept several major categories. The ceremony celebrated music's evolution and diversity across all genres.",
+    "quote": "none",
+    "author": "Jon Blistein",
+    "image_id": "none",
+    "date": "2026-02-08T22:30:00.000Z",
+    "__backendId": "news_003"
+  }
+]

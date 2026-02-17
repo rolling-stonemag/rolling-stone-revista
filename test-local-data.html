@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Data Test - Rolling Stone CMS</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        .section h2 {
+            color: #111;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #dc2626;
+        }
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .item-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .item-content {
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .status {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        pre {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎸 Rolling Stone CMS - Local Data Test</h1>
+        <p class="subtitle">Testing JSON file loading from /data folder</p>
+        
+        <div class="controls">
+            <button onclick="testLoad()">🔄 Load Data</button>
+            <button onclick="clearDisplay()">🗑️ Clear Display</button>
+            <button onclick="showRawData()">📊 Show Raw JSON</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="results"></div>
+        <div id="raw" style="display:none;">
+            <h2>Raw JSON Data</h2>
+            <pre id="raw-output"></pre>
+        </div>
+    </div>
+
+    <script>
+        let loadedData = {
+            critics: [],
+            news: [],
+            interviews: [],
+            charts: []
+        };
+
+        async function loadFile(name, path) {
+            try {
+                const response = await fetch(path);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                loadedData[name] = data;
+                return data;
+            } catch (error) {
+                console.error(`Error loading ${name}:`, error);
+                return [];
+            }
+        }
+
+        async function testLoad() {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = '<div class="status info">⏳ Loading data files...</div>';
+
+            try {
+                const [critics, news, interviews, charts] = await Promise.all([
+                    loadFile('critics', 'data/critics.json'),
+                    loadFile('news', 'data/news.json'),
+                    loadFile('interviews', 'data/interviews.json'),
+                    loadFile('charts', 'data/charts.json')
+                ]);
+
+                const total = critics.length + news.length + interviews.length + charts.length;
+                
+                statusEl.innerHTML = `
+                    <div class="status success">
+                        ✓ Successfully loaded ${total} items!
+                        <br>Critics: ${critics.length} | News: ${news.length} | Interviews: ${interviews.length} | Charts: ${charts.length}
+                    </div>
+                `;
+
+                displayData();
+            } catch (error) {
+                statusEl.innerHTML = `
+                    <div class="status error">
+                        ✗ Error loading data: ${error.message}
+                        <br><small>Make sure you're running from a local server (not file://)</small>
+                    </div>
+                `;
+            }
+        }
+
+        function displayData() {
+            const resultsEl = document.getElementById('results');
+            let html = '';
+
+            // Critics
+            if (loadedData.critics.length > 0) {
+                html += '<div class="section"><h2>🎵 Album Reviews (Critics)</h2>';
+                loadedData.critics.forEach(item => {
+                    html += `
+                        <div class="item">
+                            <div class="item-title">${item.title} - ${item.artist}</div>
+                            <div class="item-meta">Score: ${item.score}/10 | By ${item.author}</div>
+                            <div class="item-content">${item.content}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            // News
+            if (loadedData.news.length > 0) {
+                html += '<div class="section"><h2>📰 News Articles</h2>';
+                loadedData.news.forEach(item => {
+                    html += `
+                        <div class="item">
+                            <div class="item-title">${item.title}</div>
+                            <div class="item-meta">${item.category} | By ${item.author}</div>
+                            <div class="item-content">${item.content}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            // Interviews
+            if (loadedData.interviews.length > 0) {
+                html += '<div class="section"><h2>🎤 Interviews</h2>';
+                loadedData.interviews.forEach(item => {
+                    html += `
+                        <div class="item">
+                            <div class="item-title">${item.title}</div>
+                            <div class="item-meta">With ${item.artist} | By ${item.author}</div>
+                            <div class="item-content">${item.content}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            // Charts
+            if (loadedData.charts.length > 0) {
+                html += '<div class="section"><h2>📊 Charts</h2>';
+                loadedData.charts.forEach(item => {
+                    const songs = item.content.split('|');
+                    html += `
+                        <div class="item">
+                            <div class="item-title">${item.title}</div>
+                            <div class="item-content">`;
+                    songs.forEach((song, i) => {
+                        html += `${i + 1}. ${song.trim()}<br>`;
+                    });
+                    html += `</div></div>`;
+                });
+                html += '</div>';
+            }
+
+            resultsEl.innerHTML = html;
+        }
+
+        function clearDisplay() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('status').innerHTML = '';
+            document.getElementById('raw').style.display = 'none';
+        }
+
+        function showRawData() {
+            const rawEl = document.getElementById('raw');
+            const outputEl = document.getElementById('raw-output');
+            
+            if (rawEl.style.display === 'none') {
+                outputEl.textContent = JSON.stringify(loadedData, null, 2);
+                rawEl.style.display = 'block';
+            } else {
+                rawEl.style.display = 'none';
+            }
+        }
+
+        // Auto-load on page load
+        window.addEventListener('DOMContentLoaded', testLoad);
+    </script>
+</body>
+</html>

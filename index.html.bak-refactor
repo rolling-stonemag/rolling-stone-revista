@@ -1,0 +1,3477 @@
+﻿<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolling Stone Editorial CMS</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&amp;family=Lora:ital,wght@0,400;0,600;0,700&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { box-sizing: border-box; }
+    
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --text-light: #666666;
+      --red: #dc2626;
+      --border: #e5e5e5;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body, .cms-wrapper { height: 100%; width: 100%; }
+
+    .cms-wrapper {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cms-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .hero-header {
+      position: relative;
+      z-index: 50;
+      background: var(--bg);
+      transition: all 0.4s ease;
+      padding: 0;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 12vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hero-header.scrolled {
+      min-height: 8vh;
+    }
+
+    .hero-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      transition: all 0.4s ease;
+      padding: 1.5rem 1rem;
+    }
+
+    .hero-header.scrolled .hero-content {
+      padding: 0.8rem 1rem;
+    }
+
+    .hero-logo {
+      height: 100%;
+      max-height: 80px;
+      transition: all 0.4s ease;
+      object-fit: contain;
+      max-width: 90%;
+    }
+
+    .hero-header.scrolled .hero-logo {
+      max-height: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-header {
+        min-height: 10vh;
+      }
+
+      .hero-header.scrolled {
+        min-height: 7vh;
+      }
+
+      .hero-logo {
+        max-height: 60px;
+      }
+      
+      .hero-header.scrolled .hero-logo {
+        max-height: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-header {
+        min-height: 9vh;
+        padding: 0.5rem;
+      }
+
+      .hero-header.scrolled {
+        min-height: 6vh;
+      }
+
+      .hero-logo {
+        max-height: 50px;
+      }
+      
+      .hero-header.scrolled .hero-logo {
+        max-height: 35px;
+      }
+    }
+
+    .footer-nav {
+      position: relative;
+      z-index: 1000;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-top: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0;
+      margin: 0;
+      scroll-behavior: smooth;
+      flex-shrink: 0;
+      pointer-events: auto;
+    }
+
+    .footer-nav::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .footer-nav::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .footer-nav::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .footer-nav::-webkit-scrollbar-thumb:hover {
+      background: var(--text-light);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      padding: 0;
+      margin: 0;
+      min-width: min-content;
+      pointer-events: auto;
+    }
+
+    .nav-btn {
+      padding: 1rem 1.5rem;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
+      z-index: 1001;
+      position: relative;
+      pointer-events: auto;
+      user-select: none;
+    }
+
+    .nav-btn:hover { 
+      color: var(--text);
+      background: rgba(0,0,0,0.02);
+    }
+
+    .nav-btn.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    @media (max-width: 768px) {
+      .nav-btn {
+        padding: 0.8rem 1rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-btn {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    .main-pages {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .page {
+      display: none;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .page.active { display: flex; }
+
+    .page-header {
+      padding: 2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 1.5rem;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .page-subtitle {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header {
+        padding: 1rem;
+      }
+
+      .page-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .page-subtitle {
+        font-size: 0.75rem;
+      }
+    }
+
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-content {
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-content {
+        padding: 1rem;
+        gap: 1rem;
+      }
+    }
+
+    .red-accent {
+      height: 3px;
+      background: var(--red);
+      width: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .current-issue {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2.5rem;
+      align-items: center;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(0,0,0,0.02));
+      border: 2px solid var(--red);
+    }
+
+    @media (max-width: 768px) {
+      .current-issue {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .current-issue {
+        gap: 1rem;
+        padding: 1rem;
+      }
+    }
+
+    .issue-cover {
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(0,0,0,0.05));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .issue-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .issue-info h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+    }
+
+    .issue-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .issue-date {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .issue-description {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 768px) {
+      .issue-info h2 {
+        font-size: 0.6rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .issue-number {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .issue-date {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+      }
+
+      .issue-description {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .issue-info h2 {
+        font-size: 0.55rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .issue-number {
+        font-size: 2rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .issue-date {
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .issue-description {
+        font-size: 0.8rem;
+        line-height: 1.5;
+      }
+    }
+
+    .featured-section {
+      margin-top: 2rem;
+      width: 100%;
+    }
+
+    .featured-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    @media (max-width: 768px) {
+      .featured-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .featured-section {
+        margin-top: 1rem;
+      }
+
+      .featured-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .posts-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .posts-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+    }
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .post-card:hover { background: rgba(0,0,0,0.04); }
+
+    @media (max-width: 768px) {
+      .post-card {
+        gap: 0.8rem;
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .post-card {
+        gap: 0.6rem;
+        padding: 0.8rem;
+      }
+    }
+
+    .post-card-image {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(0,0,0,0.02));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .post-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-card-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .post-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .post-card-excerpt {
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-light);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .post-card-title {
+        font-size: 0.95rem;
+      }
+
+      .post-card-excerpt {
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .post-card-meta {
+        font-size: 0.55rem;
+      }
+
+      .post-card-title {
+        font-size: 0.85rem;
+      }
+
+      .post-card-excerpt {
+        font-size: 0.7rem;
+      }
+    }
+
+    .critics-compact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.4rem;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .critics-compact-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critics-compact-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .critic-card-compact {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      background: white;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      padding: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .critic-card-compact:hover {
+      border-color: #bbb;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .critic-card-compact-image {
+      position: relative;
+      width: 100%;
+      height: 155px;
+      background: #f5f5f5;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      flex-shrink: 0;
+    }
+
+    .critic-card-compact-image::before {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 0;
+      right: 0;
+      height: 40px;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .critic-card-compact-image.score-excellent::before {
+      background: #16a34a;
+    }
+
+    .critic-card-compact-image.score-good::before {
+      background: #ca8a04;
+    }
+
+    .critic-card-compact-image.score-poor::before {
+      background: #dc2626;
+    }
+
+    .critic-card-compact-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+    }
+
+    .score-badge-compact {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      z-index: 10;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .critic-card-compact:hover .score-badge-compact {
+      opacity: 1;
+    }
+
+    .score-number-compact {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.9rem;
+      color: white;
+      line-height: 1;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .score-max-compact {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      color: white;
+      margin-top: 0.35rem;
+      letter-spacing: 0.12em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      font-weight: 700;
+    }
+
+    .critic-card-compact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      padding: 1.15rem;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    .critic-card-compact-album {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: #0d0d0d;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+      letter-spacing: -0.4px;
+      margin-bottom: 0rem;
+    }
+
+    .critic-card-compact-artist {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: #999999;
+      text-transform: uppercase;
+      font-weight: 500;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 0.2rem;
+    }
+
+    .critic-card-compact-score-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.65rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid #f0f0f0;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .critic-score-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: white;
+      border-radius: 1px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .critic-score-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .critic-score-box.excellent {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    }
+
+    .critic-score-box.good {
+      background: linear-gradient(135deg, #ca8a04 0%, #b8860b 100%);
+    }
+
+    .critic-score-box.poor {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    }
+
+    .critic-score-box-value {
+      font-size: 1.65rem;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .critic-score-status {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.32rem 0.55rem;
+      border-radius: 2px;
+      color: white;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .critic-score-status.excellent {
+      background: #16a34a;
+    }
+
+    .critic-score-status.good {
+      background: #ca8a04;
+    }
+
+    .critic-score-status.poor {
+      background: #dc2626;
+    }
+
+    .critic-card-compact-text {
+      font-family: 'Lora', serif;
+      font-size: 0.78rem;
+      line-height: 1.38;
+      color: #555555;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .critic-card-compact .critic-score-distribution {
+      position: absolute;
+      bottom: 8px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      height: 3px;
+      width: calc(100% - 32px);
+      background: #eeeeee;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      border-radius: 1px;
+    }
+
+    .critic-score-distribution-fill {
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .critic-score-distribution.excellent .critic-score-distribution-fill {
+      background: #16a34a;
+    }
+
+    .critic-score-distribution.good .critic-score-distribution-fill {
+      background: #ca8a04;
+    }
+
+    .critic-score-distribution.poor .critic-score-distribution-fill {
+      background: #dc2626;
+    }
+
+    @media (max-width: 768px) {
+      .critic-card-compact {
+        height: auto;
+      }
+
+      .critic-card-compact-image {
+        height: 140px;
+      }
+
+      .critic-card-compact-image::before {
+        top: -14px;
+        height: 36px;
+      }
+
+      .critic-card-compact-info {
+        padding: 1rem;
+        gap: 0.3rem;
+      }
+
+      .critic-card-compact-album {
+        font-size: 0.98rem;
+      }
+
+      .critic-card-compact-artist {
+        font-size: 0.63rem;
+      }
+
+      .critic-card-compact-text {
+        font-size: 0.75rem;
+        line-height: 1.35;
+      }
+
+      .critic-score-box {
+        width: 48px;
+        height: 48px;
+        font-size: 1.55rem;
+      }
+
+      .critic-score-box-value {
+        font-size: 1.55rem;
+      }
+
+      .score-number-compact {
+        font-size: 2.4rem;
+      }
+
+      .score-max-compact {
+        font-size: 0.58rem;
+      }
+
+      .critic-score-distribution {
+        bottom: 7px;
+        left: 14px;
+        right: 14px;
+        width: calc(100% - 28px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critic-card-compact {
+        height: auto;
+      }
+
+      .critic-card-compact-image {
+        height: 130px;
+      }
+
+      .critic-card-compact-image::before {
+        top: -12px;
+        height: 32px;
+      }
+
+      .critic-card-compact-info {
+        padding: 0.9rem;
+        gap: 0.25rem;
+      }
+
+      .critic-card-compact-album {
+        font-size: 0.92rem;
+        margin-bottom: 0rem;
+      }
+
+      .critic-card-compact-artist {
+        font-size: 0.6rem;
+        margin-bottom: 0.15rem;
+      }
+
+      .critic-card-compact-score-row {
+        gap: 0.5rem;
+        padding-top: 0.55rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .critic-card-compact-text {
+        font-size: 0.72rem;
+        line-height: 1.33;
+      }
+
+      .critic-score-box {
+        width: 46px;
+        height: 46px;
+        font-size: 1.45rem;
+      }
+
+      .critic-score-box-value {
+        font-size: 1.45rem;
+      }
+
+      .critic-score-status {
+        font-size: 0.55rem;
+        padding: 0.28rem 0.48rem;
+      }
+
+      .score-number-compact {
+        font-size: 2.2rem;
+      }
+
+      .score-max-compact {
+        font-size: 0.55rem;
+        margin-top: 0.15rem;
+      }
+
+      .critic-score-distribution {
+        bottom: 6px;
+        left: 12px;
+        right: 12px;
+        width: calc(100% - 24px);
+        height: 3px;
+      }
+    }
+
+    .critic-review-page {
+      display: none;
+      flex-direction: column;
+      max-width: 750px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .critic-review-page.active {
+      display: flex;
+    }
+
+    .critic-review-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 2rem;
+    }
+
+    .critic-review-back-btn:hover {
+      gap: 0.8rem;
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-back-btn {
+        font-size: 0.65rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .critic-review-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .critic-review-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.1;
+      word-break: break-word;
+    }
+
+    .critic-review-artist {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    .critic-review-byline {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .critic-review-byline-author {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .critic-review-byline-date {
+      color: var(--text-light);
+    }
+
+    @media (max-width: 768px) {
+      .critic-review-title {
+        font-size: 2rem;
+      }
+
+      .critic-review-artist {
+        font-size: 1rem;
+      }
+
+      .critic-review-header {
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-title {
+        font-size: 1.5rem;
+      }
+
+      .critic-review-artist {
+        font-size: 0.9rem;
+      }
+
+      .critic-review-byline {
+        font-size: 0.7rem;
+        gap: 0.5rem;
+        padding-top: 1rem;
+      }
+
+      .critic-review-header {
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+
+    .critic-review-full-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(0,0,0,0.05));
+      border: 1px solid var(--border);
+      margin: 3rem 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .critic-review-full-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+      .critic-review-full-image {
+        margin: 2rem 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-full-image {
+        margin: 1.5rem 0;
+      }
+    }
+
+    .critic-review-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .critic-review-paragraph {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    @media (max-width: 768px) {
+      .critic-review-paragraph {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-body {
+        gap: 1.5rem;
+      }
+
+      .critic-review-paragraph {
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+    }
+
+    .news-article-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      display: none;
+      padding: 0 2.5rem;
+    }
+
+    .news-article-wrapper.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 3rem;
+      align-self: flex-start;
+    }
+
+    .article-back-btn:hover {
+      gap: 0.8rem;
+    }
+
+    .article-container {
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0 2rem;
+    }
+
+    .article-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+      text-align: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .article-category {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 800;
+      margin: 0;
+      padding-bottom: 0.5rem;
+    }
+
+    .article-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.1;
+      word-break: break-word;
+      margin: 0;
+      letter-spacing: -1px;
+    }
+
+    .article-subheadline {
+      font-family: 'Lora', serif;
+      font-size: 1.4rem;
+      color: #6b6b6b;
+      line-height: 1.7;
+      font-weight: 400;
+      font-style: italic;
+      margin: 0;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      flex-wrap: wrap;
+    }
+
+    .article-meta-author {
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .article-meta-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+      opacity: 0.7;
+    }
+
+    .article-hero-image {
+      width: 100%;
+      max-width: 900px;
+      margin: 3rem auto 0;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .article-hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+    }
+
+    @media (max-width: 768px) {
+      .news-article-wrapper {
+        padding: 0 1.5rem;
+      }
+
+      .article-container {
+        padding: 0 1rem;
+      }
+
+      .article-headline {
+        font-size: 2.5rem;
+      }
+
+      .article-subheadline {
+        font-size: 1.2rem;
+        max-width: 95%;
+      }
+
+      .article-header {
+        margin-bottom: 3rem;
+        gap: 1.2rem;
+        padding-bottom: 1.5rem;
+      }
+
+      .article-body {
+        margin-top: 3rem;
+        gap: 2rem;
+      }
+
+      .article-paragraph {
+        font-size: 1.1rem;
+        line-height: 2;
+      }
+
+      .article-meta {
+        font-size: 0.8rem;
+        gap: 1rem;
+        margin-top: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .news-article-wrapper {
+        padding: 0 1rem;
+      }
+
+      .article-container {
+        padding: 0 0.5rem;
+      }
+
+      .article-back-btn {
+        font-size: 0.65rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .article-headline {
+        font-size: 1.9rem;
+        line-height: 1.15;
+      }
+
+      .article-subheadline {
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 100%;
+      }
+
+      .article-header {
+        margin-bottom: 2.5rem;
+        gap: 1rem;
+        padding-bottom: 1.2rem;
+      }
+
+      .article-body {
+        margin-top: 2.5rem;
+        gap: 1.8rem;
+      }
+
+      .article-paragraph {
+        font-size: 1rem;
+        line-height: 1.9;
+      }
+
+      .article-category {
+        font-size: 0.65rem;
+        padding-bottom: 0.3rem;
+      }
+
+      .article-meta {
+        font-size: 0.75rem;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .article-meta-divider {
+        height: 12px;
+      }
+    }
+
+    .article-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .article-paragraph {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 2.1;
+      color: #2a2a2a;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    .article-paragraph.first-paragraph {
+      margin-top: 0;
+    }
+
+    .article-paragraph.first-paragraph::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.8rem;
+      font-weight: 900;
+      line-height: 0.75;
+      float: left;
+      margin-right: 0.15rem;
+      margin-top: 0.1rem;
+      color: var(--red);
+    }
+
+    @media (max-width: 768px) {
+      .article-paragraph.first-paragraph::first-letter {
+        font-size: 4rem;
+        line-height: 0.7;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .article-paragraph.first-paragraph::first-letter {
+        font-size: 3.5rem;
+        line-height: 0.65;
+        margin-right: 0.1rem;
+      }
+    }
+
+    .article-image {
+      width: calc(100% + 5rem);
+      margin-left: -2.5rem;
+      margin-right: -2.5rem;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(0,0,0,0.05));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+      .article-image {
+        width: calc(100% + 3rem);
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .article-image {
+        width: calc(100% + 2rem);
+        margin-left: -1rem;
+        margin-right: -1rem;
+        aspect-ratio: 16/9;
+      }
+    }
+
+    .article-quote-block {
+      margin: 4rem 0;
+      padding: 3rem 2.5rem;
+      padding-left: 3.5rem;
+      border-left: 6px solid var(--red);
+      background: linear-gradient(to right, rgba(220, 38, 38, 0.06), rgba(220, 38, 38, 0.02));
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
+    }
+
+    .article-quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.6;
+      font-style: italic;
+      margin: 0 0 1.2rem 0;
+      word-break: break-word;
+      letter-spacing: -0.4px;
+    }
+
+    .article-quote-attribution {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: #666;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .article-quote-block {
+        margin: 3rem 0;
+        padding: 2.5rem 2rem;
+        padding-left: 2.8rem;
+        border-left: 5px solid var(--red);
+      }
+
+      .article-quote-text {
+        font-size: 1.6rem;
+        line-height: 1.55;
+        margin-bottom: 1rem;
+      }
+
+      .article-quote-attribution {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .article-quote-block {
+        margin: 2.5rem 0;
+        padding: 2rem 1.5rem;
+        padding-left: 2rem;
+        border-left: 5px solid var(--red);
+      }
+
+      .article-quote-text {
+        font-size: 1.35rem;
+        line-height: 1.5;
+        margin-bottom: 0.9rem;
+      }
+
+      .article-quote-attribution {
+        font-size: 0.75rem;
+      }
+    }
+
+    .admin-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      background: #f9f9f9;
+    }
+
+    .admin-sidebar {
+      width: 240px;
+      background: #1a1a1a;
+      border-right: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .admin-sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #333;
+    }
+
+    .admin-sidebar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: white;
+      margin: 0;
+    }
+
+    .admin-sidebar-section {
+      padding: 0.75rem 0;
+    }
+
+    .admin-sidebar-section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 700;
+      padding: 0.5rem 1.5rem;
+      margin: 0;
+    }
+
+    .admin-sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: #999;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .admin-sidebar-link:hover {
+      background: rgba(220, 38, 38, 0.1);
+      color: #dc2626;
+    }
+
+    .admin-sidebar-link.active {
+      background: rgba(220, 38, 38, 0.15);
+      color: #dc2626;
+      border-left-color: #dc2626;
+      font-weight: 600;
+    }
+
+    .admin-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .admin-header {
+      padding: 2rem 2.5rem;
+      background: white;
+      border-bottom: 1px solid #e5e5e5;
+      flex-shrink: 0;
+    }
+
+    .admin-header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .admin-header-subtitle {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    .admin-panel {
+      display: none;
+      flex: 1;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .admin-sidebar {
+        width: 200px;
+      }
+
+      .admin-header {
+        padding: 1.5rem;
+      }
+
+      .admin-header-title {
+        font-size: 1.4rem;
+      }
+
+      .admin-panel {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-workspace {
+        flex-direction: row;
+        overflow: hidden;
+      }
+
+      .admin-sidebar {
+        width: clamp(140px, 38vw, 190px);
+        flex-shrink: 0;
+        overflow-y: auto;
+        border-right: 1px solid #333;
+        border-bottom: none;
+      }
+
+      .admin-main {
+        flex: 1;
+        min-width: 0;
+        overflow-y: auto;
+      }
+
+      .admin-header {
+        padding: 1rem;
+      }
+
+      .admin-header-title {
+        font-size: 1.2rem;
+      }
+
+      .admin-header-subtitle {
+        font-size: 0.8rem;
+      }
+
+      .admin-panel {
+        padding: 1rem;
+      }
+    }
+
+    .admin-content {
+      flex: 1;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .admin-grid-primary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .admin-grid-secondary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .admin-section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 700;
+      margin-bottom: -1rem;
+    }
+
+    .form-card {
+      padding: 2.5rem;
+      background: white;
+      border: 1px solid #d8d8d8;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .form-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      border-color: #c0c0c0;
+      transform: translateY(-2px);
+    }
+
+    .form-card.primary-action {
+      border-left: 4px solid var(--red);
+      background: linear-gradient(to bottom right, rgba(255, 255, 255, 1), rgba(220, 38, 38, 0.01));
+    }
+
+    .form-card.secondary-action {
+      border-left: 4px solid #9ca3af;
+      background: linear-gradient(to bottom right, rgba(255, 255, 255, 1), rgba(156, 163, 175, 0.02));
+    }
+
+    .form-card.data-load {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), rgba(255, 255, 255, 1));
+      border-left: 4px solid #22c55e;
+    }
+
+    @media (max-width: 1024px) {
+      .admin-grid-secondary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .admin-content {
+        padding: 1.5rem;
+        gap: 2rem;
+      }
+
+      .admin-grid-primary {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-grid-secondary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-card {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-content {
+        padding: 1rem;
+        gap: 1.5rem;
+      }
+
+      .admin-grid-primary {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-grid-secondary {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-section-label {
+        font-size: 0.65rem;
+      }
+
+      .form-card {
+        padding: 1rem;
+      }
+    }
+
+    .form-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 1.5rem;
+      word-break: break-word;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(220, 38, 38, 0.15);
+      letter-spacing: -0.3px;
+    }
+
+    @media (max-width: 768px) {
+      .form-card-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-card-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    .form-section-divider {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 800;
+      margin: 0;
+      padding: 0.7rem 1rem;
+      background: linear-gradient(to right, rgba(220, 38, 38, 0.05), rgba(220, 38, 38, 0.01));
+      border-left: 3px solid var(--red);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-section-divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--red);
+      box-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .form-group {
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    .form-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #333;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-label {
+        font-size: 0.65rem;
+      }
+    }
+
+    .form-input, .form-textarea, .form-select {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid #d0d0d0;
+      background: white;
+      color: var(--text);
+      transition: all 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 2px;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--red);
+      background: rgba(220, 38, 38, 0.03);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+    }
+
+    @media (max-width: 480px) {
+      .form-input, .form-textarea, .form-select {
+        font-size: 0.85rem;
+        padding: 0.7rem;
+      }
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-input-hint {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      color: #888;
+      font-style: italic;
+      line-height: 1.5;
+      margin-top: 0.4rem;
+      padding-left: 0.5rem;
+      border-left: 2px solid rgba(220, 38, 38, 0.2);
+      background: rgba(220, 38, 38, 0.02);
+      padding: 0.5rem 0.7rem;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      border: 2px dashed var(--border);
+      background: rgba(220, 38, 38, 0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      user-select: none;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--red);
+      background: rgba(220, 38, 38, 0.05);
+      color: var(--red);
+    }
+
+    @media (max-width: 480px) {
+      .file-input-label {
+        padding: 1rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    .image-preview {
+      margin-top: 1rem;
+      max-height: 150px;
+      border: 1px solid var(--border);
+      display: none;
+      overflow: hidden;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .clear-image-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 30px;
+      height: 30px;
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .clear-image-btn:hover {
+      background: #b91c1c;
+      transform: scale(1.1);
+    }
+
+    .form-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--red);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    .form-btn:hover { opacity: 0.9; }
+
+    .form-btn.loading {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 480px) {
+      .form-btn {
+        padding: 0.8rem;
+        font-size: 0.65rem;
+      }
+    }
+
+    .status-message {
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+      width: 100%;
+      box-sizing: border-box;
+      word-break: break-word;
+    }
+
+    .status-message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      display: block;
+    }
+
+    .status-message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      display: block;
+    }
+
+    /* Modal Styles */
+    .demo-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .demo-modal-overlay.active {
+      display: flex;
+    }
+
+    .demo-modal {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .demo-modal-header {
+      padding: 1.5rem;
+      border-bottom: 2px solid var(--red);
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(0,0,0,0.02));
+    }
+
+    .demo-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-modal-subtitle {
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .demo-modal-body {
+      padding: 1.5rem;
+    }
+
+    .demo-option {
+      padding: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .demo-option:hover {
+      border-color: var(--red);
+      background: rgba(220, 38, 38, 0.03);
+      transform: translateX(3px);
+    }
+
+    .demo-option-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .demo-option-icon {
+      font-size: 1.2rem;
+    }
+
+    .demo-option-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-option-desc {
+      font-family: 'Lora', serif;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-left: 2rem;
+    }
+
+    .demo-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .demo-modal-btn {
+      padding: 0.75rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .demo-modal-btn.secondary {
+      background: #f5f5f5;
+      color: var(--text);
+    }
+
+    .demo-modal-btn.secondary:hover {
+      background: #e5e5e5;
+    }
+
+    .demo-modal-btn.primary {
+      background: var(--red);
+      color: white;
+    }
+
+    .demo-modal-btn.primary:hover {
+      opacity: 0.9;
+    }
+
+    .demo-modal-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Demo Manager Styles */
+    .demo-manager {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(0,0,0,0.02));
+      border: 2px solid #3b82f6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-manager-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .demo-manager-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #1e40af;
+    }
+
+    .demo-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .demo-stat {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .demo-stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .demo-stat-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+    }
+
+    .demo-log {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 0.75rem;
+      max-height: 120px;
+      overflow-y: auto;
+      font-family: 'DM Sans', monospace;
+      font-size: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .demo-log-entry {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .demo-log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .demo-log-time {
+      color: var(--text-light);
+      margin-right: 0.5rem;
+    }
+
+    .demo-log-success {
+      color: #16a34a;
+    }
+
+    .demo-log-error {
+      color: #dc2626;
+    }
+
+    .demo-progress {
+      background: #f5f5f5;
+      border-radius: 4px;
+      height: 32px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .demo-progress.active {
+      display: block;
+    }
+
+    .demo-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transition: width 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 480px) {
+      .demo-modal {
+        max-width: 100%;
+        margin: 0.5rem;
+      }
+
+      .demo-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .status-message {
+        font-size: 0.75rem;
+        padding: 0.8rem;
+      }
+    }
+
+    .posts-management-section {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #d1d5db;
+      padding: 2rem;
+      width: 100%;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 480px) {
+      .posts-management-section {
+        padding: 1rem;
+      }
+    }
+
+    .posts-management-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      word-break: break-word;
+    }
+
+    @media (max-width: 480px) {
+      .posts-management-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    .posts-management-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .posts-management-tab-btn {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+
+    .posts-management-tab-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .posts-management-tab-btn.active {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+    }
+
+    @media (max-width: 480px) {
+      .posts-management-tab-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.6rem;
+      }
+    }
+
+    .posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .post-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      background: #f9f9f9;
+      border: 1px solid var(--border);
+      gap: 1rem;
+    }
+
+    .post-item-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .post-item-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+      word-break: break-word;
+    }
+
+    .post-item-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      color: var(--text-light);
+    }
+
+    .post-item-delete-btn {
+      width: 32px;
+      height: 32px;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: bold;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .post-item-delete-btn:hover {
+      background: #fecaca;
+      color: #7f1d1d;
+    }
+
+    .post-item-delete-btn.loading {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 480px) {
+      .post-item {
+        padding: 0.6rem;
+        gap: 0.5rem;
+      }
+
+      .post-item-title {
+        font-size: 0.75rem;
+      }
+
+      .post-item-meta {
+        font-size: 0.6rem;
+      }
+
+      .post-item-delete-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+      }
+    }
+
+    .card-date {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      color: var(--text-light);
+    }
+
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .feed {
+        gap: 1rem;
+      }
+    }
+
+    .interview-card {
+      padding: 1.5rem;
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .interview-card:hover { background: rgba(0,0,0,0.04); }
+
+    @media (max-width: 480px) {
+      .interview-card {
+        padding: 1rem;
+      }
+    }
+
+    .interview-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .interview-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      word-break: break-word;
+    }
+
+    .interview-guest {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-bottom: 0.8rem;
+    }
+
+    .interview-excerpt {
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-light);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .interview-title {
+        font-size: 0.95rem;
+      }
+
+      .interview-excerpt {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .interview-label {
+        font-size: 0.6rem;
+      }
+
+      .interview-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .interview-guest {
+        font-size: 0.65rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .interview-excerpt {
+        font-size: 0.75rem;
+      }
+    }
+
+    .chart-item {
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+      width: 100%;
+    }
+
+    .chart-item:last-child {
+      border-bottom: none;
+    }
+
+    .chart-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: rgba(0,0,0,0.1);
+      line-height: 1;
+    }
+
+    .chart-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 0;
+    }
+
+    .chart-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .chart-artist {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      color: var(--text-light);
+      letter-spacing: 0.05em;
+      word-break: break-word;
+    }
+
+    @media (max-width: 768px) {
+      .chart-item {
+        grid-template-columns: 40px 1fr;
+        gap: 0.8rem;
+        padding-bottom: 0.8rem;
+      }
+
+      .chart-number {
+        font-size: 1.4rem;
+      }
+
+      .chart-title {
+        font-size: 0.85rem;
+      }
+
+      .chart-artist {
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .chart-item {
+        grid-template-columns: 35px 1fr;
+        gap: 0.6rem;
+        padding-bottom: 0.6rem;
+      }
+
+      .chart-number {
+        font-size: 1.1rem;
+      }
+
+      .chart-title {
+        font-size: 0.75rem;
+      }
+
+      .chart-artist {
+        font-size: 0.6rem;
+      }
+    }
+
+    .news-divider {
+      height: 2px;
+      background: linear-gradient(to right, var(--red), rgba(220, 38, 38, 0.3), transparent);
+      margin: 3rem 0 2rem 0;
+    }
+
+    @media (max-width: 480px) {
+      .news-divider {
+        margin: 2rem 0 1.5rem 0;
+      }
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .news-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .news-card-item {
+      padding: 1.2rem;
+      background: rgba(0,0,0,0.02);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .news-card-item:hover {
+      background: rgba(0,0,0,0.04);
+      border-color: var(--red);
+    }
+
+    @media (max-width: 480px) {
+      .news-card-item {
+        padding: 1rem;
+        gap: 0.6rem;
+      }
+    }
+
+    .featured-news-box {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 3rem;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(0,0,0,0.02));
+      border: 2px solid var(--red);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .featured-news-box:hover {
+      box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .featured-news-box {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .featured-news-box {
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+      }
+    }
+
+    .featured-news-image-box {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(0,0,0,0.05));
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .featured-news-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-news-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: white;
+      background: var(--red);
+      padding: 0.5rem 0.8rem;
+      width: fit-content;
+      font-weight: 700;
+    }
+
+    .featured-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.15;
+      word-break: break-word;
+    }
+
+    .featured-subtitle-text {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .featured-excerpt-text {
+      font-family: 'Lora', serif;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .featured-headline {
+        font-size: 1.4rem;
+      }
+
+      .featured-subtitle-text {
+        font-size: 0.9rem;
+      }
+
+      .featured-excerpt-text {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .featured-headline {
+        font-size: 1.1rem;
+      }
+
+      .featured-subtitle-text {
+        font-size: 0.8rem;
+      }
+
+      .featured-excerpt-text {
+        font-size: 0.8rem;
+      }
+
+      .featured-badge {
+        font-size: 0.6rem;
+        padding: 0.4rem 0.6rem;
+      }
+
+      .featured-meta {
+        font-size: 0.65rem;
+        gap: 0.6rem;
+      }
+    }
+  </style>
+ </head>
+ <body class="h-full">
+  <div class="cms-wrapper">
+   <div class="cms-container">
+    <div class="hero-header" id="hero-header">
+     <div class="hero-content"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Rolling_Stone_logo.svg" alt="Rolling Stone" class="hero-logo" loading="lazy" onerror="this.alt='ROLLING STONE';">
+     </div>
+    </div>
+    <nav class="footer-nav" id="nav-bar">
+     <div class="nav-links" id="nav-links"><button type="button" class="nav-btn active" data-page="home">Home</button> <button type="button" class="nav-btn" data-page="critics">Critics</button> <button type="button" class="nav-btn" data-page="news">News</button> <button type="button" class="nav-btn" data-page="interviews">Interviews</button> <button type="button" class="nav-btn" data-page="charts">Charts</button> <button type="button" class="nav-btn" data-page="admin">Admin</button>
+     </div>
+    </nav>
+    <div class="main-pages">
+     <div class="page active" id="page-home">
+      <div class="page-content">
+       <div class="current-issue">
+        <div class="issue-cover" id="issue-cover">
+         [Capa da Revista]
+        </div>
+        <div class="issue-info">
+         <h2>Current Issue</h2>
+         <div class="issue-number" id="issue-number">
+          47
+         </div>
+         <div class="issue-date" id="issue-date">
+          February 2025
+         </div>
+         <p class="issue-description" id="issue-description">The definitive voice in rock, pop, country and music culture.</p>
+        </div>
+       </div>
+       <div class="featured-section">
+        <h2 class="featured-title">This Week's Selection</h2>
+        <div class="posts-grid" id="latest-grid"></div>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-critics">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">Album Reviews</h1>
+       <p class="page-subtitle">Our latest critical takes on new releases</p>
+      </div>
+      <div class="page-content">
+       <div class="critics-compact-grid" id="critics-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-critic-review">
+      <div class="page-content"><button class="critic-review-back-btn" onclick="backToCritics()">â† Back to Reviews</button>
+       <div class="critic-review-page" id="critic-review-wrapper"></div>
+      </div>
+     </div>
+     <div class="page" id="page-news">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">Breaking News</h1>
+       <p class="page-subtitle">Industry updates and announcements</p>
+      </div>
+      <div class="page-content">
+       <div class="feed" id="news-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-news-article">
+      <div class="page-content">
+       <div class="news-article-wrapper" id="news-article-wrapper"><button class="article-back-btn" onclick="goToNewsListing()">â† Back to News</button>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-interviews">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">In Conversation</h1>
+       <p class="page-subtitle">Exclusive interviews with artists and industry leaders</p>
+      </div>
+      <div class="page-content">
+       <div class="feed" id="interviews-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-interviews-article">
+      <div class="page-content">
+       <div class="news-article-wrapper" id="interviews-article-wrapper"><button class="article-back-btn" onclick="goToInterviewsListing()">â† Back to Interviews</button>
+       </div>
+      </div>
+     </div>
+     <div class="page" id="page-charts">
+      <div class="page-header">
+       <div class="red-accent"></div>
+       <h1 class="page-title">The Hot 100</h1>
+       <p class="page-subtitle">This week's definitive ranking</p>
+      </div>
+      <div class="page-content">
+       <div id="charts-feed"></div>
+      </div>
+     </div>
+     <div class="page" id="page-admin">
+      <div class="admin-workspace">
+       <!-- ADMIN SIDEBAR -->
+       <div class="admin-sidebar">
+        <div class="admin-sidebar-header">
+         <h2 class="admin-sidebar-title">Admin Panel</h2>
+         <div style="background: #16a34a; color: white; padding: 0.35rem 0.75rem; font-family: 'Courier New', monospace; font-size: 0.65rem; font-weight: bold; margin-top: 0.5rem; border-radius: 0.25rem; display: inline-block;">âœ“ NEW</div>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Publish</div>
+         <button class="admin-sidebar-link active" data-admin-section="review">â­ Review</button>
+         <button class="admin-sidebar-link" data-admin-section="news">ðŸ“° News</button>
+         <button class="admin-sidebar-link" data-admin-section="interview">ðŸŽ¤ Interview</button>
+         <button class="admin-sidebar-link" data-admin-section="chart">ðŸŽµ Chart</button>
+         <button class="admin-sidebar-link" data-admin-section="cover">ðŸ–¼ï¸ Cover</button>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Manage</div>
+         <button class="admin-sidebar-link" data-admin-section="posts">ðŸ“‚ Posts</button>
+        </div>
+        <div class="admin-sidebar-section">
+         <div class="admin-sidebar-section-title">Demo</div>
+         <button class="admin-sidebar-link" data-admin-section="demo">ðŸŽ¬ Demo</button>
+        </div>
+        
+        <!-- Admin Log in Sidebar -->
+        <div style="margin: 1rem; padding: 0.75rem; background: #0a0a0a; border-radius: 0.25rem; border: 1px solid #333; flex-shrink: 0;">
+         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <div style="font-size: 0.7rem; font-weight: 700; color: #ef4444; letter-spacing: 0.05em;">ADMIN LOG</div>
+          <button type="button" onclick="clearAdminLog()" style="padding: 0.2rem 0.5rem; background: #1a1a1a; color: #666; border: none; border-radius: 0.2rem; font-size: 0.65rem; cursor: pointer;">Clear</button>
+         </div>
+         <div id="admin-log" style="max-height: 150px; overflow-y: auto; font-size: 0.7rem; font-family: 'Courier New', monospace; color: #666; line-height: 1.4;">
+          <div style="color: #6b7280;">Ready...</div>
+         </div>
+        </div>
+       </div>
+
+       <!-- ADMIN MAIN CONTENT -->
+       <div class="admin-main">
+        
+        <!-- PANEL: REVIEW -->
+        <div class="admin-panel active" id="admin-panel-review">
+         <div style="padding: 2.5rem;">
+          <div style="margin-bottom: 2rem;">
+           <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">â­ Publish Critic Review</h1>
+           <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish album reviews</p>
+          </div>
+          <form id="critic-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-image">Album Cover Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="critic-image">ðŸ“¸ Click to select image</label> <input type="file" class="file-input" id="critic-image" accept="image/*">
+                <div class="image-preview" id="critic-preview">
+                 <img id="critic-preview-img" src="">
+                </div>
+               </div>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Album Header
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-album">Album Title</label> <input type="text" class="form-input" id="critic-album" placeholder="Album title appears as large serif headline" required>
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-artist">Artist Name</label> <input type="text" class="form-input" id="critic-artist" placeholder="Artist name appears below title" required>
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-score">Score (0-10)</label> <input type="number" class="form-input" id="critic-score" placeholder="8.5" step="0.1" min="0" max="10" required>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Review Content
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-review">Opening Paragraph</label> <textarea class="form-textarea" id="critic-review" placeholder="First paragraph (will get drop cap styling automatically)" required></textarea>
+               <p class="form-input-hint">The first letter will be styled as a large red drop cap.</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="critic-author">Author Name</label> <input type="text" class="form-input" id="critic-author" placeholder="Your name" required>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="critic-btn" onclick="publishCritic(event)" style="margin-top: 2rem;">Publish Review</button>
+            <div class="status-message" id="critic-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: NEWS -->
+         <div class="admin-panel" id="admin-panel-news">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸ“° Publish News Article</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish news articles</p>
+           </div>
+           <form id="news-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="news-image">Article Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="news-image">ðŸ“¸ Click to select image</label> <input type="file" class="file-input" id="news-image" accept="image/*">
+                <div class="image-preview" id="news-preview">
+                 <img id="news-preview-img" src="">
+                </div>
+               </div>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Article Header
+              </div>
+              <div class="form-group"><label class="form-label" for="news-category">Category Label</label> <select class="form-select" id="news-category" required> <option value="">Select category</option> <option value="BREAKING">BREAKING</option> <option value="EXCLUSIVE">EXCLUSIVE</option> <option value="UPDATE">UPDATE</option> <option value="DEVELOPING">DEVELOPING</option> <option value="FEATURE">FEATURE</option> </select>
+               <p class="form-input-hint">ðŸ“Œ Appears as bold uppercase label above the headline (e.g., BREAKING, EXCLUSIVE)</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="news-headline">Headline</label> <input type="text" class="form-input" id="news-headline" placeholder="e.g., Taylor Swift Announces Massive Stadium Tour" required>
+               <p class="form-input-hint">ðŸ’¡ Large serif font, centered, bold â€” the main story title</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="news-subtitle">Subtitle</label> <input type="text" class="form-input" id="news-subtitle" placeholder="e.g., The Eras Tour will span 52 dates across North America" required>
+               <p class="form-input-hint">âœï¸ Italic, lighter weight â€” supporting context for the headline</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Article Content
+              </div>
+              <div class="form-group"><label class="form-label" for="news-content">Article Body</label> <textarea class="form-textarea" id="news-content" placeholder="e.g., Taylor Swift has announced her most ambitious tour yet, spanning multiple eras of her discography. Fans can expect to hear hits from 'Fearless' all the way to 'Midnights' in a three-hour extravaganza.
+
+Use double line breaks to create new paragraphs. Each paragraph will have proper spacing." required style="min-height: 180px;"></textarea>
+               <p class="form-input-hint">ðŸ…°ï¸ First letter automatically becomes a large drop cap â€” write naturally, separate paragraphs with double line breaks</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Highlight Quote (Optional)
+              </div>
+              <div class="form-group"><label class="form-label" for="news-quote">Pull Quote</label> <textarea class="form-textarea" id="news-quote" placeholder="e.g., I've said everything I need to say with this character" style="min-height: 90px;"></textarea>
+               <p class="form-input-hint">ðŸ’¬ Optional â€” highlight a key insight or memorable quote in a styled block</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="news-author">Author Name</label> <input type="text" class="form-input" id="news-author" placeholder="e.g., Sarah Mitchell" required>
+               <p class="form-input-hint">âœ’ï¸ Byline attribution â€” appears below headline</p>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="news-btn" onclick="publishNews(event)" style="margin-top: 2rem;">Publish Article</button>
+            <div class="status-message" id="news-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!--PANEL: INTERVIEW -->
+         <div class="admin-panel" id="admin-panel-interview">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸŽ¤ Publish Interview</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish interviews</p>
+           </div>
+           <form id="interview-form">
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+             <div style="display: flex; flex-direction: column; gap: 0.8rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Media
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-image">Interview Image</label>
+               <div class="file-input-wrapper"><label class="file-input-label" for="interview-image">ðŸ“¸ Click to select image</label> <input type="file" class="file-input" id="interview-image" accept="image/*">
+                <div class="image-preview" id="interview-preview">
+                 <img id="interview-preview-img" src="">
+                </div>
+               </div>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Interview Header
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-guest">Guest Name</label> <input type="text" class="form-input" id="interview-guest" placeholder="e.g., Billie Eilish" required>
+               <p class="form-input-hint">ðŸŽ¤ The artist or person being interviewed</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-title">Interview Title</label> <input type="text" class="form-input" id="interview-title" placeholder="e.g., Billie Eilish on Growing Up in Public" required>
+               <p class="form-input-hint">ðŸ’¡ Large serif headline â€” the main interview title</p>
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-subtitle">Subtitle</label> <input type="text" class="form-input" id="interview-subtitle" placeholder="e.g., The pop icon discusses her evolution and new creative direction" required>
+               <p class="form-input-hint">âœï¸ Italic tagline â€” supporting context</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Interview Content
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-content">Interview Body</label> <textarea class="form-textarea" id="interview-content" placeholder="e.g., Five years after 'When We All Fall Asleep,' Billie Eilish reflects on fame, mental health, and artistic growth. 'I'm not the same person I was at 17,' she explains.
+
+Use double line breaks to create new paragraphs for better readability." required style="min-height: 180px;"></textarea>
+               <p class="form-input-hint">ðŸ…°ï¸ First letter automatically becomes a drop cap â€” write interview narrative naturally</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
+              <div class="form-section-divider">
+               Key Quote (Optional)
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-quote">Key Quote</label> <textarea class="form-textarea" id="interview-quote" placeholder="e.g., I'm not the same person I was at 17. This album is about accepting change." style="min-height: 90px;"></textarea>
+               <p class="form-input-hint">ðŸ’¬ Optional â€” featured quote from the guest in a styled highlight block</p>
+              </div>
+             </div>
+             <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="form-section-divider">
+               Byline
+              </div>
+              <div class="form-group"><label class="form-label" for="interview-author">Author Name</label> <input type="text" class="form-input" id="interview-author" placeholder="e.g., Amanda Foster" required>
+               <p class="form-input-hint">âœ’ï¸ Interviewer byline â€” appears below headline</p>
+              </div>
+             </div>
+            </div><button type="button" class="form-btn" id="interview-btn" onclick="publishInterview(event)" style="margin-top: 2rem;">Publish Interview</button>
+            <div class="status-message" id="interview-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: CHART -->
+         <div class="admin-panel" id="admin-panel-chart">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸŽµ Publish Chart</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the Hot 100 chart (minimum 10 songs)</p>
+           </div>
+           <form id="chart-form">
+            <div class="form-group"><label class="form-label" for="chart-song-1">Song #1</label> <input type="text" class="form-input" id="chart-song-1" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-2">Song #2</label> <input type="text" class="form-input" id="chart-song-2" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-3">Song #3</label> <input type="text" class="form-input" id="chart-song-3" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-4">Song #4</label> <input type="text" class="form-input" id="chart-song-4" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-5">Song #5</label> <input type="text" class="form-input" id="chart-song-5" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-6">Song #6</label> <input type="text" class="form-input" id="chart-song-6" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-7">Song #7</label> <input type="text" class="form-input" id="chart-song-7" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-8">Song #8</label> <input type="text" class="form-input" id="chart-song-8" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-9">Song #9</label> <input type="text" class="form-input" id="chart-song-9" placeholder="Title - Artist" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="chart-song-10">Song #10</label> <input type="text" class="form-input" id="chart-song-10" placeholder="Title - Artist" required>
+            </div><button type="button" class="form-btn" id="chart-btn" onclick="publishChart(event)">Publish</button>
+            <div class="status-message" id="chart-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: COVER -->
+         <div class="admin-panel" id="admin-panel-cover">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸ–¼ï¸ Update Cover</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the magazine cover image and details</p>
+           </div>
+           <form id="cover-form">
+            <div class="form-group"><label class="form-label" for="cover-image">Upload Cover Image</label>
+             <div class="file-input-wrapper"><label class="file-input-label" for="cover-image">ðŸ“¸ Click to select image</label> <input type="file" class="file-input" id="cover-image" accept="image/*">
+              <div class="image-preview" id="cover-preview">
+               <img id="cover-preview-img" src="">
+              </div>
+             </div>
+            </div>
+            <div class="form-group"><label class="form-label" for="cover-issue">Issue Number</label> <input type="text" class="form-input" id="cover-issue" placeholder="47" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="cover-date">Issue Date</label> <input type="text" class="form-input" id="cover-date" placeholder="February 2025" required>
+            </div>
+            <div class="form-group"><label class="form-label" for="cover-description">Description</label> <textarea class="form-textarea" id="cover-description" placeholder="Issue description..." required></textarea>
+            </div><button type="button" class="form-btn" id="cover-btn" onclick="publishCover(event)">Update Cover</button>
+            <div class="status-message" id="cover-status"></div>
+           </form>
+          </div>
+         </div>
+
+         <!-- PANEL: POSTS -->
+         <div class="admin-panel" id="admin-panel-posts">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸ“‚ Manage Posts</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">View and manage published content</p>
+           </div>
+           <div class="posts-management-tabs"><button type="button" class="posts-management-tab-btn active" data-filter="all">All</button> <button type="button" class="posts-management-tab-btn" data-filter="critic">Critics</button> <button type="button" class="posts-management-tab-btn" data-filter="news">News</button> <button type="button" class="posts-management-tab-btn" data-filter="interview">Interviews</button> <button type="button" class="posts-management-tab-btn" data-filter="chart">Charts</button>
+           </div>
+           <div class="posts-list" id="posts-management-list"></div>
+          </div>
+         </div>
+
+         <!-- PANEL: DEMO -->
+         <div class="admin-panel" id="admin-panel-demo">
+          <div style="padding: 2.5rem;">
+           <div style="margin-bottom: 2rem;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">ðŸŽ¬ Demo Content</h1>
+            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Test and seed the site with demo content</p>
+           </div>
+
+           <!-- Demo Manager -->
+           <div class="demo-manager" id="demo-manager" style="display: none;">
+            <div class="demo-manager-header">
+             <span style="font-size: 1.2rem;">ðŸŽ¬</span>
+             <span class="demo-manager-title">Demo Content Manager</span>
+            </div>
+            <div class="demo-stats">
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-critics">0</div>
+              <div class="demo-stat-label">Critics</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-news">0</div>
+              <div class="demo-stat-label">News</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-interviews">0</div>
+              <div class="demo-stat-label">Interviews</div>
+             </div>
+             <div class="demo-stat">
+              <div class="demo-stat-value" id="demo-count-charts">0</div>
+              <div class="demo-stat-label">Charts</div>
+             </div>
+            </div>
+            <div class="demo-progress" id="demo-progress">
+             <div class="demo-progress-bar" id="demo-progress-bar" style="width: 0%;">0%</div>
+            </div>
+            <div class="demo-log" id="demo-log">
+             <div class="demo-log-entry">
+              <span class="demo-log-time">--:--:--</span>
+              <span>Ready to publish demo content...</span>
+             </div>
+            </div>
+            <button type="button" class="form-btn" onclick="deleteDemoContent()" style="background: linear-gradient(135deg, #dc2626, #ef4444); margin-top: 0;">ðŸ—‘ï¸ Delete All Demo Content</button>
+           </div>
+
+           <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="form-card data-load">
+             <div class="form-card-title" style="color: #16a34a; display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem 0;"><span style="font-size: 1.3rem;">ðŸš€</span> <span>Publish Demo Content</span>
+             </div>
+             <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">Creates demo posts in all sections for layout testing.</p>
+             <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+              <button type="button" class="form-btn" id="demo-publish-btn" onclick="openDemoModal()" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); margin-top: 0;">ðŸŽ¬ Run Test Publish</button>
+             </div>
+            </div>
+
+            <div class="form-card data-load">
+             <div class="form-card-title" style="color: #16a34a; display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem 0;"><span style="font-size: 1.3rem;">ðŸ§ª</span> <span>Load Test Data</span>
+             </div>
+             <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">Populate with sample critics, news, and interviews.</p>
+             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <button type="button" class="form-btn" id="test-data-btn" onclick="loadTestData(event)" style="background: linear-gradient(135deg, #16a34a, #22c55e); margin-top: 0;">Load Test Data</button>
+              <button type="button" class="form-btn" id="seed-demo-btn" onclick="seedDemoData()" style="background: linear-gradient(135deg, #3b82f6, #60a5fa); margin-top: 0;">ðŸŒ± Seed Demo</button>
+             </div>
+             <div class="status-message" id="test-data-status"></div>
+            </div>
+           </div>
+          </div>
+         </div>
+
+        </div><!-- end admin-main -->
+       </div><!-- end admin-workspace -->
+      </div><!-- end #page-admin -->
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- Demo Publish Modal -->
+  <div class="demo-modal-overlay" id="demo-modal-overlay" onclick="closeDemoModalOnOverlay(event)">
+   <div class="demo-modal" onclick="event.stopPropagation()">
+    <div class="demo-modal-header">
+     <h2 class="demo-modal-title">ðŸŽ¬ Publish Demo Content</h2>
+     <p class="demo-modal-subtitle">Choose how to populate your site with test content</p>
+    </div>
+    <div class="demo-modal-body">
+     <div class="demo-option" onclick="selectDemoOption('single')">
+      <div class="demo-option-header">
+       <span class="demo-option-icon">ðŸ“„</span>
+       <span class="demo-option-title">1 Item per Section</span>
+      </div>
+      <p class="demo-option-desc">Publishes one critic review, one news article, one interview, and one chart</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('multiple')">
+      <div class="demo-option-header">
+       <span class="demo-option-icon">ðŸ“š</span>
+       <span class="demo-option-title">3 Items per Section</span>
+      </div>
+      <p class="demo-option-desc">Publishes three items in each section for a fuller layout preview</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('dryrun')">
+      <div class="demo-option-header">
+       <span class="demo-option-icon">ðŸ‘ï¸</span>
+       <span class="demo-option-title">Dry Run (Preview Only)</span>
+      </div>
+      <p class="demo-option-desc">Simulates publishing and shows console logs without actually creating content</p>
+     </div>
+     <div class="demo-option" onclick="selectDemoOption('reset')" style="border-color: #dc2626;">
+      <div class="demo-option-header">
+       <span class="demo-option-icon">ðŸ—‘ï¸</span>
+       <span class="demo-option-title" style="color: #dc2626;">Reset Demo Content</span>
+      </div>
+      <p class="demo-option-desc">Deletes all demo posts (marked with isDemo: true)</p>
+     </div>
+    </div>
+    <div class="demo-modal-footer">
+     <button class="demo-modal-btn secondary" onclick="closeDemoModal()">Cancel</button>
+    </div>
+   </div>
+  </div>
+
+  <script defer src="./app.js"></script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd0fa18a63727e7',t:'MTc3MDk1MDU5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

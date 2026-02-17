@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "createdAt": "2026-02-17T00:34:03.308Z",
+  "updatedAt": "2026-02-17T05:53:59.230Z",
+  "items": [
+    {
+      "id": "critic_001",
+      "type": "critic",
+      "album": "The New Abnormal",
+      "artist": "The Strokes",
+      "score": 8.2,
+      "content": "A triumphant return from the NYC indie rock legends. Bold, confident, and packed with unforgettable hooks that showcase their mastery of modern rock songwriting.",
+      "author": "Rob Sheffield",
+      "coverImageUrl": "",
+      "publishedAt": "2026-02-11T10:00:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "critic_002",
+      "type": "critic",
+      "album": "Renaissance",
+      "artist": "Beyoncé",
+      "score": 9.1,
+      "content": "Beyoncé's dance odyssey is a masterclass in reinvention. House-inflected production paired with her incomparable vocals creates something both timeless and immediately now.",
+      "author": "Angie Martoccio",
+      "coverImageUrl": "",
+      "publishedAt": "2026-02-09T14:30:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "critic_003",
+      "type": "critic",
+      "album": "Midnights",
+      "artist": "Taylor Swift",
+      "score": 7.5,
+      "content": "An introspective exploration of sleepless nights and emotional turbulence. Swift balances vulnerability with pop sensibilities in this deeply personal work.",
+      "author": "Rob Sheffield",
+      "coverImageUrl": "",
+      "publishedAt": "2026-02-07T09:15:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "critic_004",
+      "type": "critic",
+      "album": "Un Verano Sin Ti",
+      "artist": "Bad Bunny",
+      "score": 8.8,
+      "content": "Bad Bunny delivers a sun-soaked masterpiece that transcends language barriers. Infectious rhythms meet heartfelt lyrics in this genre-defying album.",
+      "author": "Suzy Exposito",
+      "coverImageUrl": "",
+      "publishedAt": "2026-02-05T16:45:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "news_001",
+      "type": "news",
+      "category": "Breaking",
+      "headline": "Arctic Monkeys Announce World Tour",
+      "subtitle": "Sheffield rockers set to perform across 40+ cities in 2025",
+      "content": "Arctic Monkeys have announced an extensive world tour following the success of their latest album. The tour will span five continents and include performances at major festivals and venue shows. Fans can expect a mix of classic hits and new material from their critically acclaimed recent release.",
+      "pullQuote": "This is going to be our most ambitious tour yet",
+      "author": "Jon Dolan",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-12T08:00:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "news_002",
+      "type": "news",
+      "category": "Exclusive",
+      "headline": "Adele Talks New Album and Las Vegas Residency",
+      "subtitle": "The British superstar opens up about upcoming projects",
+      "content": "In an exclusive interview, Adele discusses her highly anticipated fourth studio album and confirms she will be returning to Las Vegas for an extended residency. She promises fans an even more intimate experience than her previous performances, with new arrangements and special guests.",
+      "pullQuote": "I want to push myself creatively in ways I've never done before",
+      "author": "Brittany Spanos",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-10T11:20:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "news_003",
+      "type": "news",
+      "category": "Update",
+      "headline": "Grammy Awards 2026: Complete Winners List",
+      "subtitle": "Record-breaking night sees diverse array of artists honored",
+      "content": "The 68th Annual Grammy Awards delivered surprises and historic moments. Taylor Swift became the first artist to win Album of the Year four times, while newcomers swept several major categories. The ceremony celebrated music's evolution and diversity across all genres.",
+      "pullQuote": "",
+      "author": "Jon Blistein",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-08T22:30:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "interview_001",
+      "type": "interview",
+      "guest": "Billie Eilish",
+      "title": "Billie Eilish on Growing Up in the Spotlight",
+      "subtitle": "The Grammy winner reflects on fame, family, and the future",
+      "content": "Billie Eilish has learned how to disappear in plain sight — not from fans, but from the noise that comes with being watched.\n\nQ: When did you first feel the spotlight change you?\n\nA: When I realized I was editing myself in real time. Like, even my silence had to be explained.\n\nQ: What does privacy look like for you now?\n\nA: It's less about hiding and more about having places where I don't perform — even emotionally.\n\nQ: How do you know when a song is finished?\n\nA: When the emotion stops asking for more. If I keep adding details, it's usually because I'm avoiding saying the simple truth.\n\nQ: Do you still write from the same place you started?\n\nA: The same place, but with better tools. I'm braver about letting things be ugly, or quiet.\n\nQ: What keeps you grounded?\n\nA: My family. And routines that are boring on purpose.\n\nQ: What are you chasing next?\n\nA: Space. More breathing room in the production, and more room in my life.",
+      "keyQuote": "I've learned to trust my instincts and not care what anyone else thinks about my music",
+      "author": "David Fricke",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-08T13:00:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "interview_002",
+      "type": "interview",
+      "guest": "The Weeknd",
+      "title": "The Weeknd On Creating The Weeknd Universe",
+      "subtitle": "How The Weeknd built a multimedia empire through music",
+      "content": "Abel Tesfaye discusses his creative vision and how he's built an interconnected universe across his albums, films, and performances. He talks about the inspiration behind his characters and the long-term narrative he's been crafting since his early mixtapes. His artistic ambition knows no bounds.",
+      "keyQuote": "Every album is another chapter in the story I'm telling",
+      "author": "David Fricke",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-06T15:45:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "interview_003",
+      "type": "interview",
+      "guest": "Kendrick Lamar",
+      "title": "Kendrick Lamar: The Art of Storytelling",
+      "subtitle": "Hip-hop's poet laureate on craft and legacy",
+      "content": "In a rare extended conversation, Kendrick Lamar breaks down his creative process and the responsibility he feels as one of hip-hop's most influential voices. He discusses the importance of authenticity and how his Compton roots continue to shape his worldview and artistry.",
+      "keyQuote": "The truth is the only currency that matters in this game",
+      "author": "Jeff Weiss",
+      "heroImageUrl": "assets/images/placeholder-hero.svg",
+      "publishedAt": "2026-02-04T10:30:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "id": "chart_001",
+      "type": "chart",
+      "chartTitle": "The Hot 15",
+      "issueNumber": 2026,
+      "entries": [
+        {
+          "position": 1,
+          "trackTitle": "As It Was",
+          "artist": "Harry Styles",
+          "movement": "same"
+        },
+        {
+          "position": 2,
+          "trackTitle": "Unholy",
+          "artist": "Sam Smith, Kim Petras",
+          "movement": "same"
+        },
+        {
+          "position": 3,
+          "trackTitle": "Anti-Hero",
+          "artist": "Taylor Swift",
+          "movement": "same"
+        },
+        {
+          "position": 4,
+          "trackTitle": "Calm Down",
+          "artist": "Rema & Selena Gomez",
+          "movement": "same"
+        },
+        {
+          "position": 5,
+          "trackTitle": "Flowers",
+          "artist": "Miley Cyrus",
+          "movement": "same"
+        },
+        {
+          "position": 6,
+          "trackTitle": "Vampire",
+          "artist": "Olivia Rodrigo",
+          "movement": "same"
+        },
+        {
+          "position": 7,
+          "trackTitle": "Snooze",
+          "artist": "SZA",
+          "movement": "same"
+        },
+        {
+          "position": 8,
+          "trackTitle": "Paint The Town Red",
+          "artist": "Doja Cat",
+          "movement": "same"
+        },
+        {
+          "position": 9,
+          "trackTitle": "Kill Bill",
+          "artist": "SZA",
+          "movement": "same"
+        },
+        {
+          "position": 10,
+          "trackTitle": "Cruel Summer",
+          "artist": "Taylor Swift",
+          "movement": "same"
+        },
+        {
+          "position": 11,
+          "trackTitle": "Espresso",
+          "artist": "Sabrina Carpenter",
+          "movement": "same"
+        },
+        {
+          "position": 12,
+          "trackTitle": "Too Sweet",
+          "artist": "Hozier",
+          "movement": "same"
+        },
+        {
+          "position": 13,
+          "trackTitle": "Stick Season",
+          "artist": "Noah Kahan",
+          "movement": "same"
+        },
+        {
+          "position": 14,
+          "trackTitle": "Houdini",
+          "artist": "Dua Lipa",
+          "movement": "same"
+        },
+        {
+          "position": 15,
+          "trackTitle": "Red Wine Supernova",
+          "artist": "Chappell Roan",
+          "movement": "same"
+        }
+      ],
+      "publishedAt": "2026-02-13T00:00:00.000Z",
+      "status": "published",
+      "isDemo": false
+    },
+    {
+      "publishedAt": "2026-02-17T00:34:47.964Z",
+      "type": "news",
+      "subtitle": "Persist?ncia em JSON",
+      "pullQuote": "Funciona!",
+      "category": "BREAKING",
+      "headline": "Teste de Publica��o Local",
+      "author": "Admin",
+      "heroImageUrl": "",
+      "content": "Este post foi criado via API local para validar persist?ncia.",
+      "status": "published",
+      "id": "news_0be2e8e09325ae93",
+      "createdAt": "2026-02-17T00:34:48.004Z",
+      "updatedAt": "2026-02-17T05:53:52.949Z"
+    }
+  ]
+}

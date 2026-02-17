@@ -1,0 +1,172 @@
+{
+  "_documentation": "API Payload Schemas for Rolling Stone CMS",
+  "_version": "1.1.0",
+  "_updated": "2026-02-17",
+  
+  "endpoints": {
+    "critic": "POST /v1/content/critic",
+    "news": "POST /v1/content/news",
+    "interview": "POST /v1/content/interview",
+    "chart": "POST /v1/content/chart"
+  },
+  
+  "schemas": {
+    "critic": {
+      "description": "Album review submission",
+      "example": {
+        "type": "critic",
+        "album": "The Dark Side of the Moon",
+        "artist": "Pink Floyd",
+        "score": 9.5,
+        "subtitle": "A blacklight classic that still hits",
+        "content": "A transcendent masterpiece that redefined the possibilities of rock music. The album's seamless flow and conceptual depth create an immersive listening experience.",
+        "pullQuote": "A once-in-a-lifetime record that never stops moving.",
+        "author": "Rob Sheffield",
+        "coverImageUrl": "assets/images/placeholder-hero.svg",
+        "timestamp": "2026-02-13T10:30:00.000Z"
+      },
+      "required_fields": ["album", "artist", "score", "content", "author"],
+      "optional_fields": ["subtitle", "pullQuote", "coverImageUrl"]
+    },
+    
+    "news": {
+      "description": "News article submission",
+      "example": {
+        "type": "news",
+        "category": "Breaking",
+        "headline": "Arctic Monkeys Announce Surprise Album",
+        "subtitle": "Sheffield band drops new record with zero promotion",
+        "content": "In an unprecedented move, Arctic Monkeys have released a surprise album with no prior announcement. The 12-track LP showcases the band's evolution while maintaining their signature sound.",
+        "pullQuote": "We wanted to let the music speak for itself",
+        "author": "Brittany Spanos",
+        "heroImageUrl": "assets/images/placeholder-hero.svg",
+        "timestamp": "2026-02-13T14:15:00.000Z"
+      },
+      "required_fields": ["category", "headline", "subtitle", "content", "author"],
+      "optional_fields": ["pullQuote", "heroImageUrl"]
+    },
+    
+    "interview": {
+      "description": "Artist interview submission",
+      "example": {
+        "type": "interview",
+        "title": "Kendrick Lamar on Art, Identity, and Legacy",
+        "subtitle": "The Pulitzer Prize winner reflects on his journey",
+        "guest": "Kendrick Lamar",
+        "content": "Kendrick Lamar sits in a minimalist studio, discussing the weight of expectation and the power of storytelling.\n\nQ: What changed the most for you after the Pulitzer?\n\nA: The silence — and what it forces you to hear.",
+        "keyQuote": "Every album is a different chapter in understanding myself",
+        "author": "David Fricke",
+        "heroImageUrl": "assets/images/placeholder-hero.svg",
+        "timestamp": "2026-02-13T16:45:00.000Z"
+      },
+      "required_fields": ["title", "subtitle", "guest", "content", "author"],
+      "optional_fields": ["keyQuote", "heroImageUrl"]
+    },
+    
+    "chart": {
+      "description": "Music chart submission (The Hot 15)",
+      "example": {
+        "type": "chart",
+        "title": "The Hot 15",
+        "issueNumber": "47",
+        "publishedAt": "2026-02-13T12:00:00.000Z",
+        "entries": [
+          {
+            "position": 1,
+            "title": "Anti-Hero",
+            "artist": "Taylor Swift"
+          },
+          {
+            "position": 2,
+            "title": "As It Was",
+            "artist": "Harry Styles"
+          },
+          {
+            "position": 3,
+            "title": "Flowers",
+            "artist": "Miley Cyrus"
+          },
+          {
+            "position": 4,
+            "title": "Calm Down",
+            "artist": "Rema & Selena Gomez"
+          },
+          {
+            "position": 5,
+            "title": "Unholy",
+            "artist": "Sam Smith & Kim Petras"
+          }
+        ],
+        "timestamp": "2026-02-13T12:00:00.000Z"
+      },
+      "required_fields": ["title", "entries"],
+      "optional_fields": ["issueNumber", "publishedAt"]
+    }
+  },
+  
+  "common_fields": {
+    "type": {
+      "description": "Content type identifier",
+      "values": ["critic", "news", "interview", "chart"],
+      "required": true
+    },
+    "timestamp": {
+      "description": "Creation timestamp in ISO 8601 format",
+      "format": "YYYY-MM-DDTHH:mm:ss.sssZ",
+      "required": true
+    },
+    "coverImageUrl": {
+      "description": "URL or data URL for critic cover art (upload or external)",
+      "required": false
+    },
+    "heroImageUrl": {
+      "description": "URL or data URL for article hero image (upload or external)",
+      "required": false
+    }
+  },
+  
+  "request_headers": {
+    "Content-Type": "application/json",
+    "X-Request-Type": "Type of content (critic|news|interview|chart)",
+    "X-Attempt": "Attempt number (1-4)"
+  },
+  
+  "response_format": {
+    "success": {
+      "status": 200,
+      "body": {
+        "success": true,
+        "id": "unique-content-id",
+        "message": "Content created successfully"
+      }
+    },
+    "error": {
+      "status": 400,
+      "body": {
+        "success": false,
+        "error": "Error message",
+        "details": "Additional error details"
+      }
+    },
+    "rate_limit": {
+      "status": 429,
+      "body": {
+        "success": false,
+        "error": "Rate limit exceeded",
+        "retry_after": 120
+      }
+    }
+  },
+  
+  "notes": [
+    "All timestamps are in UTC",
+    "Image data is optional but recommended",
+    "Data URLs (base64) can be large (>500KB)",
+    "Rate limit: 120ms between requests (client-side)",
+    "Retry logic: 3 attempts with 2s delay",
+    "Chart entries are limited to 15 items (The Hot 15)",
+    "All text fields should be trimmed",
+    "Interview content supports narrative paragraphs and optional Q&A blocks using lines starting with Q: / A:",
+    "Empty or missing required fields will fail validation"
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "type": "interview",
+    "title": "Billie Eilish on Growing Up in the Spotlight",
+    "subtitle": "The Grammy winner reflects on fame, family, and the future",
+    "artist": "Billie Eilish",
+    "content": "Billie Eilish sits down to discuss her journey from bedroom producer to global phenomenon. She opens up about the challenges of growing up with the world watching and how she maintains her authenticity in an industry often focused on image. Her evolution as an artist continues to surprise and inspire.",
+    "quote": "I've learned to trust my instincts and not care what anyone else thinks about my music",
+    "author": "David Fricke",
+    "image_id": "none",
+    "date": "2026-02-08T13:00:00.000Z",
+    "__backendId": "interview_001"
+  },
+  {
+    "type": "interview",
+    "title": "The Weeknd On Creating The Weeknd Universe",
+    "subtitle": "How The Weeknd built a multimedia empire through music",
+    "artist": "The Weeknd",
+    "content": "Abel Tesfaye discusses his creative vision and how he's built an interconnected universe across his albums, films, and performances. He talks about the inspiration behind his characters and the long-term narrative he's been crafting since his early mixtapes. His artistic ambition knows no bounds.",
+    "quote": "Every album is another chapter in the story I'm telling",
+    "author": "David Fricke",
+    "image_id": "none",
+    "date": "2026-02-06T15:45:00.000Z",
+    "__backendId": "interview_002"
+  },
+  {
+    "type": "interview",
+    "title": "Kendrick Lamar: The Art of Storytelling",
+    "subtitle": "Hip-hop's poet laureate on craft and legacy",
+    "artist": "Kendrick Lamar",
+    "content": "In a rare extended conversation, Kendrick Lamar breaks down his creative process and the responsibility he feels as one of hip-hop's most influential voices. He discusses the importance of authenticity and how his Compton roots continue to shape his worldview and artistry.",
+    "quote": "The truth is the only currency that matters in this game",
+    "author": "Jeff Weiss",
+    "image_id": "none",
+    "date": "2026-02-04T10:30:00.000Z",
+    "__backendId": "interview_003"
+  }
+]
