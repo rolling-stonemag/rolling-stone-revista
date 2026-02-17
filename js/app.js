@@ -301,6 +301,35 @@ async function cloudinaryUploadDataUrl(filename, dataUrl) {
   return outUrl;
 }
 
+async function cloudinaryUploadFile(file) {
+  if (!cloudinaryEnabled()) throw new Error('Cloudinary não configurado');
+  if (!file) throw new Error('Arquivo inválido');
+
+  const cloudName = String(CLOUDINARY_RUNTIME.cloudName || '').trim();
+  const uploadPreset = String(CLOUDINARY_RUNTIME.uploadPreset || '').trim();
+  const folder = String(CLOUDINARY_RUNTIME.folder || '').trim();
+  const filename = sanitizeStorageName(file.name || 'image');
+
+  const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
+
+  const form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', uploadPreset);
+  if (folder) form.append('folder', folder);
+  form.append('context', `alt=${filename}|caption=${filename}`);
+
+  const resp = await fetch(url, { method: 'POST', body: form });
+  const json = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = (json && (json.error && json.error.message)) ? json.error.message : `Cloudinary upload falhou (HTTP ${resp.status})`;
+    throw new Error(msg);
+  }
+
+  const outUrl = String(json && (json.secure_url || json.url) ? (json.secure_url || json.url) : '').trim();
+  if (!outUrl) throw new Error('Cloudinary não retornou URL');
+  return outUrl;
+}
+
 async function firebaseUploadDataUrl(filename, dataUrl) {
   if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado');
   await requireFirebaseLogin();
@@ -1826,10 +1855,21 @@ async function uploadImage(fileInput) {
   }
 
   const file = fileInput.files[0];
-  
+
+  // Fast path: Cloudinary upload can send the File directly (no Base64 conversion).
+  // This is significantly faster for larger images.
+  if (cloudinaryEnabled() && !firebaseEnabled()) {
+    const t0 = performance.now();
+    logLine(`Uploading image (Cloudinary): ${file.name}`, 'info');
+    const url = await cloudinaryUploadFile(file);
+    const ms = Math.round(performance.now() - t0);
+    logLine(`Image uploaded (Cloudinary) in ${ms}ms: ${file.name}`, 'success');
+    return url;
+  }
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onload = async (e) => {
       try {
         const base64 = e.target.result;
@@ -1847,15 +1887,17 @@ async function uploadImage(fileInput) {
         }
 
         if (cloudinaryEnabled()) {
-          const url = await cloudinaryUploadDataUrl(file.name, String(base64));
-          logLine(`Image uploaded (Cloudinary): ${file.name}`, 'success');
+          const t0 = performance.now();
+          const url = await cloudinaryUploadFile(file);
+          const ms = Math.round(performance.now() - t0);
+          logLine(`Image uploaded (Cloudinary) in ${ms}ms: ${file.name}`, 'success');
           resolve(url);
           return;
         }
 
         const hasBackend = await detectBackend();
         if (hasBackend) {
-          const result = await apiQueue.add(() => 
+          const result = await apiQueue.add(() =>
             apiRequest('/uploadImage', 'POST', {
               filename: file.name,
               data: base64,
