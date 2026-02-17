@@ -52,6 +52,246 @@ function initApiBaseFromRuntime() {
 initApiBaseFromRuntime();
 
 // ==========================================
+// A4) FIREBASE (Auth + Firestore + Storage)
+// ==========================================
+
+const FIREBASE_RUNTIME = (window.ROLLINGSTONE_FIREBASE && window.ROLLINGSTONE_FIREBASE.config)
+  ? window.ROLLINGSTONE_FIREBASE
+  : null;
+
+let __fbInited = false;
+let __fbAuth = null;
+let __fbDb = null;
+let __fbStorage = null;
+
+function isFirebaseSdkLoaded() {
+  return typeof window.firebase !== 'undefined' && !!window.firebase && typeof window.firebase.initializeApp === 'function';
+}
+
+function isFirebaseConfigured() {
+  return !!(FIREBASE_RUNTIME && FIREBASE_RUNTIME.config && FIREBASE_RUNTIME.config.projectId);
+}
+
+function firebaseEnabled() {
+  return isFirebaseConfigured() && isFirebaseSdkLoaded();
+}
+
+function firebaseAllowedEmails() {
+  const list = FIREBASE_RUNTIME && Array.isArray(FIREBASE_RUNTIME.allowedEmails) ? FIREBASE_RUNTIME.allowedEmails : [];
+  return list.map(s => String(s || '').trim().toLowerCase()).filter(Boolean);
+}
+
+function ensureFirebaseInit() {
+  if (!firebaseEnabled()) return false;
+  if (__fbInited) return true;
+
+  try {
+    if (window.firebase.apps && window.firebase.apps.length > 0) {
+      // already initialized
+    } else {
+      window.firebase.initializeApp(FIREBASE_RUNTIME.config);
+    }
+    __fbAuth = window.firebase.auth();
+    __fbDb = window.firebase.firestore();
+    __fbStorage = window.firebase.storage();
+    __fbInited = true;
+    if (isDebugMode()) console.log('[FIREBASE] init ok');
+    return true;
+  } catch (e) {
+    console.warn('[FIREBASE] init failed', e);
+    return false;
+  }
+}
+
+function currentFirebaseUser() {
+  if (!__fbAuth) return null;
+  return __fbAuth.currentUser || null;
+}
+
+function isAllowedFirebaseUser(user) {
+  const allowed = firebaseAllowedEmails();
+  if (allowed.length === 0) return true;
+  const email = String(user && user.email ? user.email : '').trim().toLowerCase();
+  return !!email && allowed.includes(email);
+}
+
+async function requireFirebaseLogin() {
+  if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado (SDK/config)');
+
+  const existing = currentFirebaseUser();
+  if (existing) {
+    if (!isAllowedFirebaseUser(existing)) throw new Error('Conta Google não autorizada para publicar.');
+    return existing;
+  }
+
+  const provider = new window.firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  try {
+    const result = await __fbAuth.signInWithPopup(provider);
+    const user = result && result.user ? result.user : currentFirebaseUser();
+    if (!user) throw new Error('Login não concluído.');
+    if (!isAllowedFirebaseUser(user)) throw new Error('Conta Google não autorizada para publicar.');
+    return user;
+  } catch (e) {
+    const msg = e && e.message ? e.message : String(e || 'Falha no login');
+    throw new Error(msg);
+  }
+}
+
+function fbCollectionForType(type) {
+  const t = String(type || '').trim().toLowerCase();
+  if (t === 'critic') return 'critics';
+  if (t === 'news') return 'news';
+  if (t === 'interview') return 'interviews';
+  if (t === 'chart') return 'charts';
+  return null;
+}
+
+function sanitizeStorageName(name) {
+  const raw = String(name || 'file').trim();
+  return raw.replace(/[^a-z0-9._-]+/gi, '_').slice(0, 80) || 'file';
+}
+
+async function firebaseUploadDataUrl(filename, dataUrl) {
+  if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado');
+  await requireFirebaseLogin();
+
+  const safe = sanitizeStorageName(filename);
+  const path = `uploads/${Date.now()}_${randomId()}_${safe}`;
+  const ref = __fbStorage.ref().child(path);
+
+  const snap = await ref.putString(String(dataUrl || ''), 'data_url');
+  const url = await snap.ref.getDownloadURL();
+  return url;
+}
+
+async function firebaseUpsertItem(payload) {
+  if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado');
+  await requireFirebaseLogin();
+
+  const type = String(payload.type || '').trim();
+  const col = fbCollectionForType(type);
+  if (!col) throw new Error('Tipo inválido para Firebase');
+
+  const id = payload.id || `${type}_${Date.now()}_${randomId()}`;
+  const nowIso = new Date().toISOString();
+
+  const docRef = __fbDb.collection(col).doc(id);
+  const existing = await docRef.get();
+
+  const createdAt = existing.exists ? (existing.data().createdAt || nowIso) : (payload.createdAt || nowIso);
+  const publishedAt = payload.publishedAt || (existing.exists ? (existing.data().publishedAt || nowIso) : nowIso);
+
+  const item = {
+    ...payload,
+    id,
+    type,
+    status: payload.status || 'published',
+    createdAt,
+    updatedAt: nowIso,
+    publishedAt
+  };
+
+  await docRef.set(item, { merge: true });
+  return item;
+}
+
+async function firebaseDeleteItem(type, id) {
+  if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado');
+  await requireFirebaseLogin();
+  const col = fbCollectionForType(type);
+  if (!col) throw new Error('Tipo inválido');
+  await __fbDb.collection(col).doc(String(id)).delete();
+  return true;
+}
+
+async function firebaseList(type) {
+  if (!ensureFirebaseInit()) return [];
+  const col = fbCollectionForType(type);
+  if (!col) return [];
+
+  const snap = await __fbDb.collection(col).get();
+  const items = [];
+  snap.forEach(doc => {
+    const data = doc.data();
+    if (data) items.push(data);
+  });
+  items.sort((a, b) => {
+    const da = new Date(a.publishedAt || a.createdAt || 0).getTime();
+    const db = new Date(b.publishedAt || b.createdAt || 0).getTime();
+    return db - da;
+  });
+  return items;
+}
+
+async function firebaseGetItem(type, id) {
+  if (!ensureFirebaseInit()) return null;
+  const col = fbCollectionForType(type);
+  if (!col) return null;
+  const doc = await __fbDb.collection(col).doc(String(id)).get();
+  if (!doc.exists) return null;
+  return doc.data();
+}
+
+async function firebaseLatest(limit = 6) {
+  if (!ensureFirebaseInit()) return [];
+  const types = ['critic', 'news', 'interview', 'chart'];
+  const perType = Math.max(2, Math.min(12, Math.ceil(Number(limit || 6) / 2)));
+
+  const all = [];
+  for (const t of types) {
+    const col = fbCollectionForType(t);
+    if (!col) continue;
+    const snap = await __fbDb.collection(col).get();
+    const items = [];
+    snap.forEach(doc => {
+      const data = doc.data();
+      if (data && data.status === 'published') items.push(data);
+    });
+    items.sort((a, b) => {
+      const da = new Date(a.publishedAt || a.createdAt || 0).getTime();
+      const db = new Date(b.publishedAt || b.createdAt || 0).getTime();
+      return db - da;
+    });
+    all.push(...items.slice(0, perType));
+  }
+
+  all.sort((a, b) => {
+    const da = new Date(a.publishedAt || a.createdAt || 0).getTime();
+    const db = new Date(b.publishedAt || b.createdAt || 0).getTime();
+    return db - da;
+  });
+
+  return all.slice(0, Math.max(1, Math.min(12, Number(limit || 6))));
+}
+
+async function firebaseGetCover() {
+  if (!ensureFirebaseInit()) return null;
+  const doc = await __fbDb.collection('meta').doc('cover').get();
+  if (!doc.exists) return null;
+  return doc.data();
+}
+
+async function firebaseUpdateCover(coverPayload) {
+  if (!ensureFirebaseInit()) throw new Error('Firebase não inicializado');
+  await requireFirebaseLogin();
+
+  const nowIso = new Date().toISOString();
+  const cover = {
+    type: 'cover',
+    issueNumber: String(coverPayload.issueNumber || '').trim(),
+    issueDate: String(coverPayload.issueDate || '').trim(),
+    description: String(coverPayload.description || '').trim(),
+    coverImageUrl: String(coverPayload.coverImageUrl || '').trim(),
+    updatedAt: nowIso
+  };
+
+  await __fbDb.collection('meta').doc('cover').set(cover, { merge: true });
+  return cover;
+}
+
+// ==========================================
 // A2) ADMIN STATE (Edit / Manager)
 // ==========================================
 
@@ -1090,6 +1330,19 @@ async function apiOrStaticAllItems() {
     return chunks.flat().filter(Boolean).sort(sortByPublishedDesc);
   }
 
+  if (firebaseEnabled()) {
+    try {
+      const chunks = [];
+      for (const t of types) {
+        const list = await firebaseList(t);
+        chunks.push(Array.isArray(list) ? list : []);
+      }
+      return chunks.flat().filter(Boolean).sort(sortByPublishedDesc);
+    } catch (e) {
+      if (isDebugMode()) console.warn('[FIREBASE] all items failed', e);
+    }
+  }
+
   const db = await loadStaticDb();
   return (Array.isArray(db?.items) ? db.items : [])
     .filter(i => i && types.includes(String(i.type || '')))
@@ -1192,6 +1445,8 @@ async function deleteFromManager(item, btnEl) {
     const hasBackend = await detectBackend();
     if (hasBackend) {
       await apiDeleteItem(type, id);
+    } else if (firebaseEnabled()) {
+      await firebaseDeleteItem(type, id);
     } else {
       // Remove local copy (se existir) e marca como deletado para esconder o item estático
       removeLocalPublishedItemById(id);
@@ -1337,6 +1592,13 @@ async function staticCover() {
 }
 
 async function apiOrStaticList(type) {
+  if (firebaseEnabled()) {
+    try {
+      return await firebaseList(type);
+    } catch (e) {
+      if (isDebugMode()) console.warn('[FIREBASE] list failed', e);
+    }
+  }
   const hasBackend = await detectBackend();
   if (hasBackend) {
     const result = await apiQueue.add(() => apiRequest(`/list?type=${encodeURIComponent(String(type))}`, 'GET'));
@@ -1347,6 +1609,13 @@ async function apiOrStaticList(type) {
 }
 
 async function apiOrStaticItem(type, id) {
+  if (firebaseEnabled()) {
+    try {
+      return await firebaseGetItem(type, id);
+    } catch (e) {
+      if (isDebugMode()) console.warn('[FIREBASE] item failed', e);
+    }
+  }
   const hasBackend = await detectBackend();
   if (hasBackend) {
     const result = await apiQueue.add(() => apiRequest(`/item?id=${encodeURIComponent(String(id))}&type=${encodeURIComponent(String(type))}`, 'GET'));
@@ -1357,6 +1626,13 @@ async function apiOrStaticItem(type, id) {
 }
 
 async function apiOrStaticLatest(limit = 6) {
+  if (firebaseEnabled()) {
+    try {
+      return await firebaseLatest(limit);
+    } catch (e) {
+      if (isDebugMode()) console.warn('[FIREBASE] latest failed', e);
+    }
+  }
   const hasBackend = await detectBackend();
   if (hasBackend) {
     const result = await apiQueue.add(() => apiRequest(`/latest?limit=${encodeURIComponent(String(limit))}`, 'GET'));
@@ -1367,6 +1643,13 @@ async function apiOrStaticLatest(limit = 6) {
 }
 
 async function apiOrStaticCover() {
+  if (firebaseEnabled()) {
+    try {
+      return await firebaseGetCover();
+    } catch (e) {
+      if (isDebugMode()) console.warn('[FIREBASE] cover failed', e);
+    }
+  }
   const hasBackend = await detectBackend();
   if (hasBackend) {
     const result = await apiQueue.add(() => apiRequest('/cover', 'GET'));
@@ -1394,6 +1677,13 @@ async function uploadImage(fileInput) {
       try {
         const base64 = e.target.result;
         logLine(`Uploading image: ${file.name}`, 'info');
+
+        if (firebaseEnabled()) {
+          const url = await firebaseUploadDataUrl(file.name, String(base64));
+          logLine(`Image uploaded (Firebase): ${file.name}`, 'success');
+          resolve(url);
+          return;
+        }
 
         const hasBackend = await detectBackend();
         if (hasBackend) {
@@ -1550,12 +1840,11 @@ async function publishCritic(event) {
 
         if (!result.success) throw new Error(result.error || 'Publication failed');
       }
+    } else if (firebaseEnabled()) {
+      await firebaseUpsertItem(payload);
     } else {
-      if (edit) {
-        upsertLocalPublishedItem(payload);
-      } else {
-        await publishToLocalDb(payload);
-      }
+      if (edit) upsertLocalPublishedItem(payload);
+      else await publishToLocalDb(payload);
     }
 
     {
@@ -1652,12 +1941,11 @@ async function publishNews(event) {
 
         if (!result.success) throw new Error(result.error || 'Publication failed');
       }
+    } else if (firebaseEnabled()) {
+      await firebaseUpsertItem(payload);
     } else {
-      if (edit) {
-        upsertLocalPublishedItem(payload);
-      } else {
-        await publishToLocalDb(payload);
-      }
+      if (edit) upsertLocalPublishedItem(payload);
+      else await publishToLocalDb(payload);
     }
 
     {
@@ -1754,12 +2042,11 @@ async function publishInterview(event) {
 
         if (!result.success) throw new Error(result.error || 'Publication failed');
       }
+    } else if (firebaseEnabled()) {
+      await firebaseUpsertItem(payload);
     } else {
-      if (edit) {
-        upsertLocalPublishedItem(payload);
-      } else {
-        await publishToLocalDb(payload);
-      }
+      if (edit) upsertLocalPublishedItem(payload);
+      else await publishToLocalDb(payload);
     }
 
     {
@@ -1907,12 +2194,11 @@ async function publishChart(event) {
 
         if (!result.success) throw new Error(result.error || 'Publication failed');
       }
+    } else if (firebaseEnabled()) {
+      await firebaseUpsertItem(payload);
     } else {
-      if (edit) {
-        upsertLocalPublishedItem(payload);
-      } else {
-        await publishToLocalDb(payload);
-      }
+      if (edit) upsertLocalPublishedItem(payload);
+      else await publishToLocalDb(payload);
     }
 
     {
@@ -1993,6 +2279,9 @@ async function publishCover(event) {
         apiRequest('/updateCover', 'POST', payload)
       );
       if (!result.success) throw new Error(result.error || 'Update failed');
+    } else if (firebaseEnabled()) {
+      const cover = await firebaseUpdateCover(payload);
+      updateCoverDisplay(cover);
     } else {
       const cover = await updateCoverLocally(payload);
       updateCoverDisplay(cover);
@@ -3574,9 +3863,14 @@ function initializeApp() {
   // Setup admin-only features (safe to call; will no-op if missing)
   setupPostsManager();
 
-  // Load initial content (API quando existe; fallback para JSON no GitHub Pages)
+  // Load initial content (Firebase > API backend > static JSON)
+  const fb = firebaseEnabled();
+  if (fb && !isFileProtocol()) {
+    logLine('Modo Firebase detectado. Publicação/upload usam Firestore + Storage (login Google).', 'success');
+  }
+
   detectBackend().then((hasBackend) => {
-    if (!hasBackend && !isFileProtocol()) {
+    if (!fb && !hasBackend && !isFileProtocol()) {
       logLine('Modo estático detectado (ex.: GitHub Pages). Publicação/upload ficam desabilitados, mas o site carrega de data/db.json.', 'warning');
     }
     loadCover();
