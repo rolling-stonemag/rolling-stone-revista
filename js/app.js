@@ -1522,7 +1522,16 @@ function beginEditFromManager(item) {
     set('news-category', item.category || '');
     set('news-headline', item.headline || '');
     set('news-subtitle', item.subtitle || '');
-    set('news-content', item.content || '');
+    {
+      const raw = String(item.content || '').trim();
+      const parts = raw
+        ? raw.split('\n\n').map(p => p.trim()).filter(Boolean)
+        : [];
+      const opening = parts.length > 0 ? parts[0] : '';
+      const body = parts.length > 1 ? parts.slice(1).join('\n\n') : '';
+      set('news-opening', opening);
+      set('news-body', body);
+    }
     set('news-quote', item.pullQuote || '');
     set('news-author', item.author || '');
     set('news-image-url', item.heroImageUrl || '');
@@ -2049,7 +2058,8 @@ async function publishNews(event) {
       'news-category': 'Category',
       'news-headline': 'Headline',
       'news-subtitle': 'Subtitle',
-      'news-content': 'Content',
+      'news-opening': 'Opening Paragraph',
+      'news-body': 'Article Body',
       'news-author': 'Author'
     };
 
@@ -2079,7 +2089,10 @@ async function publishNews(event) {
       category: document.getElementById('news-category').value.trim(),
       headline: document.getElementById('news-headline').value.trim(),
       subtitle: document.getElementById('news-subtitle').value.trim(),
-      content: document.getElementById('news-content').value.trim(),
+      content: [
+        document.getElementById('news-opening').value.trim(),
+        document.getElementById('news-body').value.trim()
+      ].filter(Boolean).join('\n\n'),
       pullQuote: document.getElementById('news-quote')?.value.trim() || '',
       author: document.getElementById('news-author').value.trim(),
       heroImageUrl: imageUrl || (edit?.item?.heroImageUrl || ''),
