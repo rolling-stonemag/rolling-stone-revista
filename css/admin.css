@@ -8,8 +8,8 @@
 
     .admin-sidebar {
       width: 240px;
-      background: #1a1a1a;
-      border-right: 1px solid #333;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -18,15 +18,56 @@
 
     .admin-sidebar-header {
       padding: 1.5rem;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-sidebar-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
     }
 
     .admin-sidebar-title {
       font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       font-weight: 900;
-      color: white;
+      color: var(--text);
       margin: 0;
+    }
+
+    .admin-badge {
+      display: inline-block;
+      margin-top: 0.6rem;
+      padding: 0.25rem 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      background: var(--bg);
+    }
+
+    .admin-sidebar-toggle {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-light);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .admin-sidebar-toggle:hover {
+      color: var(--text);
+      border-color: #d8d8d8;
     }
 
     .admin-sidebar-section {
@@ -38,7 +79,7 @@
       font-size: 0.65rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #666;
+      color: var(--text-light);
       font-weight: 700;
       padding: 0.5rem 1.5rem;
       margin: 0;
@@ -49,7 +90,7 @@
       align-items: center;
       gap: 0.75rem;
       padding: 0.75rem 1.5rem;
-      color: #999;
+      color: var(--text-light);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
       border: none;
@@ -59,6 +100,19 @@
       cursor: pointer;
       transition: all 0.2s;
       border-left: 3px solid transparent;
+    }
+
+    .admin-nav-icon {
+      width: 1.25rem;
+      display: inline-flex;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .admin-nav-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .admin-sidebar-link:hover {
@@ -71,6 +125,129 @@
       color: #dc2626;
       border-left-color: #dc2626;
       font-weight: 600;
+    }
+
+    .admin-sidebar-card {
+      margin: 1rem;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .admin-sidebar-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-sidebar-card-title {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: 0.08em;
+    }
+
+    .admin-sidebar-card-title--danger {
+      color: var(--red);
+    }
+
+    .admin-sidebar-mono {
+      font-size: 0.72rem;
+      font-family: 'Courier New', monospace;
+      color: var(--text-light);
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+      overflow-wrap: anywhere;
+    }
+
+    .admin-sidebar-card-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .admin-sidebar-mini-btn {
+      flex: 1;
+      padding: 0.4rem 0.55rem;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .admin-sidebar-mini-btn:hover {
+      border-color: #d8d8d8;
+    }
+
+    .admin-sidebar-mini-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .admin-sidebar-clear {
+      padding: 0.25rem 0.55rem;
+      background: var(--bg);
+      color: var(--text-light);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.68rem;
+      cursor: pointer;
+    }
+
+    .admin-sidebar-clear:hover {
+      color: var(--text);
+      border-color: #d8d8d8;
+    }
+
+    .admin-log {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 0.72rem;
+      font-family: 'Courier New', monospace;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .admin-log-line {
+      color: var(--text-light);
+    }
+
+    .admin-sidebar.collapsed {
+      width: 72px;
+    }
+
+    .admin-sidebar.collapsed .admin-sidebar-title,
+    .admin-sidebar.collapsed .admin-badge,
+    .admin-sidebar.collapsed .admin-sidebar-section-title,
+    .admin-sidebar.collapsed .admin-nav-label,
+    .admin-sidebar.collapsed .admin-sidebar-card {
+      display: none;
+    }
+
+    .admin-sidebar.collapsed .admin-sidebar-header {
+      padding: 1rem;
+    }
+
+    .admin-sidebar.collapsed .admin-sidebar-toggle {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto;
+    }
+
+    .admin-sidebar.collapsed .admin-sidebar-link {
+      padding: 0.75rem 0;
+      justify-content: center;
+      border-left: none;
+    }
+
+    .admin-sidebar.collapsed .admin-sidebar-link.active {
+      background: rgba(220, 38, 38, 0.1);
     }
 
     .admin-main {
@@ -119,6 +296,10 @@
         width: 200px;
       }
 
+      .admin-sidebar.collapsed {
+        width: 68px;
+      }
+
       .admin-header {
         padding: 1.5rem;
       }
@@ -142,8 +323,12 @@
         width: clamp(140px, 38vw, 190px);
         flex-shrink: 0;
         overflow-y: auto;
-        border-right: 1px solid #333;
+        border-right: 1px solid var(--border);
         border-bottom: none;
+      }
+
+      .admin-sidebar.collapsed {
+        width: 60px;
       }
 
       .admin-main {

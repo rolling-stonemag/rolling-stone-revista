@@ -3545,6 +3545,7 @@ function showPage(pageName) {
     setTimeout(() => {
       window.diagnoseAdmin();
       setupAdminSidebar();
+      setupAdminSidebarCollapse();
       setupFirebaseAuthUI();
     }, 100);
   }
@@ -3587,12 +3588,36 @@ function showAdminPanel(section) {
 function setupAdminSidebar() {
   const sidebarLinks = document.querySelectorAll('.admin-sidebar-link');
   sidebarLinks.forEach(link => {
+    if (link.__boundAdminNav) return;
+    link.__boundAdminNav = true;
     link.addEventListener('click', () => {
       const section = link.getAttribute('data-admin-section');
       showAdminPanel(section);
     });
   });
   console.log('[ADMIN] Sidebar navigation configured');
+}
+
+function setupAdminSidebarCollapse() {
+  const sidebar = document.querySelector('.admin-sidebar');
+  const toggleBtn = document.getElementById('admin-sidebar-toggle');
+  if (!sidebar || !toggleBtn) return;
+
+  if (toggleBtn.__boundAdminCollapse) {
+    const collapsed = sidebar.classList.contains('collapsed');
+    toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    return;
+  }
+
+  toggleBtn.__boundAdminCollapse = true;
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    const collapsed = sidebar.classList.contains('collapsed');
+    toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  });
+
+  const collapsed = sidebar.classList.contains('collapsed');
+  toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
 }
 
 function viewCritic(id) {

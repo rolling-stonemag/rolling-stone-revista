@@ -108,48 +108,49 @@
        <!-- ADMIN SIDEBAR -->
        <div class="admin-sidebar">
         <div class="admin-sidebar-header">
-         <h2 class="admin-sidebar-title">Admin Panel</h2>
-         <div style="background: #16a34a; color: white; padding: 0.35rem 0.75rem; font-family: 'Courier New', monospace; font-size: 0.65rem; font-weight: bold; margin-top: 0.5rem; border-radius: 0.25rem; display: inline-block;">✓ NEW</div>
+       <div class="admin-sidebar-header-row">
+        <h2 class="admin-sidebar-title">Admin Panel</h2>
+        <button type="button" class="admin-sidebar-toggle" id="admin-sidebar-toggle" aria-label="Alternar sidebar" aria-expanded="true">⫶</button>
+       </div>
+       <div class="admin-badge">NEW</div>
         </div>
 
           <!-- Firebase Auth (Admin) -->
-          <div id="firebase-auth-box" style="margin: 1rem; padding: 0.75rem; background: #0a0a0a; border-radius: 0.25rem; border: 1px solid #333; flex-shrink: 0; display: none;">
-           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <div style="font-size: 0.7rem; font-weight: 700; color: #22c55e; letter-spacing: 0.05em;">FIREBASE LOGIN</div>
+          <div id="firebase-auth-box" class="admin-sidebar-card" style="display: none;">
+           <div class="admin-sidebar-card-row">
+            <div class="admin-sidebar-card-title">FIREBASE LOGIN</div>
            </div>
-           <div id="firebase-auth-status" style="font-size: 0.7rem; font-family: 'Courier New', monospace; color: #9ca3af; line-height: 1.4; margin-bottom: 0.6rem;">
-            Verificando…
-           </div>
-           <div style="display: flex; gap: 0.5rem;">
-            <button type="button" id="firebase-login-btn" style="flex: 1; padding: 0.35rem 0.5rem; background: #1a1a1a; color: #e5e7eb; border: 1px solid #333; border-radius: 0.25rem; font-size: 0.7rem; cursor: pointer;">Entrar com Google</button>
-            <button type="button" id="firebase-logout-btn" style="flex: 1; padding: 0.35rem 0.5rem; background: #1a1a1a; color: #9ca3af; border: 1px solid #333; border-radius: 0.25rem; font-size: 0.7rem; cursor: pointer;">Sair</button>
+           <div id="firebase-auth-status" class="admin-sidebar-mono">Verificando…</div>
+           <div class="admin-sidebar-card-actions">
+            <button type="button" id="firebase-login-btn" class="admin-sidebar-mini-btn">Entrar com Google</button>
+            <button type="button" id="firebase-logout-btn" class="admin-sidebar-mini-btn">Sair</button>
            </div>
           </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Publish</div>
-         <button class="admin-sidebar-link active" data-admin-section="review">★ Review</button>
-         <button class="admin-sidebar-link" data-admin-section="news">📰 News</button>
-         <button class="admin-sidebar-link" data-admin-section="interview">🎤 Interview</button>
-         <button class="admin-sidebar-link" data-admin-section="chart">🎵 Chart</button>
-         <button class="admin-sidebar-link" data-admin-section="cover">🖼️ Cover</button>
+         <button class="admin-sidebar-link active" data-admin-section="review" title="Review"><span class="admin-nav-icon">★</span><span class="admin-nav-label">Review</span></button>
+         <button class="admin-sidebar-link" data-admin-section="news" title="News"><span class="admin-nav-icon">📰</span><span class="admin-nav-label">News</span></button>
+         <button class="admin-sidebar-link" data-admin-section="interview" title="Interview"><span class="admin-nav-icon">🎤</span><span class="admin-nav-label">Interview</span></button>
+         <button class="admin-sidebar-link" data-admin-section="chart" title="Chart"><span class="admin-nav-icon">🎵</span><span class="admin-nav-label">Chart</span></button>
+         <button class="admin-sidebar-link" data-admin-section="cover" title="Cover"><span class="admin-nav-icon">🖼️</span><span class="admin-nav-label">Cover</span></button>
         </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Manage</div>
-         <button class="admin-sidebar-link" data-admin-section="posts">📂 Posts</button>
+         <button class="admin-sidebar-link" data-admin-section="posts" title="Posts"><span class="admin-nav-icon">📂</span><span class="admin-nav-label">Posts</span></button>
         </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Demo</div>
-         <button class="admin-sidebar-link" data-admin-section="demo">🎬 Demo</button>
+         <button class="admin-sidebar-link" data-admin-section="demo" title="Demo"><span class="admin-nav-icon">🎬</span><span class="admin-nav-label">Demo</span></button>
         </div>
         
         <!-- Admin Log in Sidebar -->
-        <div style="margin: 1rem; padding: 0.75rem; background: #0a0a0a; border-radius: 0.25rem; border: 1px solid #333; flex-shrink: 0;">
-         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <div style="font-size: 0.7rem; font-weight: 700; color: #ef4444; letter-spacing: 0.05em;">ADMIN LOG</div>
-          <button type="button" onclick="clearAdminLog()" style="padding: 0.2rem 0.5rem; background: #1a1a1a; color: #666; border: none; border-radius: 0.2rem; font-size: 0.65rem; cursor: pointer;">Clear</button>
+        <div class="admin-sidebar-card">
+         <div class="admin-sidebar-card-row">
+          <div class="admin-sidebar-card-title admin-sidebar-card-title--danger">ADMIN LOG</div>
+          <button type="button" class="admin-sidebar-clear" onclick="clearAdminLog()">Clear</button>
          </div>
-         <div id="admin-log" style="max-height: 150px; overflow-y: auto; font-size: 0.7rem; font-family: 'Courier New', monospace; color: #666; line-height: 1.4;">
-          <div style="color: #6b7280;">Ready...</div>
+         <div id="admin-log" class="admin-log">
+          <div class="admin-log-line">Ready...</div>
          </div>
         </div>
 
