@@ -290,7 +290,6 @@ async function cloudinaryUploadDataUrl(filename, dataUrl) {
 
   const cloudName = String(CLOUDINARY_RUNTIME.cloudName || '').trim();
   const uploadPreset = String(CLOUDINARY_RUNTIME.uploadPreset || '').trim();
-  const folder = String(CLOUDINARY_RUNTIME.folder || '').trim();
 
   const safe = sanitizeStorageName(filename);
   const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
@@ -298,8 +297,8 @@ async function cloudinaryUploadDataUrl(filename, dataUrl) {
   const form = new FormData();
   form.append('file', String(dataUrl || ''));
   form.append('upload_preset', uploadPreset);
-  if (folder) form.append('folder', folder);
-  form.append('context', `alt=${safe}|caption=${safe}`);
+  // For unsigned uploads, keep parameters minimal for compatibility.
+  // Configure folder/naming rules inside the upload preset.
 
   const resp = await fetch(url, { method: 'POST', body: form });
   const json = await resp.json().catch(() => ({}));
@@ -319,7 +318,6 @@ async function cloudinaryUploadFile(file) {
 
   const cloudName = String(CLOUDINARY_RUNTIME.cloudName || '').trim();
   const uploadPreset = String(CLOUDINARY_RUNTIME.uploadPreset || '').trim();
-  const folder = String(CLOUDINARY_RUNTIME.folder || '').trim();
   const filename = sanitizeStorageName(file.name || 'image');
 
   const url = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`;
@@ -327,8 +325,8 @@ async function cloudinaryUploadFile(file) {
   const form = new FormData();
   form.append('file', file);
   form.append('upload_preset', uploadPreset);
-  if (folder) form.append('folder', folder);
-  form.append('context', `alt=${filename}|caption=${filename}`);
+  // For unsigned uploads, keep parameters minimal for compatibility.
+  // Configure folder/naming rules inside the upload preset.
 
   const resp = await fetch(url, { method: 'POST', body: form });
   const json = await resp.json().catch(() => ({}));
