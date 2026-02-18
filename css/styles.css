@@ -1379,8 +1379,8 @@
       }
 
       .critic-card-compact-image::before {
-        top: -14px;
-        height: 36px;
+        top: 0;
+        height: 55%;
       }
 
       .critic-card-compact-info {
@@ -1437,8 +1437,8 @@
       }
 
       .critic-card-compact-image::before {
-        top: -12px;
-        height: 32px;
+        top: 0;
+        height: 55%;
       }
 
       .critic-card-compact-info {
