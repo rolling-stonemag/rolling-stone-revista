@@ -4132,7 +4132,7 @@ function initializeApp() {
   setupDebugOverlay();
 
   if (isFileProtocol()) {
-    logLine('⚠️ Para publicar e manter posts/imagens, rode via backend local (npm start).', 'warning');
+    logLine('⚠️ Você abriu via file://. Use Live Server (ou qualquer servidor local) para evitar limitações do browser e permitir login/requests.', 'warning');
   }
 
   // Setup navigation
@@ -4152,12 +4152,12 @@ function initializeApp() {
   // Load initial content (Firebase > API backend > static JSON)
   const fb = firebaseEnabled();
   if (fb && !isFileProtocol()) {
-    logLine('Modo Firebase detectado. Publicação/upload usam Firestore + Storage (login Google).', 'success');
+    logLine('Modo Firebase detectado. Publicação usa Firestore (login Google). Imagens usam Cloudinary (ou Storage se habilitado).', 'success');
   }
 
   detectBackend().then((hasBackend) => {
     if (!fb && !hasBackend && !isFileProtocol()) {
-      logLine('Modo estático detectado (ex.: GitHub Pages). Publicação/upload ficam desabilitados, mas o site carrega de data/db.json.', 'warning');
+      logLine('Modo estático detectado (sem Firebase/Backend). Publicação fica desabilitada; o site tenta carregar conteúdo dos JSONs em /data.', 'warning');
     }
     loadCover();
     loadLatest();

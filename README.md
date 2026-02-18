@@ -1,13 +1,13 @@
 # Rolling Stone Editorial CMS
 
-Static website for managing Rolling Stone editorial content.
+Site editorial estático (GitHub Pages) com painel Admin que publica conteúdo via **Firebase (Auth + Firestore)** e hospeda imagens no **Cloudinary**.
 
 ## Project Structure
 
 ```
 /
 ├── index.html              # Main HTML entry point
-├── app.js                  # All JavaScript logic
+├── js/app.js               # All JavaScript logic
 ├── assets/                 # Media assets
 │   ├── images/            # General images
 │   ├── covers/            # Magazine covers
@@ -18,34 +18,24 @@ Static website for managing Rolling Stone editorial content.
 │   ├── interviews.json    # Interview articles data
 │   └── charts.json        # Chart data
 └── styles/                 # Additional stylesheets
-    └── optional.css       # Optional custom styles
+  └── optional.css       # Optional custom styles
 
 ```
 
-## How to Use
+## Como usar
 
-### GitHub Pages (atenção)
+### Produção (GitHub Pages)
 
-GitHub Pages é **estático**. Em produção você consegue **ver** o conteúdo, mas **não consegue publicar** pelo Admin.
-
-Fluxo recomendado:
-- Publique localmente com `npm start`
-- Faça commit/push de `data/db.json`, `data/cover.json` e `assets/uploads/`
+- O site roda estático no GitHub Pages.
+- Para publicar pelo Admin (e não “sumir”), o projeto usa **Firestore** para texto/dados e **Cloudinary** para imagens.
+- O Admin exige login Google (Firebase Auth) e só libera publicação para e-mails permitidos (UI). A segurança real deve ser feita via **Rules** do Firestore.
 
 Detalhes em [GITHUB_PAGES.md](GITHUB_PAGES.md).
 
-### Opening the Website
+### Rodando local (desenvolvimento)
 
-**Option 1: View-only (no publishing)**
-- You can open `index.html` directly, but **publishing will not work** (browser cannot write files).
-
-**Option 2: Full CMS (publishing + images + persistence) — Recommended**
-1. Install dependencies:
-  - `npm install`
-2. Start the local backend:
-  - `npm start`
-3. Open:
-  - `http://localhost:3000/`
+- Use Live Server (VS Code) ou qualquer servidor estático.
+- Evite abrir via `file://` para não ter limitações do browser com requests/login.
 
 ### Project Features
 
@@ -56,14 +46,15 @@ Detalhes em [GITHUB_PAGES.md](GITHUB_PAGES.md).
 
 ### Development Notes
 
-- All JavaScript is in `app.js` - no embedded scripts in HTML
+- All JavaScript is in `js/app.js` - no embedded scripts in HTML (fora configurações runtime)
 - Event handlers are kept minimal in HTML (onclick attributes only)
-- CSS is embedded in `index.html` to maintain single-file styling
+- CSS fica em `css/styles.css` e `css/admin.css`
 - Future images should be stored in the `assets/` subdirectories
 
-## Local Data Handling
+## Backend local (legado/opcional)
 
-This project includes a local backend (`server.js`) that persists all content to `data/db.json` and uploads images to `assets/uploads/`.
+Ainda existe um backend Node/Express em `server.js`, mas o fluxo principal atual é **Firebase + Cloudinary**.
+Se você quiser manter o backend local para testes, ele pode coexistir — porém a documentação e o deploy recomendados estão focados no modo Firebase.
 
 ### How It Works
 

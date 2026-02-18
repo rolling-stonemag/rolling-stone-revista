@@ -1,37 +1,19 @@
-# Deploy no GitHub Pages (importante)
+# Deploy no GitHub Pages (modo atual)
 
-GitHub Pages é **somente site estático**. Isso significa:
+O GitHub Pages é estático (serve HTML/CSS/JS), mas o **Admin publica normalmente** porque o projeto usa serviços externos:
 
-- ✅ O site pode **exibir** posts e imagens
-- ✅ Ele pode **ler** `data/db.json` e `data/cover.json`
-- ✅ Você pode **publicar pelo Admin sem commit** usando modo local (no navegador)
+- ✅ Textos/dados: **Firestore**
+- ✅ Login Admin: **Firebase Auth (Google)**
+- ✅ Imagens: **Cloudinary**
 
-## Fluxo recomendado (publicar e subir para o Pages)
+## Fluxo recomendado
 
-1. Rode localmente o CMS completo:
-   - `npm install`
-   - `npm start`
-   - Abra `http://localhost:3000/`
+1. Configure Firebase + Firestore e habilite Google Sign-in.
+2. Configure Cloudinary com um `upload_preset` **Unsigned**.
+3. No [index.html](index.html), preencha `window.ROLLINGSTONE_FIREBASE` e `window.ROLLINGSTONE_CLOUDINARY`.
+4. No Admin, faça login e publique.
 
-2. Publique pelo Admin (Critics/News/Interviews/Charts/Cover)
+## Observação
 
-3. Atualize o repositório (commit/push) com:
-   - `data/db.json`
-   - `data/cover.json`
-   - `assets/uploads/` (todas as imagens novas)
-
-4. O GitHub Pages vai servir esses arquivos e o site vai carregar de forma automática.
-
-## Publicar no Pages sem commit (modo local)
-
-Quando não existe backend (GitHub Pages), o Admin publica **localmente no navegador**:
-
-- Os posts vão aparecer imediatamente nas páginas (Critics/News/Interviews/Charts)
-- As imagens enviadas viram **DataURL** (funciona na hora)
-- Tenta salvar no `localStorage`, mas:
-   - pode não persistir se o browser limpar dados
-   - imagens grandes podem estourar a quota e aí fica “só na sessão”
-
-## Se você quiser persistência de verdade (sem commit)
-
-Aí você precisa de um backend externo (ex.: Supabase/Firebase/Cloudflare Workers/Google Apps Script) e configurar `CONFIG.API_BASE` em [js/app.js](js/app.js).
+Se Firebase/Cloudinary não estiverem configurados, o projeto pode entrar em modo “somente leitura” (carregando JSONs de `/data`).
+Para persistência real no Pages, mantenha o modo Firebase habilitado.

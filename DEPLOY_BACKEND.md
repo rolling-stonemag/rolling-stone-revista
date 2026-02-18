@@ -1,4 +1,10 @@
-# Deploy do Backend (para funcionar no GitHub Pages)
+# Deploy do Backend (legado/opcional)
+
+⚠️ Este guia descreve o fluxo antigo com `server.js` (Node/Express). O fluxo principal atual do projeto é:
+- Firebase Auth + Firestore (textos/dados)
+- Cloudinary (imagens)
+
+Se você ainda quiser rodar um backend Node próprio por algum motivo, este documento continua válido.
 
 O GitHub Pages é **estático** — por isso, quando você publica no Admin em produção, ele cai no modo local (`localStorage`) e pode falhar por **quota** (principalmente por imagens em DataURL). Resultado: o post “some” ao recarregar/navegar.
 

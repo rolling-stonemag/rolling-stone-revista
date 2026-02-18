@@ -41,6 +41,28 @@
     <path d="M10 8l6 4-6 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
     <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2" />
    </symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24">
+   <path d="M7 3h7l3 3v15H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   <path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+  </symbol>
+  <symbol id="i-stack" viewBox="0 0 24 24">
+   <path d="M12 4l9 5-9 5-9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   <path d="M3 14l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+  </symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24">
+   <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="none" stroke="currentColor" stroke-width="2" />
+  </symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24">
+   <path d="M4 7h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   <path d="M10 11v7M14 11v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   <path d="M6 7l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   <path d="M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+  </symbol>
+  <symbol id="i-sidebar" viewBox="0 0 24 24">
+   <path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2" />
+   <path d="M9 5v14" fill="none" stroke="currentColor" stroke-width="2" />
+  </symbol>
    <symbol id="i-login" viewBox="0 0 24 24">
     <path d="M10 17l5-5-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M15 12H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -150,7 +172,7 @@
         <div class="admin-sidebar-header">
        <div class="admin-sidebar-header-row">
         <h2 class="admin-sidebar-title">Admin Panel</h2>
-        <button type="button" class="admin-sidebar-toggle" id="admin-sidebar-toggle" aria-label="Alternar sidebar" aria-expanded="true">⫶</button>
+        <button type="button" class="admin-sidebar-toggle" id="admin-sidebar-toggle" aria-label="Alternar sidebar" aria-expanded="true"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-sidebar"></use></svg></button>
        </div>
        <div class="admin-badge">NEW</div>
         <div class="admin-sidebar-actions" aria-label="Ações" role="group">
@@ -211,7 +233,7 @@
         <div class="admin-panel active" id="admin-panel-review">
          <div style="padding: 2.5rem;">
           <div style="margin-bottom: 2rem;">
-           <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">★ Publish Critic Review</h1>
+           <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-review"></use></svg></span>Publish Critic Review</h1>
            <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish album reviews</p>
           </div>
           <form id="critic-form">
@@ -221,7 +243,7 @@
                Media
               </div>
               <div class="form-group"><label class="form-label" for="critic-image">Album Cover Image</label>
-               <div class="file-input-wrapper"><label class="file-input-label" for="critic-image">📸 Click to select image</label> <input type="file" class="file-input" id="critic-image" accept="image/*">
+               <div class="file-input-wrapper"><label class="file-input-label" for="critic-image">Click to select image</label> <input type="file" class="file-input" id="critic-image" accept="image/*">
                 <div class="image-preview" id="critic-preview">
                  <img id="critic-preview-img" src="">
                 </div>
@@ -250,7 +272,7 @@
                  <p class="form-input-hint">Optional — appears under the title on the full review page</p>
                 </div>
                 <div class="form-group"><label class="form-label" for="critic-review">Review Body</label> <textarea class="form-textarea" id="critic-review" placeholder="Write the review. Use double line breaks to create paragraphs." required></textarea>
-               <p class="form-input-hint">The first letter will be styled as a large red drop cap.</p>
+                 <p class="form-input-hint">The first letter will be styled as a large red drop cap.</p>
               </div>
                 <div class="form-group"><label class="form-label" for="critic-quote">Pull Quote (Optional)</label> <textarea class="form-textarea" id="critic-quote" placeholder="Optional — highlight a key line" style="min-height: 90px;"></textarea>
                  <p class="form-input-hint">Optional — shown as a highlighted quote block in the full review</p>
@@ -273,7 +295,7 @@
          <div class="admin-panel" id="admin-panel-news">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">📰 Publish News Article</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-news"></use></svg></span>Publish News Article</h1>
             <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish news articles</p>
            </div>
            <form id="news-form">
@@ -283,7 +305,7 @@
                Media
               </div>
               <div class="form-group"><label class="form-label" for="news-image">Article Image</label>
-               <div class="file-input-wrapper"><label class="file-input-label" for="news-image">📸 Click to select image</label> <input type="file" class="file-input" id="news-image" accept="image/*">
+               <div class="file-input-wrapper"><label class="file-input-label" for="news-image">Click to select image</label> <input type="file" class="file-input" id="news-image" accept="image/*">
                 <div class="image-preview" id="news-preview">
                  <img id="news-preview-img" src="">
                 </div>
@@ -298,13 +320,13 @@
                Article Header
               </div>
               <div class="form-group"><label class="form-label" for="news-category">Category Label</label> <select class="form-select" id="news-category" required> <option value="">Select category</option> <option value="BREAKING">BREAKING</option> <option value="EXCLUSIVE">EXCLUSIVE</option> <option value="UPDATE">UPDATE</option> <option value="DEVELOPING">DEVELOPING</option> <option value="FEATURE">FEATURE</option> </select>
-               <p class="form-input-hint">📌 Appears as bold uppercase label above the headline (e.g., BREAKING, EXCLUSIVE)</p>
+               <p class="form-input-hint">Appears as bold uppercase label above the headline (e.g., BREAKING, EXCLUSIVE)</p>
               </div>
               <div class="form-group"><label class="form-label" for="news-headline">Headline</label> <input type="text" class="form-input" id="news-headline" placeholder="e.g., Taylor Swift Announces Massive Stadium Tour" required>
                <p class="form-input-hint">💡 Large serif font, centered, bold — the main story title</p>
               </div>
               <div class="form-group"><label class="form-label" for="news-subtitle">Subtitle</label> <input type="text" class="form-input" id="news-subtitle" placeholder="e.g., The Eras Tour will span 52 dates across North America" required>
-               <p class="form-input-hint">✍️ Italic, lighter weight — supporting context for the headline</p>
+               <p class="form-input-hint">Italic, lighter weight — supporting context for the headline</p>
               </div>
              </div>
              <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
@@ -312,7 +334,7 @@
                Article Content
               </div>
                 <div class="form-group"><label class="form-label" for="news-opening">OPENING PARAGRAPH (DROP CAP)</label> <textarea class="form-textarea" id="news-opening" placeholder="Write the opening paragraph here…" required style="min-height: 110px;"></textarea>
-                 <p class="form-input-hint">🅰️ The first letter of this paragraph becomes a large drop cap</p>
+                 <p class="form-input-hint">The first letter of this paragraph becomes a large drop cap</p>
                 </div>
                 <div class="form-group"><label class="form-label" for="news-body">ARTICLE BODY</label> <textarea class="form-textarea" id="news-body" placeholder="Write the rest of the article here.
 
@@ -325,7 +347,7 @@
                Highlight Quote (Optional)
               </div>
               <div class="form-group"><label class="form-label" for="news-quote">Pull Quote</label> <textarea class="form-textarea" id="news-quote" placeholder="e.g., I've said everything I need to say with this character" style="min-height: 90px;"></textarea>
-               <p class="form-input-hint">💬 Optional — highlight a key insight or memorable quote in a styled block</p>
+               <p class="form-input-hint">Optional — highlight a key insight or memorable quote in a styled block</p>
               </div>
              </div>
              <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -333,7 +355,7 @@
                Byline
               </div>
               <div class="form-group"><label class="form-label" for="news-author">Author Name</label> <input type="text" class="form-input" id="news-author" placeholder="e.g., Sarah Mitchell" required>
-               <p class="form-input-hint">✒️ Byline attribution — appears below headline</p>
+               <p class="form-input-hint">Byline attribution — appears below headline</p>
               </div>
              </div>
             </div><button type="button" class="form-btn" id="news-btn" onclick="publishNews(event)" style="margin-top: 2rem;">Publish Article</button>
@@ -346,7 +368,7 @@
          <div class="admin-panel" id="admin-panel-interview">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎤 Publish Interview</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-interview"></use></svg></span>Publish Interview</h1>
             <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Create and publish interviews</p>
            </div>
            <form id="interview-form">
@@ -356,7 +378,7 @@
                Media
               </div>
               <div class="form-group"><label class="form-label" for="interview-image">Interview Image</label>
-               <div class="file-input-wrapper"><label class="file-input-label" for="interview-image">📸 Click to select image</label> <input type="file" class="file-input" id="interview-image" accept="image/*">
+               <div class="file-input-wrapper"><label class="file-input-label" for="interview-image">Click to select image</label> <input type="file" class="file-input" id="interview-image" accept="image/*">
                 <div class="image-preview" id="interview-preview">
                  <img id="interview-preview-img" src="">
                 </div>
@@ -371,13 +393,13 @@
                Interview Header
               </div>
               <div class="form-group"><label class="form-label" for="interview-guest">Guest Name</label> <input type="text" class="form-input" id="interview-guest" placeholder="e.g., Billie Eilish" required>
-               <p class="form-input-hint">🎤 The artist or person being interviewed</p>
+               <p class="form-input-hint">The artist or person being interviewed</p>
               </div>
               <div class="form-group"><label class="form-label" for="interview-title">Interview Title</label> <input type="text" class="form-input" id="interview-title" placeholder="e.g., Billie Eilish on Growing Up in Public" required>
                <p class="form-input-hint">💡 Large serif headline — the main interview title</p>
               </div>
               <div class="form-group"><label class="form-label" for="interview-subtitle">Subtitle</label> <input type="text" class="form-input" id="interview-subtitle" placeholder="e.g., The pop icon discusses her evolution and new creative direction" required>
-               <p class="form-input-hint">✍️ Italic tagline — supporting context</p>
+               <p class="form-input-hint">Italic tagline — supporting context</p>
               </div>
              </div>
              <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
@@ -393,7 +415,7 @@ Q: What changed the most in the last year?
 A: I stopped trying to be perfect.
 
 Use double line breaks to create new paragraphs." required style="min-height: 180px;"></textarea>
-               <p class="form-input-hint">🅰️ Drop cap applies to the first narrative paragraph; lines starting with Q: / A: render as styled Q&A blocks</p>
+               <p class="form-input-hint">Drop cap applies to the first narrative paragraph; lines starting with Q: / A: render as styled Q&A blocks</p>
               </div>
              </div>
              <div style="display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e0e0e0;">
@@ -401,7 +423,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
                Key Quote (Optional)
               </div>
               <div class="form-group"><label class="form-label" for="interview-quote">Key Quote</label> <textarea class="form-textarea" id="interview-quote" placeholder="e.g., I'm not the same person I was at 17. This album is about accepting change." style="min-height: 90px;"></textarea>
-               <p class="form-input-hint">💬 Optional — featured quote from the guest in a styled highlight block</p>
+               <p class="form-input-hint">Optional — featured quote from the guest in a styled highlight block</p>
               </div>
              </div>
              <div style="display: flex; flex-direction: column; gap: 1rem;">
@@ -409,7 +431,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
                Byline
               </div>
               <div class="form-group"><label class="form-label" for="interview-author">Author Name</label> <input type="text" class="form-input" id="interview-author" placeholder="e.g., Amanda Foster" required>
-               <p class="form-input-hint">✒️ Interviewer byline — appears below headline</p>
+               <p class="form-input-hint">Interviewer byline — appears below headline</p>
               </div>
              </div>
             </div><button type="button" class="form-btn" id="interview-btn" onclick="publishInterview(event)" style="margin-top: 2rem;">Publish Interview</button>
@@ -422,7 +444,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
          <div class="admin-panel" id="admin-panel-chart">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎵 Publish Chart</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-chart"></use></svg></span>Publish Chart</h1>
               <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the Hot 15 chart (15 songs)</p>
            </div>
            <form id="chart-form">
@@ -437,7 +459,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
                 <p class="form-input-hint">Optional — leave blank to use today</p>
                </div>
               </div>
-                  <p class="form-input-hint" style="margin-bottom: 1rem;">📈 Movement: <b>Auto</b> calcula com base no <b>Prev #</b>. Se Prev # estiver vazio, vira <b>NEW</b>.</p>
+                  <p class="form-input-hint" style="margin-bottom: 1rem;">Movement: <b>Auto</b> calcula com base no <b>Prev #</b>. Se Prev # estiver vazio, vira <b>NEW</b>.</p>
 
                 <div class="form-group"><label class="form-label" for="chart-song-1">Song #1</label>
                   <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
@@ -555,12 +577,12 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
          <div class="admin-panel" id="admin-panel-cover">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🖼️ Update Cover</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-cover"></use></svg></span>Update Cover</h1>
             <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Update the magazine cover image and details</p>
            </div>
            <form id="cover-form">
             <div class="form-group"><label class="form-label" for="cover-image">Upload Cover Image</label>
-             <div class="file-input-wrapper"><label class="file-input-label" for="cover-image">📸 Click to select image</label> <input type="file" class="file-input" id="cover-image" accept="image/*">
+             <div class="file-input-wrapper"><label class="file-input-label" for="cover-image">Click to select image</label> <input type="file" class="file-input" id="cover-image" accept="image/*">
               <div class="image-preview" id="cover-preview">
                <img id="cover-preview-img" src="">
               </div>
@@ -584,7 +606,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
          <div class="admin-panel" id="admin-panel-posts">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">📂 Manage Posts</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-posts"></use></svg></span>Manage Posts</h1>
             <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">View and manage published content</p>
            </div>
            <div class="posts-management-tabs"><button type="button" class="posts-management-tab-btn active" data-filter="all">All</button> <button type="button" class="posts-management-tab-btn" data-filter="critic">Critics</button> <button type="button" class="posts-management-tab-btn" data-filter="news">News</button> <button type="button" class="posts-management-tab-btn" data-filter="interview">Interviews</button> <button type="button" class="posts-management-tab-btn" data-filter="chart">Charts</button>
@@ -611,14 +633,14 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
          <div class="admin-panel" id="admin-panel-demo">
           <div style="padding: 2.5rem;">
            <div style="margin-bottom: 2rem;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;">🎬 Demo Content</h1>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--text); margin-bottom: 0.3rem;"><span class="admin-panel-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-demo"></use></svg></span>Demo Content</h1>
             <p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text-light);">Test and seed the site with demo content</p>
            </div>
 
            <!-- Demo Manager -->
            <div class="demo-manager" id="demo-manager" style="display: none;">
             <div class="demo-manager-header">
-             <span style="font-size: 1.2rem;">🎬</span>
+             <span class="admin-inline-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-demo"></use></svg></span>
              <span class="demo-manager-title">Demo Content Manager</span>
             </div>
             <div class="demo-stats">
@@ -648,7 +670,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
               <span>Ready to publish demo content...</span>
              </div>
             </div>
-            <button type="button" class="form-btn" onclick="deleteDemoContent()" style="background: linear-gradient(135deg, #dc2626, #ef4444); margin-top: 0;">🗑️ Delete All Demo Content</button>
+            <button type="button" class="form-btn" onclick="deleteDemoContent()" style="background: linear-gradient(135deg, #dc2626, #ef4444); margin-top: 0;"><span class="admin-btn-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-trash"></use></svg></span>Delete All Demo Content</button>
            </div>
 
            <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem;">
@@ -657,7 +679,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
              </div>
              <p style="font-family: 'Lora', serif; font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">Creates demo posts in all sections for layout testing.</p>
              <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
-              <button type="button" class="form-btn" id="demo-publish-btn" onclick="openDemoModal()" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); margin-top: 0;">🎬 Run Test Publish</button>
+              <button type="button" class="form-btn" id="demo-publish-btn" onclick="openDemoModal()" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); margin-top: 0;"><span class="admin-btn-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-demo"></use></svg></span>Run Test Publish</button>
              </div>
             </div>
            </div>
@@ -676,34 +698,34 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
   <div class="demo-modal-overlay" id="demo-modal-overlay" onclick="closeDemoModalOnOverlay(event)">
    <div class="demo-modal" onclick="event.stopPropagation()">
     <div class="demo-modal-header">
-    <h2 class="demo-modal-title">🎬 Publish Demo Content</h2>
+    <h2 class="demo-modal-title"><span class="admin-modal-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-demo"></use></svg></span>Publish Demo Content</h2>
      <p class="demo-modal-subtitle">Choose how to populate your site with test content</p>
     </div>
     <div class="demo-modal-body">
      <div class="demo-option" onclick="selectDemoOption('single')">
       <div class="demo-option-header">
-      <span class="demo-option-icon">📄</span>
+      <span class="demo-option-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-doc"></use></svg></span>
        <span class="demo-option-title">1 Item per Section</span>
       </div>
       <p class="demo-option-desc">Publishes one critic review, one news article, one interview, and one chart</p>
      </div>
      <div class="demo-option" onclick="selectDemoOption('multiple')">
       <div class="demo-option-header">
-      <span class="demo-option-icon">📚</span>
+      <span class="demo-option-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-stack"></use></svg></span>
        <span class="demo-option-title">3 Items per Section</span>
       </div>
       <p class="demo-option-desc">Publishes three items in each section for a fuller layout preview</p>
      </div>
      <div class="demo-option" onclick="selectDemoOption('dryrun')">
       <div class="demo-option-header">
-      <span class="demo-option-icon">👁️</span>
+      <span class="demo-option-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-eye"></use></svg></span>
        <span class="demo-option-title">Dry Run (Preview Only)</span>
       </div>
       <p class="demo-option-desc">Simulates publishing and shows console logs without actually creating content</p>
      </div>
      <div class="demo-option" onclick="selectDemoOption('reset')" style="border-color: #dc2626;">
       <div class="demo-option-header">
-      <span class="demo-option-icon">🗑️</span>
+      <span class="demo-option-icon"><svg class="admin-btn-svg" aria-hidden="true"><use href="#i-trash"></use></svg></span>
        <span class="demo-option-title" style="color: #dc2626;">Reset Demo Content</span>
       </div>
       <p class="demo-option-desc">Deletes all demo posts (marked with isDemo: true)</p>
@@ -740,7 +762,6 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
   <script defer src="js/app.js"></script>
  </body>
 </html>

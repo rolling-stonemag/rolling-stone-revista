@@ -1,38 +1,28 @@
-# Quick Start Guide - CMS Local (Persistência + Upload)
+# Quick Start - Firebase + Cloudinary (Persistência real no GitHub Pages)
 
-## ✅ Pronto para usar
+Este projeto foi ajustado para funcionar em produção (GitHub Pages) com:
+- **Firebase Auth (Google)** para login do Admin
+- **Firestore** para salvar textos/dados
+- **Cloudinary** para hospedar imagens (free tier)
 
-Seu Rolling Stone CMS agora roda com um **backend local** que:
-- Persiste posts em `data/db.json`
-- Faz upload de imagens para `assets/uploads/`
+## 🚀 Rodar localmente
 
-## 🚀 How to Test
+1. Abra o projeto com um servidor estático (recomendado):
+  - VS Code: Live Server em `index.html`
+  - ou `python -m http.server`
 
-### 1. Instale e rode o backend
+2. Evite abrir via `file://` (pode causar limitações em login/requests).
 
-```bash
-cd "C:\Users\gphot\Documents\Rolling stone Revista"
-npm install
-npm start
-```
+## ✅ Checklist de configuração
 
-### 2. Abra o site
+No final do [index.html](index.html) existem dois blocos de config:
 
-Navegue para: `http://localhost:3000/`
+- `window.ROLLINGSTONE_FIREBASE`
+  - `allowedEmails`: lista de e-mails que podem publicar
+- `window.ROLLINGSTONE_CLOUDINARY`
+  - `cloudName`, `uploadPreset` (Unsigned) e `folder`
 
-### 3. Verify Loading
-
-**Check Console (F12):**
-You should see:
-```
-Loading local data from JSON files...
-Loaded 11 items from local files
-- Critics: 4
-- News: 3
-- Interviews: 3
-- Charts: 1
-✓ Local data loaded and rendered successfully
-```
+Se esses valores estiverem corretos e o Firestore estiver ativo, o Admin publica e o conteúdo não some após atualizar.
 
 **Check the Pages:**
 - **Home** → Should show mixed content from all sections
@@ -45,13 +35,9 @@ Loaded 11 items from local files
 
 Open `test-local-data.html` to see all loaded data in a clean test interface.
 
-## 📁 Onde fica salvo
+## 🔐 Importante (segurança)
 
-```
-/data/db.json         ← Banco local (posts publicados)
-/data/cover.json      ← Capa atual
-/assets/uploads/      ← Imagens enviadas
-```
+O “bloqueio” por e-mail no Admin é UX. Para segurança real, aplique Rules no Firestore para permitir escrita apenas do seu e-mail.
 
 ## ✏️ How to Add More Content
 
@@ -82,11 +68,12 @@ Open `test-local-data.html` to see all loaded data in a clean test interface.
 
 **Same process for interviews and charts!**
 
-## 🔧 Como funciona
+## 🔧 Como funciona (resumo)
 
-1. **Backend** serve o `index.html` e arquivos estáticos
-2. **Admin** publica via endpoints (`/publish`, `/uploadImage`, etc.)
-3. **Persistência** grava no disco e recarrega na UI
+1. Admin faz login via Google (Firebase Auth)
+2. Textos vão para o Firestore
+3. Imagens sobem para o Cloudinary e viram URLs públicas
+4. Páginas públicas leem do Firestore e renderizam
 
 ## ⚠️ Troubleshooting
 
@@ -95,9 +82,10 @@ Open `test-local-data.html` to see all loaded data in a clean test interface.
 - ✅ Check browser console for errors
 - ✅ Verify JSON files are valid (use jsonlint.com)
 
-### "CORS error" / nada publica
-- ✅ Use `npm start` e abra `http://localhost:3000/`
-- ✅ Não publique via `file://` (não tem backend)
+### Publicar não funciona
+- Confira se você está logado com um e-mail presente em `allowedEmails`
+- Se aparecer `permission-denied`, ajuste as Rules do Firestore
+- Se upload falhar, confira `cloudName` e se o `uploadPreset` está como **Unsigned**
 
 ### "JSON syntax error"
 - ✅ Check for missing commas between objects
@@ -145,7 +133,4 @@ Open `test-local-data.html` to see all loaded data in a clean test interface.
 
 ---
 
-**Status**: ✅ Ready to use  
-**Data Source**: Local JSON files (`/data` folder)  
-**Server Required**: Yes (for fetch API)  
-**Layout Changed**: No (preserved exactly)
+**Status**: ✅ Pronto para usar

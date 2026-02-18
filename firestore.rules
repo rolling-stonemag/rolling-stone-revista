@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "matteusgsilva15@gmail.com";
+    }
+
+    // Leitura pública (site é uma revista pública)
+    match /{document=**} {
+      allow read: if true;
+    }
+
+    // Escrita somente para admin autenticado
+    match /critics/{docId} {
+      allow create, update, delete: if isAdmin();
+    }
+    match /news/{docId} {
+      allow create, update, delete: if isAdmin();
+    }
+    match /interviews/{docId} {
+      allow create, update, delete: if isAdmin();
+    }
+    match /charts/{docId} {
+      allow create, update, delete: if isAdmin();
+    }
+    match /meta/{docId} {
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
