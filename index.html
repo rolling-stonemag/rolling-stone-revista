@@ -12,6 +12,46 @@
 
 </head>
  <body class="h-full">
+  <svg class="admin-icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+   <symbol id="i-review" viewBox="0 0 24 24">
+    <path d="M12 2l3 7 7 .6-5 4.4 1.6 7L12 17l-6.6 4 1.6-7-5-4.4 7-.6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   </symbol>
+   <symbol id="i-news" viewBox="0 0 24 24">
+    <path d="M6 4h12v16H6z" fill="none" stroke="currentColor" stroke-width="2" />
+    <path d="M8 8h8M8 11h8M8 14h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   </symbol>
+   <symbol id="i-interview" viewBox="0 0 24 24">
+    <path d="M9 6a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0z" fill="none" stroke="currentColor" stroke-width="2" />
+    <path d="M12 15v3M9 18h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   </symbol>
+   <symbol id="i-chart" viewBox="0 0 24 24">
+    <path d="M10 18V6a2 2 0 0 1 2-2h1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <path d="M13 4v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <path d="M18 16a2 2 0 1 1-4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   </symbol>
+   <symbol id="i-cover" viewBox="0 0 24 24">
+    <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2" />
+    <path d="M8 14l2-2 3 3 2-2 3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M9 10h.01" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+   </symbol>
+   <symbol id="i-posts" viewBox="0 0 24 24">
+    <path d="M4 7h7l2 2h7v10H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+   </symbol>
+   <symbol id="i-demo" viewBox="0 0 24 24">
+    <path d="M10 8l6 4-6 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2" />
+   </symbol>
+   <symbol id="i-login" viewBox="0 0 24 24">
+    <path d="M10 17l5-5-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M15 12H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <path d="M21 4v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   </symbol>
+   <symbol id="i-logout" viewBox="0 0 24 24">
+    <path d="M14 7l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M9 12h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <path d="M3 4v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+   </symbol>
+  </svg>
   <div class="cms-wrapper">
    <div class="cms-container">
     <div class="hero-header" id="hero-header">
@@ -113,6 +153,14 @@
         <button type="button" class="admin-sidebar-toggle" id="admin-sidebar-toggle" aria-label="Alternar sidebar" aria-expanded="true">⫶</button>
        </div>
        <div class="admin-badge">NEW</div>
+        <div class="admin-sidebar-actions" aria-label="Ações" role="group">
+         <button type="button" class="admin-icon-btn" id="admin-icon-login" title="Entrar" aria-label="Entrar">
+          <svg class="admin-nav-svg" aria-hidden="true"><use href="#i-login"></use></svg>
+         </button>
+         <button type="button" class="admin-icon-btn" id="admin-icon-logout" title="Sair" aria-label="Sair">
+          <svg class="admin-nav-svg" aria-hidden="true"><use href="#i-logout"></use></svg>
+         </button>
+        </div>
         </div>
 
           <!-- Firebase Auth (Admin) -->
@@ -128,19 +176,19 @@
           </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Publish</div>
-         <button class="admin-sidebar-link active" data-admin-section="review" title="Review"><span class="admin-nav-icon">★</span><span class="admin-nav-label">Review</span></button>
-         <button class="admin-sidebar-link" data-admin-section="news" title="News"><span class="admin-nav-icon">📰</span><span class="admin-nav-label">News</span></button>
-         <button class="admin-sidebar-link" data-admin-section="interview" title="Interview"><span class="admin-nav-icon">🎤</span><span class="admin-nav-label">Interview</span></button>
-         <button class="admin-sidebar-link" data-admin-section="chart" title="Chart"><span class="admin-nav-icon">🎵</span><span class="admin-nav-label">Chart</span></button>
-         <button class="admin-sidebar-link" data-admin-section="cover" title="Cover"><span class="admin-nav-icon">🖼️</span><span class="admin-nav-label">Cover</span></button>
+         <button class="admin-sidebar-link active" data-admin-section="review" title="Review"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-review"></use></svg></span><span class="admin-nav-label">Review</span></button>
+         <button class="admin-sidebar-link" data-admin-section="news" title="News"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-news"></use></svg></span><span class="admin-nav-label">News</span></button>
+         <button class="admin-sidebar-link" data-admin-section="interview" title="Interview"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-interview"></use></svg></span><span class="admin-nav-label">Interview</span></button>
+         <button class="admin-sidebar-link" data-admin-section="chart" title="Chart"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-chart"></use></svg></span><span class="admin-nav-label">Chart</span></button>
+         <button class="admin-sidebar-link" data-admin-section="cover" title="Cover"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-cover"></use></svg></span><span class="admin-nav-label">Cover</span></button>
         </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Manage</div>
-         <button class="admin-sidebar-link" data-admin-section="posts" title="Posts"><span class="admin-nav-icon">📂</span><span class="admin-nav-label">Posts</span></button>
+         <button class="admin-sidebar-link" data-admin-section="posts" title="Posts"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-posts"></use></svg></span><span class="admin-nav-label">Posts</span></button>
         </div>
         <div class="admin-sidebar-section">
          <div class="admin-sidebar-section-title">Demo</div>
-         <button class="admin-sidebar-link" data-admin-section="demo" title="Demo"><span class="admin-nav-icon">🎬</span><span class="admin-nav-label">Demo</span></button>
+         <button class="admin-sidebar-link" data-admin-section="demo" title="Demo"><span class="admin-nav-icon"><svg class="admin-nav-svg" aria-hidden="true"><use href="#i-demo"></use></svg></span><span class="admin-nav-label">Demo</span></button>
         </div>
         
         <!-- Admin Log in Sidebar -->

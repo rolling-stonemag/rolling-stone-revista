@@ -161,10 +161,14 @@ function updateFirebaseAuthUI() {
   const statusEl = document.getElementById('firebase-auth-status');
   const loginBtn = document.getElementById('firebase-login-btn');
   const logoutBtn = document.getElementById('firebase-logout-btn');
+  const iconLoginBtn = document.getElementById('admin-icon-login');
+  const iconLogoutBtn = document.getElementById('admin-icon-logout');
   if (!box || !statusEl || !loginBtn || !logoutBtn) return;
 
   if (!firebaseEnabled()) {
     box.style.display = 'none';
+    if (iconLoginBtn) iconLoginBtn.disabled = true;
+    if (iconLogoutBtn) iconLogoutBtn.disabled = true;
     updateAdminPublishLock();
     return;
   }
@@ -176,6 +180,8 @@ function updateFirebaseAuthUI() {
     statusEl.textContent = 'Não logado. Faça login para publicar.';
     loginBtn.disabled = false;
     logoutBtn.disabled = true;
+    if (iconLoginBtn) iconLoginBtn.disabled = false;
+    if (iconLogoutBtn) iconLogoutBtn.disabled = true;
     updateAdminPublishLock();
     return;
   }
@@ -185,6 +191,8 @@ function updateFirebaseAuthUI() {
     statusEl.textContent = `Conta não autorizada: ${email || '(sem email)'}`;
     loginBtn.disabled = false;
     logoutBtn.disabled = false;
+    if (iconLoginBtn) iconLoginBtn.disabled = false;
+    if (iconLogoutBtn) iconLogoutBtn.disabled = false;
     updateAdminPublishLock();
     return;
   }
@@ -192,6 +200,8 @@ function updateFirebaseAuthUI() {
   statusEl.textContent = `Logado: ${email || '(sem email)'}`;
   loginBtn.disabled = true;
   logoutBtn.disabled = false;
+  if (iconLoginBtn) iconLoginBtn.disabled = true;
+  if (iconLogoutBtn) iconLogoutBtn.disabled = false;
   updateAdminPublishLock();
 }
 
@@ -199,6 +209,8 @@ function setupFirebaseAuthUI() {
   const box = document.getElementById('firebase-auth-box');
   const loginBtn = document.getElementById('firebase-login-btn');
   const logoutBtn = document.getElementById('firebase-logout-btn');
+  const iconLoginBtn = document.getElementById('admin-icon-login');
+  const iconLogoutBtn = document.getElementById('admin-icon-logout');
   if (!box || !loginBtn || !logoutBtn) return;
 
   if (!firebaseEnabled()) {
@@ -226,9 +238,40 @@ function setupFirebaseAuthUI() {
     });
   }
 
+  if (iconLoginBtn && !iconLoginBtn.__bound) {
+    iconLoginBtn.__bound = true;
+    iconLoginBtn.addEventListener('click', async () => {
+      try {
+        logLine('Abrindo login Google (Firebase)...', 'info');
+        await requireFirebaseLogin();
+        logLine('✓ Login concluído (Firebase).', 'success');
+      } catch (e) {
+        logLine(`✗ Login falhou: ${e?.message || e}`, 'error');
+        alert(e?.message || String(e || 'Falha no login'));
+      } finally {
+        updateFirebaseAuthUI();
+      }
+    });
+  }
+
   if (!logoutBtn.__bound) {
     logoutBtn.__bound = true;
     logoutBtn.addEventListener('click', async () => {
+      try {
+        if (!__fbAuth) return;
+        await __fbAuth.signOut();
+        logLine('Sessão encerrada (Firebase).', 'info');
+      } catch (e) {
+        logLine(`Logout falhou: ${e?.message || e}`, 'error');
+      } finally {
+        updateFirebaseAuthUI();
+      }
+    });
+  }
+
+  if (iconLogoutBtn && !iconLogoutBtn.__bound) {
+    iconLogoutBtn.__bound = true;
+    iconLogoutBtn.addEventListener('click', async () => {
       try {
         if (!__fbAuth) return;
         await __fbAuth.signOut();
