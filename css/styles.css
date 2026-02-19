@@ -418,13 +418,22 @@
       --vinyl-inset-a: 0.06;
     }
 
+    .critic-review-verdict-cover-wrap.vinyl-tier-bronze,
     .critic-review-verdict-cover-wrap.vinyl-tier-basic {
       --vinyl-groove-a: 0.02;
-      --vinyl-sheen-a: 0.11;
-      --vinyl-sheen-mid-a: 0.03;
+      --vinyl-sheen-a: 0.10;
+      --vinyl-sheen-mid-a: 0.025;
       --vinyl-sparkle-a: 0;
     }
 
+    .critic-review-verdict-cover-wrap.vinyl-tier-silver {
+      --vinyl-groove-a: 0.018;
+      --vinyl-sheen-a: 0.13;
+      --vinyl-sheen-mid-a: 0.04;
+      --vinyl-sparkle-a: 0;
+    }
+
+    .critic-review-verdict-cover-wrap.vinyl-tier-gold,
     .critic-review-verdict-cover-wrap.vinyl-tier-glossy {
       --vinyl-groove-a: 0.016;
       --vinyl-sheen-a: 0.16;
@@ -432,11 +441,18 @@
       --vinyl-sparkle-a: 0;
     }
 
+    .critic-review-verdict-cover-wrap.vinyl-tier-platinum {
+      --vinyl-groove-a: 0.014;
+      --vinyl-sheen-a: 0.18;
+      --vinyl-sheen-mid-a: 0.075;
+      --vinyl-sparkle-a: 0.02;
+    }
+
     .critic-review-verdict-cover-wrap.vinyl-tier-diamond {
       --vinyl-groove-a: 0.012;
-      --vinyl-sheen-a: 0.19;
-      --vinyl-sheen-mid-a: 0.08;
-      --vinyl-sparkle-a: 0.06;
+      --vinyl-sheen-a: 0.20;
+      --vinyl-sheen-mid-a: 0.09;
+      --vinyl-sparkle-a: 0.055;
     }
 
     .critic-review-verdict-cover-wrap::after {

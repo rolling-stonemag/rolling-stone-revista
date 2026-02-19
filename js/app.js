@@ -3721,11 +3721,14 @@ function renderCriticReview(review) {
   const scoreDisplay = Number.isFinite(scoreValue) ? scoreValue.toFixed(1) : '';
   const { tier, label } = getScoreTier(scoreValue);
 
-  const vinylTier = tier === 'excellent'
-    ? 'diamond'
-    : tier === 'good'
-      ? 'glossy'
-      : 'basic';
+  const vinylTier = (() => {
+    if (!Number.isFinite(scoreValue)) return 'bronze';
+    if (scoreValue >= 9) return 'diamond';
+    if (scoreValue >= 8) return 'platinum';
+    if (scoreValue >= 6) return 'gold';
+    if (scoreValue >= 4) return 'silver';
+    return 'bronze';
+  })();
 
   const paragraphsHtmlWithDropcap = paragraphs.map((p, index) => {
     const className = index === 0
