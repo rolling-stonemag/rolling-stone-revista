@@ -1239,6 +1239,20 @@
       margin-bottom: 0.2rem;
     }
 
+    .critic-card-compact-type {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: #666666;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+    }
+
     .critic-card-compact-score-row {
       display: flex;
       align-items: center;
@@ -1396,6 +1410,11 @@
         font-size: 0.63rem;
       }
 
+      .critic-card-compact-type {
+        font-size: 0.58rem;
+        margin-bottom: 0.25rem;
+      }
+
       .critic-card-compact-text {
         font-size: 0.75rem;
         line-height: 1.35;
@@ -1454,6 +1473,11 @@
       .critic-card-compact-artist {
         font-size: 0.6rem;
         margin-bottom: 0.15rem;
+      }
+
+      .critic-card-compact-type {
+        font-size: 0.56rem;
+        margin-bottom: 0.22rem;
       }
 
       .critic-card-compact-score-row {

@@ -1588,6 +1588,7 @@ function beginEditFromManager(item) {
   if (type === 'critic') {
     showAdminPanel('review');
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    set('critic-release-type', normalizeCriticReleaseType(item.releaseType || item.format || item.kind || ''));
     set('critic-album', item.album || '');
     set('critic-artist', item.artist || '');
     set('critic-score', item.score != null ? String(item.score) : '');
@@ -2066,6 +2067,7 @@ async function publishCritic(event) {
     const payload = {
       type: 'critic',
       ...(edit ? { id: edit.id, createdAt: edit.createdAt || '', publishedAt: edit.publishedAt || '' } : {}),
+      releaseType: normalizeCriticReleaseType(document.getElementById('critic-release-type')?.value || ''),
       album: document.getElementById('critic-album').value.trim(),
       artist: document.getElementById('critic-artist').value.trim(),
       score: parseFloat(document.getElementById('critic-score').value),
@@ -3042,6 +3044,7 @@ function renderCritics(critics) {
     const criticId = critic?.id || critic?.__backendId || critic?._id;
     const album = critic?.album || critic?.title || '';
     const artist = critic?.artist || '';
+    const releaseTypeLabel = formatCriticReleaseType(critic?.releaseType || critic?.format || critic?.kind || '');
     const scoreValue = Number(critic?.score);
     const scoreDisplay = Number.isFinite(scoreValue) ? scoreValue.toFixed(1) : '';
     const { tier, label } = getScoreTier(scoreValue);
@@ -3091,6 +3094,10 @@ function renderCritics(critics) {
     artistEl.className = 'critic-card-compact-artist';
     artistEl.textContent = String(artist);
 
+    const typeEl = document.createElement('div');
+    typeEl.className = 'critic-card-compact-type';
+    typeEl.textContent = releaseTypeLabel;
+
     const scoreRow = document.createElement('div');
     scoreRow.className = 'critic-card-compact-score-row';
 
@@ -3118,6 +3125,7 @@ function renderCritics(critics) {
 
     info.appendChild(albumEl);
     info.appendChild(artistEl);
+    info.appendChild(typeEl);
     info.appendChild(scoreRow);
     info.appendChild(text);
 
@@ -3721,6 +3729,7 @@ function renderCriticReview(review) {
 
   const subtitle = String(review.subtitle || review.subheadline || review.deck || '').trim();
   const pullQuote = String(review.pullQuote || review.quote || '').trim();
+  const releaseTypeLabel = formatCriticReleaseType(review?.releaseType || review?.format || review?.kind || '');
 
   const pullQuoteHtml = pullQuote ? `
     <div class="article-quote-block">
@@ -3745,7 +3754,7 @@ function renderCriticReview(review) {
 
   container.innerHTML = `
     <div class="critic-review-header">
-      <p class="article-category">ALBUM REVIEW</p>
+      <p class="article-category">${escapeHtml(releaseTypeLabel)} REVIEW</p>
       <h1 class="critic-review-title">${escapeHtml(review.album || review.title || '')}</h1>
       <p class="critic-review-artist">${escapeHtml(review.artist || '')}</p>
       ${subtitle ? `<p class="critic-review-subheadline">${escapeHtml(subtitle)}</p>` : ''}
@@ -4085,6 +4094,26 @@ function formatDate(isoDate) {
     day: 'numeric', 
     year: 'numeric' 
   });
+}
+
+function normalizeCriticReleaseType(raw) {
+  const t = String(raw || '').trim().toLowerCase();
+  if (!t) return 'album';
+  if (t === 'album') return 'album';
+  if (t === 'ep' || t === 'e.p.' || t === 'e.p') return 'ep';
+  if (t === 'single') return 'single';
+  // Accept some common variations
+  if (t.includes('single')) return 'single';
+  if (t.includes('ep')) return 'ep';
+  if (t.includes('album')) return 'album';
+  return 'album';
+}
+
+function formatCriticReleaseType(raw) {
+  const t = normalizeCriticReleaseType(raw);
+  if (t === 'single') return 'SINGLE';
+  if (t === 'ep') return 'EP';
+  return 'ALBUM';
 }
 
 // ==========================================
