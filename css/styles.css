@@ -388,8 +388,8 @@
     }
 
     .critic-review-verdict-cover-wrap {
-      width: 152px;
-      height: 152px;
+      width: 168px;
+      height: 168px;
       flex: 0 0 auto;
       position: relative;
       overflow: visible;
@@ -402,9 +402,9 @@
       content: '';
       position: absolute;
       top: 50%;
-      right: -46px;
-      width: 132px;
-      height: 132px;
+      right: -52px;
+      width: 148px;
+      height: 148px;
       transform: translateY(-50%);
       border-radius: 999px;
       background:
@@ -421,8 +421,8 @@
     }
 
     .critic-review-verdict-cover {
-      width: 152px;
-      height: 152px;
+      width: 168px;
+      height: 168px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -471,19 +471,19 @@
       }
 
       .critic-review-verdict-cover-wrap {
-        width: 120px;
-        height: 120px;
+        width: 132px;
+        height: 132px;
       }
 
       .critic-review-verdict-cover-wrap::after {
-        right: -38px;
-        width: 106px;
-        height: 106px;
+        right: -42px;
+        width: 118px;
+        height: 118px;
       }
 
       .critic-review-verdict-cover {
-        width: 120px;
-        height: 120px;
+        width: 132px;
+        height: 132px;
         border-radius: 12px;
       }
     }
