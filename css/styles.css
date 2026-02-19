@@ -438,9 +438,17 @@
       min-width: 0;
     }
 
+    .critic-review-verdict.critic-review-verdict-card .critic-review-score {
+      margin-top: -0.22rem;
+    }
+
     @media (max-width: 480px) {
       .critic-review-verdict {
         gap: 1.25rem;
+      }
+
+      .critic-review-verdict.critic-review-verdict-card .critic-review-score {
+        margin-top: -0.14rem;
       }
 
       .critic-review-verdict.critic-review-verdict-card {
