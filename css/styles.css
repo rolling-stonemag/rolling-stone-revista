@@ -418,7 +418,7 @@
       border-radius: 999px;
       background:
         radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(0,0,0,0.92) 7px 8px, transparent 8px 100%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.10) 0 7px, var(--red) 7px 22px, rgba(0,0,0,0.38) 22px 23px, transparent 23px 100%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0 7px, rgba(255,255,255,0.10) 7px 8px, var(--red) 8px 25px, rgba(255,255,255,0.14) 25px 26px, rgba(0,0,0,0.34) 26px 27px, transparent 27px 100%),
         conic-gradient(from 215deg,
           rgba(255,255,255,0.14) 0deg,
           rgba(255,255,255,0.00) 55deg,
