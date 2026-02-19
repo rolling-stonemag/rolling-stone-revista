@@ -571,70 +571,89 @@
       content: none;
     }
 
-    .critic-review-seal-badge {
+    .critic-review-seal-pill {
       position: absolute;
       top: 50%;
       right: var(--disc-right);
-      width: var(--disc-size);
-      height: var(--disc-size);
+      width: calc(var(--disc-size) * 0.42);
+      height: calc(var(--disc-size) * 0.96);
       transform: translateY(-50%);
       z-index: 0;
       pointer-events: none;
-      display: grid;
-      place-items: center;
-      filter: drop-shadow(0 14px 26px rgba(0,0,0,0.34));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg,
+          rgba(0,0,0,0.88) 0%,
+          rgba(0,0,0,0.94) 74%,
+          color-mix(in srgb, var(--red) 92%, #000000) 74%,
+          color-mix(in srgb, var(--red) 92%, #000000) 100%
+        );
+      box-shadow:
+        0 14px 26px rgba(0,0,0,0.34),
+        inset 0 0 0 1px rgba(255,255,255,0.10);
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,0.30));
     }
 
-    .critic-review-seal-badge::before {
+    .critic-review-seal-pill::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: 50%;
+      inset: 2px;
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 36% 28%, rgba(255,255,255,0.72) 0 18%, rgba(255,255,255,0.00) 58%),
-        radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--gold) 86%, #ffffff) 0%, color-mix(in srgb, var(--gold) 98%, #000000) 68%, color-mix(in srgb, var(--gold) 86%, #000000) 100%);
-      clip-path: polygon(
-        50% 0%, 58% 4%, 66% 2%, 72% 9%, 80% 5%, 83% 14%, 91% 14%, 90% 23%, 98% 27%, 93% 35%, 100% 43%, 92% 47%, 96% 56%, 88% 59%, 91% 69%, 82% 69%, 79% 79%, 71% 76%, 65% 85%, 57% 80%, 50% 88%, 43% 80%, 35% 85%, 29% 76%, 21% 79%, 18% 69%, 9% 69%, 12% 59%, 4% 56%, 8% 47%, 0% 43%, 7% 35%, 2% 27%, 10% 23%, 9% 14%, 17% 14%, 20% 5%, 28% 9%, 34% 2%, 42% 4%
-      );
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+        linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.00) 48%, rgba(0,0,0,0.30));
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .critic-review-seal-badge::after {
-      content: '';
+    .critic-review-seal-pill-cd {
       position: absolute;
-      inset: 14px;
-      border-radius: 50%;
+      top: 50%;
+      width: clamp(14px, calc(var(--disc-size) * 0.14), 24px);
+      height: clamp(14px, calc(var(--disc-size) * 0.14), 24px);
+      transform: translateY(-50%);
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.62) 0 8%, rgba(255,255,255,0.00) 38%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.16) 0 58%, rgba(0,0,0,0.00) 60%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0 58%, rgba(0,0,0,0.18) 58% 60%, rgba(255,255,255,0.00) 60% 100%),
-        radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--gold) 72%, #ffffff) 0%, color-mix(in srgb, var(--gold) 92%, #000000) 92%);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.92) 0 18%, rgba(0,0,0,0.00) 19% 100%),
+        radial-gradient(circle at 28% 26%, rgba(255,255,255,0.18) 0 30%, rgba(255,255,255,0.00) 68%),
+        radial-gradient(circle at 50% 50%,
+          color-mix(in srgb, var(--red) 64%, #000000) 0%,
+          color-mix(in srgb, var(--red) 92%, #000000) 68%,
+          color-mix(in srgb, var(--red) 58%, #000000) 100%
+        );
+      box-shadow:
+        0 6px 14px rgba(0,0,0,0.35),
+        inset 0 0 0 1px rgba(255,255,255,0.12);
+      opacity: 0.95;
+      z-index: 1;
     }
 
-    .critic-review-seal-text {
+    .critic-review-seal-pill-cd--left {
+      left: 8px;
+    }
+
+    .critic-review-seal-pill-cd--right {
+      right: 8px;
+    }
+
+    .critic-review-seal-pill-text {
       position: relative;
       z-index: 1;
-      padding: 0 18px;
-      text-align: center;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
       font-family: 'DM Sans', sans-serif;
       font-weight: 900;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      line-height: 1.15;
-      color: color-mix(in srgb, #000000 86%, var(--gold));
-      text-shadow: 0 1px 0 rgba(255,255,255,0.28);
-    }
-
-    .critic-review-seal-stars {
-      position: relative;
-      z-index: 1;
-      margin-top: -0.35rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.22em;
-      color: color-mix(in srgb, #000000 78%, var(--gold));
-      opacity: 0.85;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+      padding: 0.55rem 0;
     }
 
     .critic-review-verdict-cover {

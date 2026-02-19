@@ -3755,7 +3755,7 @@ function renderCriticReview(review) {
   const releaseTypeLabel = formatCriticReleaseType(releaseTypeRaw) || 'ALBUM';
   const isAlbumReview = releaseType === 'album';
   const reviewKicker = releaseType === 'single' ? 'SINGLE REVIEW' : releaseType === 'ep' ? 'EP REVIEW' : 'ALBUM REVIEW';
-  const sealText = releaseType === 'single' ? 'HOT TRACK' : releaseType === 'ep' ? 'EP REVIEW' : '';
+  const sealText = releaseType === 'single' ? 'TRACK' : releaseType === 'ep' ? 'EP' : '';
 
   const pullQuoteAttrib = String(review.author || '').trim();
   const pullQuoteHtml = pullQuote ? `
@@ -3815,9 +3815,10 @@ function renderCriticReview(review) {
 
   const sealHtml = (!isAlbumReview && sealText)
     ? `
-      <div class="critic-review-seal-badge" aria-hidden="true">
-        <div class="critic-review-seal-text">${escapeHtml(sealText)}</div>
-        <div class="critic-review-seal-stars" aria-hidden="true">★ ★ ★</div>
+      <div class="critic-review-seal-pill" aria-hidden="true">
+        <span class="critic-review-seal-pill-cd critic-review-seal-pill-cd--left" aria-hidden="true"></span>
+        <span class="critic-review-seal-pill-cd critic-review-seal-pill-cd--right" aria-hidden="true"></span>
+        <div class="critic-review-seal-pill-text">${escapeHtml(sealText)}</div>
       </div>
     `.trim()
     : '';
