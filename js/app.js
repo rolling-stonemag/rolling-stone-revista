@@ -3811,11 +3811,10 @@ function renderCriticReview(review) {
 
   const verdictCoverWrapClass = isAlbumReview
     ? `critic-review-verdict-cover-wrap vinyl-tier-${escapeHtml(vinylTier)}`
-    : 'critic-review-verdict-cover-wrap no-vinyl';
+    : `critic-review-verdict-cover-wrap no-vinyl release-seal--${escapeHtml(releaseType)}`;
 
   const verdictCoverHtml = `
-    <div class="${verdictCoverWrapClass}" aria-label="Album cover">
-      ${!isAlbumReview && sealText ? `<div class="critic-review-release-seal critic-review-release-seal--${escapeHtml(releaseType)}">${escapeHtml(sealText)}</div>` : ''}
+    <div class="${verdictCoverWrapClass}" ${!isAlbumReview ? `data-seal="${escapeHtml(sealText)}"` : ''} aria-label="Album cover">
       <div class="critic-review-verdict-cover">
         <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(safeAlbumTitle || 'Album cover')}">
       </div>

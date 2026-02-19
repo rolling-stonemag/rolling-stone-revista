@@ -470,6 +470,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      --disc-right: -58px;
+      --disc-size: 165px;
     }
 
     .critic-review-verdict-cover-wrap {
@@ -532,9 +534,9 @@
       content: '';
       position: absolute;
       top: 50%;
-      right: -58px;
-      width: 165px;
-      height: 165px;
+      right: var(--disc-right);
+      width: var(--disc-size);
+      height: var(--disc-size);
       transform: translateY(-50%);
       border-radius: 999px;
       background:
@@ -562,28 +564,81 @@
     }
 
     .critic-review-verdict-cover-wrap.no-vinyl::after {
-      content: none;
+      background:
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.78) 0 18%, rgba(255,255,255,0.00) 60%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.10) 0 55%, rgba(0,0,0,0.00) 56% 100%),
+        radial-gradient(circle at 50% 50%, #fff7db 0%, #f5dc98 34%, #e0bf5f 54%, #c89c33 72%, rgba(0,0,0,0.00) 73%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.22) 0 58%, rgba(0,0,0,0.20) 58% 60%, rgba(255,255,255,0.00) 60% 100%),
+        conic-gradient(from -8deg,
+          #b10d12 0deg 10deg,
+          #e0181f 10deg 20deg,
+          #a70c10 20deg 30deg,
+          #e0181f 30deg 40deg,
+          #b10d12 40deg 50deg,
+          #e0181f 50deg 60deg,
+          #a70c10 60deg 70deg,
+          #e0181f 70deg 80deg,
+          #b10d12 80deg 90deg,
+          #e0181f 90deg 100deg,
+          #a70c10 100deg 110deg,
+          #e0181f 110deg 120deg,
+          #b10d12 120deg 130deg,
+          #e0181f 130deg 140deg,
+          #a70c10 140deg 150deg,
+          #e0181f 150deg 160deg,
+          #b10d12 160deg 170deg,
+          #e0181f 170deg 180deg,
+          #a70c10 180deg 190deg,
+          #e0181f 190deg 200deg,
+          #b10d12 200deg 210deg,
+          #e0181f 210deg 220deg,
+          #a70c10 220deg 230deg,
+          #e0181f 230deg 240deg,
+          #b10d12 240deg 250deg,
+          #e0181f 250deg 260deg,
+          #a70c10 260deg 270deg,
+          #e0181f 270deg 280deg,
+          #b10d12 280deg 290deg,
+          #e0181f 290deg 300deg,
+          #a70c10 300deg 310deg,
+          #e0181f 310deg 320deg,
+          #b10d12 320deg 330deg,
+          #e0181f 330deg 340deg,
+          #a70c10 340deg 350deg,
+          #e0181f 350deg 360deg
+        );
+      box-shadow:
+        0 12px 28px rgba(0,0,0,0.34),
+        inset 0 0 0 1px rgba(255,255,255,0.18);
     }
 
-    .critic-review-release-seal {
+    .critic-review-verdict-cover-wrap.no-vinyl::before {
+      content: attr(data-seal);
       position: absolute;
-      top: -0.35rem;
-      left: -0.35rem;
-      z-index: 2;
-      padding: 0.38rem 0.6rem;
-      border-radius: 999px;
+      top: 50%;
+      right: var(--disc-right);
+      width: var(--disc-size);
+      height: var(--disc-size);
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      text-align: center;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.62rem;
       font-weight: 900;
-      letter-spacing: 0.22em;
+      font-size: 0.92rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--red);
-      background: rgba(255,255,255,0.92);
-      border: 1px solid color-mix(in srgb, var(--red) 48%, rgba(255,255,255,0));
-      box-shadow: 0 10px 22px rgba(0,0,0,0.26);
+      color: rgba(55, 30, 12, 0.92);
+      z-index: 0;
       pointer-events: none;
       user-select: none;
-      white-space: nowrap;
+      line-height: 1.1;
+    }
+
+    .critic-review-verdict-cover-wrap.no-vinyl[data-seal=""]::before {
+      content: none;
     }
 
     .critic-review-verdict-cover {
@@ -640,12 +695,8 @@
       .critic-review-verdict-cover-wrap {
         width: 146px;
         height: 146px;
-      }
-
-      .critic-review-verdict-cover-wrap::after {
-        right: -46px;
-        width: 130px;
-        height: 130px;
+        --disc-right: -46px;
+        --disc-size: 130px;
       }
 
       .critic-review-verdict-cover {
