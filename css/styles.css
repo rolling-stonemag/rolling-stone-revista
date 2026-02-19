@@ -419,12 +419,19 @@
       background:
         radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(0,0,0,0.92) 7px 8px, transparent 8px 100%),
         radial-gradient(circle at 50% 50%, rgba(0,0,0,0.10) 0 7px, var(--red) 7px 22px, rgba(0,0,0,0.38) 22px 23px, transparent 23px 100%),
-        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0 1px, rgba(0,0,0,0) 2px 7px),
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.14) 0 18%, transparent 46%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.80) 0 46%, rgba(0,0,0,0.56) 47% 64%, rgba(0,0,0,0.92) 65% 100%);
+        conic-gradient(from 215deg,
+          rgba(255,255,255,0.14) 0deg,
+          rgba(255,255,255,0.00) 55deg,
+          rgba(255,255,255,0.06) 185deg,
+          rgba(255,255,255,0.00) 320deg,
+          rgba(255,255,255,0.14) 360deg
+        ),
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0 1px, rgba(0,0,0,0) 2px 6px),
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.10) 0 18%, transparent 52%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.72) 0 62%, rgba(0,0,0,0.92) 100%);
       box-shadow:
-        0 14px 30px rgba(0,0,0,0.40),
-        inset 0 0 0 1px rgba(255,255,255,0.08);
+        0 12px 28px rgba(0,0,0,0.34),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
       z-index: 0;
       pointer-events: none;
     }
