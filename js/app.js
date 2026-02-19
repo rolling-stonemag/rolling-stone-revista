@@ -3747,8 +3747,8 @@ function renderCriticReview(review) {
   const scoreHtml = Number.isFinite(scoreValue) ? `
     <div class="critic-review-score critic-review-score--${escapeHtml(tier)}" aria-label="Score">
       <div class="critic-review-score-value">${escapeHtml(scoreDisplay)}</div>
-      <div class="critic-review-score-label">Score</div>
-      <div class="critic-review-score-note">out of 10</div>
+      <div class="critic-review-score-label">CRITICAL SCORE</div>
+      <div class="critic-review-score-note">Out of 10</div>
     </div>
   ` : '';
 
@@ -3790,25 +3790,27 @@ function renderCriticReview(review) {
 
       <div class="article-dark">
         <header class="critic-review-header" aria-label="Review header">
-          <div class="critic-review-header-grid">
-            <div class="critic-review-classification" aria-label="Section label">
-              <span class="critic-review-classification-line" aria-hidden="true"></span>
-              <span class="critic-review-classification-text">${escapeHtml(releaseTypeLabel)} REVIEW</span>
-            </div>
-
+          <div class="critic-review-intro">
+            <div class="critic-review-label">ALBUM REVIEW</div>
             <h1 class="article-dark-headline">${escapeHtml(safeAlbumTitle)}</h1>
-            ${scoreHtml}
             ${safeArtist ? `<p class="critic-review-artistline">${escapeHtml(safeArtist)}</p>` : ''}
             ${subtitle ? `<p class="article-dark-deck">${escapeHtml(subtitle)}</p>` : ''}
-
-            <div class="article-meta article-meta--dark">
-              <span class="article-meta-author article-meta-author--dark">Rolling Stone Music Desk</span>
-              <div class="article-meta-divider article-meta-divider--dark"></div>
-              <span class="article-meta-date article-meta-date--dark">${escapeHtml(formatDate(publishedAt))}</span>
-            </div>
           </div>
 
-          <div class="critic-review-header-divider" aria-hidden="true"></div>
+          <div class="critic-review-divider" aria-hidden="true"></div>
+
+          ${scoreHtml ? `
+            <div class="critic-review-verdict" aria-label="Verdict">
+              ${scoreHtml}
+            </div>
+            <div class="critic-review-divider" aria-hidden="true"></div>
+          ` : ''}
+
+          <div class="critic-review-meta-row" aria-label="Metadata">
+            <span class="critic-review-meta-desk">Rolling Stone Music Desk</span>
+            <span class="critic-review-meta-sep" aria-hidden="true">•</span>
+            <span class="critic-review-meta-date">${escapeHtml(formatDate(publishedAt))}</span>
+          </div>
         </header>
 
         ${heroHtml}
