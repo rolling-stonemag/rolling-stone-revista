@@ -338,15 +338,46 @@
     }
 
     .critic-review-verdict {
-      padding: 0.45rem 0;
+      padding: 0.65rem 0;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.8rem;
+    }
+
+    .critic-review-verdict-cover {
+      width: 152px;
+      height: 152px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
       justify-content: center;
+      background: transparent;
+    }
+
+    .critic-review-verdict-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .critic-review-verdict .critic-review-score {
-      align-items: center;
-      text-align: center;
+      align-items: flex-end;
+      text-align: right;
       min-width: 0;
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-verdict {
+        gap: 1.25rem;
+      }
+
+      .critic-review-verdict-cover {
+        width: 120px;
+        height: 120px;
+      }
     }
 
     .critic-review-classification {
