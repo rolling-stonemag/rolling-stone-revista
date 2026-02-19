@@ -3732,49 +3732,56 @@ function renderCriticReview(review) {
   const releaseTypeLabel = formatCriticReleaseType(review?.releaseType || review?.format || review?.kind || '');
 
   const pullQuoteHtml = pullQuote ? `
-    <div class="article-quote-block">
-      <p class="article-quote-text">${escapeHtml(pullQuote)}</p>
-    </div>
+    <aside class="critic-review-pullquote" aria-label="Pull quote">
+      <p class="critic-review-pullquote-text">${escapeHtml(pullQuote)}</p>
+    </aside>
   ` : '';
 
   const publishedAt = review.publishedAt || review.date || review.timestamp;
 
-  const metascoreHtml = Number.isFinite(scoreValue) ? `
-    <div class="critic-review-metascore">
-      <div class="critic-review-metascore-label">METASCORE</div>
-      <div class="critic-review-metascore-row">
-        <div class="critic-score-box ${tier}"><div class="critic-score-box-value">${escapeHtml(scoreDisplay)}</div></div>
-        <div class="critic-score-status ${tier}">${escapeHtml(label)}</div>
-      </div>
-      <div class="critic-review-progress ${tier}" aria-hidden="true">
-        <div class="critic-review-progress-fill" style="width:${Number.isFinite(scoreValue) ? Math.max(0, Math.min(100, (scoreValue / 10) * 100)) : 0}%"></div>
-      </div>
+  const scoreHtml = Number.isFinite(scoreValue) ? `
+    <div class="critic-review-score" aria-label="Score">
+      <div class="critic-review-score-value">${escapeHtml(scoreDisplay)}</div>
+      <div class="critic-review-score-label">Score</div>
+      <div class="critic-review-score-note">out of 10</div>
     </div>
   ` : '';
 
   container.innerHTML = `
-    <div class="critic-review-header">
-      <p class="article-category">${escapeHtml(releaseTypeLabel)} REVIEW</p>
-      <h1 class="critic-review-title">${escapeHtml(review.album || review.title || '')}</h1>
-      <p class="critic-review-artist">${escapeHtml(review.artist || '')}</p>
-      ${subtitle ? `<p class="critic-review-subheadline">${escapeHtml(subtitle)}</p>` : ''}
-      <div class="critic-review-byline">
-        <span class="critic-review-byline-author">${escapeHtml(review.author || '')}</span>
-        <span class="critic-review-byline-date">• ${escapeHtml(formatDate(publishedAt))}</span>
-      </div>
-      ${metascoreHtml}
-    </div>
+    <article class="critic-review-article">
+      <section class="critic-review-hero" aria-label="Review header">
+        <div class="critic-review-inner">
+          <div class="critic-review-hero-grid">
+            <div class="critic-review-hero-text">
+              <p class="critic-review-kicker">${escapeHtml(releaseTypeLabel)} REVIEW</p>
+              <h1 class="critic-review-title">${escapeHtml(review.album || review.title || '')}</h1>
+              <p class="critic-review-artist">${escapeHtml(review.artist || '')}</p>
+              ${subtitle ? `<p class="critic-review-subheadline">${escapeHtml(subtitle)}</p>` : ''}
+              <div class="critic-review-byline">
+                <span class="critic-review-byline-author">${escapeHtml(review.author || '')}</span>
+                <span class="critic-review-byline-date">• ${escapeHtml(formatDate(publishedAt))}</span>
+              </div>
+            </div>
+            ${scoreHtml}
+          </div>
+        </div>
+      </section>
 
-    <div class="critic-review-full-image">
-      <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(review.album || review.title || 'Album cover')}">
-    </div>
+      <section class="critic-review-body-section" aria-label="Review content">
+        <div class="critic-review-inner">
+          <div class="critic-review-cover">
+            <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(review.album || review.title || 'Album cover')}">
+          </div>
 
-    <div class="critic-review-body">
-      ${paragraphsHtmlWithDropcap}
-      ${pullQuoteHtml}
-    </div>
+          <div class="critic-review-body">
+            ${paragraphsHtmlWithDropcap}
+            ${pullQuoteHtml}
+          </div>
 
-    <button class="critic-review-end-back-btn" type="button" onclick="backToCritics()">← Back to Critics</button>
+          <button class="critic-review-end-back-btn" type="button" onclick="backToCritics()">← Back to Critics</button>
+        </div>
+      </section>
+    </article>
   `;
 }
 
