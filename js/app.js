@@ -3779,8 +3779,10 @@ function renderCriticReview(review) {
   const safeArtist = String(review.artist || '').trim();
 
   const verdictCoverHtml = `
-    <div class="critic-review-verdict-cover" aria-label="Album cover">
-      <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(safeAlbumTitle || 'Album cover')}">
+    <div class="critic-review-verdict-cover-wrap" aria-label="Album cover">
+      <div class="critic-review-verdict-cover">
+        <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(safeAlbumTitle || 'Album cover')}">
+      </div>
     </div>
   `;
 

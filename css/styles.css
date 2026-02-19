@@ -387,10 +387,40 @@
       z-index: 1;
     }
 
-    .critic-review-verdict-cover {
+    .critic-review-verdict-cover-wrap {
       width: 152px;
       height: 152px;
       flex: 0 0 auto;
+      position: relative;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .critic-review-verdict-cover-wrap::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -46px;
+      width: 132px;
+      height: 132px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.65) 0 6px, transparent 7px),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18) 0 2px, transparent 3px),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.18) 0 44%, rgba(0,0,0,0.08) 45% 63%, rgba(0,0,0,0.22) 64% 100%);
+      box-shadow:
+        0 12px 26px rgba(0,0,0,0.26),
+        inset 0 0 0 1px rgba(255,255,255,0.10);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .critic-review-verdict-cover {
+      width: 152px;
+      height: 152px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -399,6 +429,8 @@
       background: transparent;
       border: 1px solid rgba(0,0,0,0.12);
       box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+      position: relative;
+      z-index: 1;
     }
 
     .critic-review-verdict-cover img {
@@ -434,6 +466,17 @@
 
       .critic-review-verdict.critic-review-verdict-card::after {
         border-radius: 16px;
+      }
+
+      .critic-review-verdict-cover-wrap {
+        width: 120px;
+        height: 120px;
+      }
+
+      .critic-review-verdict-cover-wrap::after {
+        right: -38px;
+        width: 106px;
+        height: 106px;
       }
 
       .critic-review-verdict-cover {
