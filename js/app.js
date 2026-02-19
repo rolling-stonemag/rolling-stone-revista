@@ -3753,10 +3753,31 @@ function renderCriticReview(review) {
     </div>
   ` : '';
 
+  const paragraphsHtmlWithDropcapAndQuote = (() => {
+    if (!pullQuoteHtml) return paragraphsHtmlWithDropcap;
+    if (paragraphs.length <= 1) return `${paragraphsHtmlWithDropcap}${pullQuoteHtml}`;
+
+    const insertAfter = Math.min(2, paragraphs.length - 1);
+    const top = paragraphs
+      .slice(0, insertAfter)
+      .map((p, index) => {
+        const className = index === 0 ? 'critic-review-paragraph first-paragraph' : 'critic-review-paragraph';
+        return `<p class="${className}">${escapeHtml(p)}</p>`;
+      })
+      .join('');
+
+    const bottom = paragraphs
+      .slice(insertAfter)
+      .map((p) => `<p class="critic-review-paragraph">${escapeHtml(p)}</p>`)
+      .join('');
+
+    return `${top}${pullQuoteHtml}${bottom}`;
+  })();
+
   container.innerHTML = `
     <article class="critic-review-article">
       <section class="critic-review-hero" aria-label="Review header">
-        <div class="critic-review-inner">
+        <div class="critic-review-bleed-inner">
           <div class="critic-review-hero-grid">
             <div class="critic-review-hero-text">
               <p class="critic-review-kicker">${escapeHtml(releaseTypeLabel)} REVIEW</p>
@@ -3774,17 +3795,18 @@ function renderCriticReview(review) {
       </section>
 
       <section class="critic-review-body-section" aria-label="Review content">
+        <div class="critic-review-cover-bleed" aria-label="Album cover">
+          <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(review.album || review.title || 'Album cover')}">
+        </div>
+
         <div class="critic-review-inner">
-          <div class="critic-review-cover">
-            <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(review.album || review.title || 'Album cover')}">
-          </div>
+          <div class="critic-review-prose">
+            <div class="critic-review-body">
+              ${paragraphsHtmlWithDropcapAndQuote}
+            </div>
 
-          <div class="critic-review-body">
-            ${paragraphsHtmlWithDropcap}
-            ${pullQuoteHtml}
+            <button class="critic-review-end-back-btn" type="button" onclick="backToCritics()">← Back to Critics</button>
           </div>
-
-          <button class="critic-review-end-back-btn" type="button" onclick="backToCritics()">← Back to Critics</button>
         </div>
       </section>
     </article>
