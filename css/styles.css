@@ -2603,8 +2603,8 @@
 
     .critic-review-surface .article-paragraph.first-paragraph.article-paragraph--dark::first-letter {
       font-size: 4.3rem;
-      line-height: 0.72;
-      margin-top: 0.14rem;
+      line-height: 0.68;
+      margin-top: 0.32rem;
     }
 
     @media (max-width: 768px) {
@@ -2615,8 +2615,8 @@
 
       .critic-review-surface .article-paragraph.first-paragraph.article-paragraph--dark::first-letter {
         font-size: 3.6rem;
-        line-height: 0.70;
-        margin-top: 0.12rem;
+        line-height: 0.67;
+        margin-top: 0.28rem;
       }
     }
 
@@ -2628,8 +2628,8 @@
 
       .critic-review-surface .article-paragraph.first-paragraph.article-paragraph--dark::first-letter {
         font-size: 3.15rem;
-        line-height: 0.68;
-        margin-top: 0.11rem;
+        line-height: 0.66;
+        margin-top: 0.26rem;
       }
     }
 
