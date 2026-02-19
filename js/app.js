@@ -3721,6 +3721,12 @@ function renderCriticReview(review) {
   const scoreDisplay = Number.isFinite(scoreValue) ? scoreValue.toFixed(1) : '';
   const { tier, label } = getScoreTier(scoreValue);
 
+  const vinylTier = tier === 'excellent'
+    ? 'diamond'
+    : tier === 'good'
+      ? 'glossy'
+      : 'basic';
+
   const paragraphsHtmlWithDropcap = paragraphs.map((p, index) => {
     const className = index === 0
       ? 'article-paragraph first-paragraph article-paragraph--dark'
@@ -3779,7 +3785,7 @@ function renderCriticReview(review) {
   const safeArtist = String(review.artist || '').trim();
 
   const verdictCoverHtml = `
-    <div class="critic-review-verdict-cover-wrap" aria-label="Album cover">
+    <div class="critic-review-verdict-cover-wrap vinyl-tier-${escapeHtml(vinylTier)}" aria-label="Album cover">
       <div class="critic-review-verdict-cover">
         <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(safeAlbumTitle || 'Album cover')}">
       </div>

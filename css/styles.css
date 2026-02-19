@@ -408,6 +408,37 @@
       justify-content: center;
     }
 
+    .critic-review-verdict-cover-wrap {
+      --vinyl-groove-a: 0.02;
+      --vinyl-sheen-a: 0.14;
+      --vinyl-sheen-mid-a: 0.05;
+      --vinyl-sheen-angle: 215deg;
+      --vinyl-sparkle-a: 0;
+      --vinyl-shadow-a: 0.34;
+      --vinyl-inset-a: 0.06;
+    }
+
+    .critic-review-verdict-cover-wrap.vinyl-tier-basic {
+      --vinyl-groove-a: 0.02;
+      --vinyl-sheen-a: 0.11;
+      --vinyl-sheen-mid-a: 0.03;
+      --vinyl-sparkle-a: 0;
+    }
+
+    .critic-review-verdict-cover-wrap.vinyl-tier-glossy {
+      --vinyl-groove-a: 0.016;
+      --vinyl-sheen-a: 0.16;
+      --vinyl-sheen-mid-a: 0.06;
+      --vinyl-sparkle-a: 0;
+    }
+
+    .critic-review-verdict-cover-wrap.vinyl-tier-diamond {
+      --vinyl-groove-a: 0.012;
+      --vinyl-sheen-a: 0.19;
+      --vinyl-sheen-mid-a: 0.08;
+      --vinyl-sparkle-a: 0.06;
+    }
+
     .critic-review-verdict-cover-wrap::after {
       content: '';
       position: absolute;
@@ -420,19 +451,22 @@
       background:
         radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(0,0,0,0.92) 7px 8px, transparent 8px 100%),
         radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0 7px, rgba(255,255,255,0.10) 7px 8px, var(--red) 8px 25px, rgba(255,255,255,0.14) 25px 26px, rgba(0,0,0,0.34) 26px 27px, transparent 27px 100%),
-        conic-gradient(from 215deg,
-          rgba(255,255,255,0.14) 0deg,
+        radial-gradient(circle at 74% 18%, rgba(255,255,255,var(--vinyl-sparkle-a)) 0 2px, transparent 3px),
+        radial-gradient(circle at 66% 34%, rgba(255,255,255,calc(var(--vinyl-sparkle-a) * 0.8)) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 82% 32%, rgba(255,255,255,calc(var(--vinyl-sparkle-a) * 0.7)) 0 1.6px, transparent 3px),
+        conic-gradient(from var(--vinyl-sheen-angle),
+          rgba(255,255,255,var(--vinyl-sheen-a)) 0deg,
           rgba(255,255,255,0.00) 55deg,
-          rgba(255,255,255,0.05) 185deg,
+          rgba(255,255,255,var(--vinyl-sheen-mid-a)) 185deg,
           rgba(255,255,255,0.00) 320deg,
-          rgba(255,255,255,0.14) 360deg
+          rgba(255,255,255,var(--vinyl-sheen-a)) 360deg
         ),
-        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0 1px, rgba(0,0,0,0) 2px 7px),
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,var(--vinyl-groove-a)) 0 1px, rgba(0,0,0,0) 2px 7px),
         radial-gradient(circle at 34% 28%, rgba(255,255,255,0.09) 0 18%, transparent 56%),
         radial-gradient(circle at 50% 50%, rgba(0,0,0,0.72) 0 62%, rgba(0,0,0,0.92) 100%);
       box-shadow:
-        0 12px 28px rgba(0,0,0,0.34),
-        inset 0 0 0 1px rgba(255,255,255,0.06);
+        0 12px 28px rgba(0,0,0,var(--vinyl-shadow-a)),
+        inset 0 0 0 1px rgba(255,255,255,var(--vinyl-inset-a));
       z-index: 0;
       pointer-events: none;
     }
