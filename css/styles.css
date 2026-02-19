@@ -376,7 +376,19 @@
 
     .critic-review-intro .article-dark-headline {
       margin: 0;
-      font-size: 1.1em;
+      font-size: 3.96rem;
+    }
+
+    @media (max-width: 768px) {
+      .critic-review-intro .article-dark-headline {
+        font-size: 2.97rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .critic-review-intro .article-dark-headline {
+        font-size: 2.37rem;
+      }
     }
 
     .critic-review-divider {
