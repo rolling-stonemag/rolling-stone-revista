@@ -2040,8 +2040,7 @@ async function publishCritic(event) {
       'critic-album': 'Album Title',
       'critic-artist': 'Artist Name',
       'critic-score': 'Score',
-      'critic-review': 'Review Content',
-      'critic-author': 'Author Name'
+      'critic-review': 'Review Content'
     };
 
     const missing = validateRequiredFields(required);
@@ -3545,7 +3544,7 @@ function updateCoverDisplay(coverData) {
     img.alt = 'Current Issue';
     img.style.width = '100%';
     img.style.height = '100%';
-    img.style.objectFit = 'cover';
+    img.style.objectFit = 'contain';
     coverEl.appendChild(img);
   }
   if (numberEl) numberEl.textContent = coverData.issueNumber;
@@ -3722,12 +3721,10 @@ function renderCriticReview(review) {
   const scoreDisplay = Number.isFinite(scoreValue) ? scoreValue.toFixed(1) : '';
   const { tier, label } = getScoreTier(scoreValue);
 
-  const paragraphsHtml = paragraphs.map((p) => {
-    return `<p class="critic-review-paragraph">${escapeHtml(p)}</p>`;
-  }).join('');
-
   const paragraphsHtmlWithDropcap = paragraphs.map((p, index) => {
-    const className = index === 0 ? 'critic-review-paragraph first-paragraph' : 'critic-review-paragraph';
+    const className = index === 0
+      ? 'article-paragraph first-paragraph article-paragraph--dark'
+      : 'article-paragraph article-paragraph--dark';
     return `<p class="${className}">${escapeHtml(p)}</p>`;
   }).join('');
 
@@ -3735,12 +3732,14 @@ function renderCriticReview(review) {
 
   const subtitle = String(review.subtitle || review.subheadline || review.deck || '').trim();
   const pullQuote = String(review.pullQuote || review.quote || '').trim();
-  const releaseTypeLabel = formatCriticReleaseType(review?.releaseType || review?.format || review?.kind || '');
+  const releaseTypeLabel = formatCriticReleaseType(review?.releaseType || review?.format || review?.kind || '') || 'ALBUM';
 
+  const pullQuoteAttrib = String(review.author || '').trim();
   const pullQuoteHtml = pullQuote ? `
-    <aside class="critic-review-pullquote" aria-label="Pull quote">
-      <p class="critic-review-pullquote-text">${escapeHtml(pullQuote)}</p>
-    </aside>
+    <div class="article-dark-quote" aria-label="Pull quote">
+      <p class="article-dark-quote-text">${escapeHtml(pullQuote)}</p>
+      ${pullQuoteAttrib ? `<p class="article-dark-quote-attrib">— ${escapeHtml(pullQuoteAttrib)}</p>` : ''}
+    </div>
   ` : '';
 
   const publishedAt = review.publishedAt || review.date || review.timestamp;
@@ -3761,55 +3760,64 @@ function renderCriticReview(review) {
     const top = paragraphs
       .slice(0, insertAfter)
       .map((p, index) => {
-        const className = index === 0 ? 'critic-review-paragraph first-paragraph' : 'critic-review-paragraph';
+        const className = index === 0
+          ? 'article-paragraph first-paragraph article-paragraph--dark'
+          : 'article-paragraph article-paragraph--dark';
         return `<p class="${className}">${escapeHtml(p)}</p>`;
       })
       .join('');
 
     const bottom = paragraphs
       .slice(insertAfter)
-      .map((p) => `<p class="critic-review-paragraph">${escapeHtml(p)}</p>`)
+      .map((p) => `<p class="article-paragraph article-paragraph--dark">${escapeHtml(p)}</p>`)
       .join('');
 
     return `${top}${pullQuoteHtml}${bottom}`;
   })();
 
+  const safeAlbumTitle = String(review.album || review.title || '').trim();
+  const safeArtist = String(review.artist || '').trim();
+
+  const heroHtml = `
+    <div class="article-hero-image article-hero-image--dark">
+      <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(safeAlbumTitle || 'Album cover')}">
+    </div>
+  `;
+
   container.innerHTML = `
-    <article class="critic-review-article">
-      <section class="critic-review-hero" aria-label="Review header">
-        <div class="critic-review-bleed-inner">
-          <div class="critic-review-hero-grid">
-            <div class="critic-review-hero-text">
-              <p class="critic-review-kicker">${escapeHtml(releaseTypeLabel)} REVIEW</p>
-              <h1 class="critic-review-title">${escapeHtml(review.album || review.title || '')}</h1>
-              <p class="critic-review-artist">${escapeHtml(review.artist || '')}</p>
-              ${subtitle ? `<p class="critic-review-subheadline">${escapeHtml(subtitle)}</p>` : ''}
-              <div class="critic-review-byline">
-                <span class="critic-review-byline-author">${escapeHtml(review.author || '')}</span>
-                <span class="critic-review-byline-date">• ${escapeHtml(formatDate(publishedAt))}</span>
-              </div>
+    <div class="article-dark-surface critic-review-surface">
+      <button class="article-back-btn article-back-btn--dark" onclick="backToCritics()">← Back to Critics</button>
+
+      <div class="article-dark">
+        <header class="critic-review-header" aria-label="Review header">
+          <div class="critic-review-header-grid">
+            <div class="critic-review-classification" aria-label="Section label">
+              <span class="critic-review-classification-line" aria-hidden="true"></span>
+              <span class="critic-review-classification-text">${escapeHtml(releaseTypeLabel)} REVIEW</span>
             </div>
+
+            <h1 class="article-dark-headline">${escapeHtml(safeAlbumTitle)}</h1>
             ${scoreHtml}
-          </div>
-        </div>
-      </section>
+            ${safeArtist ? `<p class="critic-review-artistline">${escapeHtml(safeArtist)}</p>` : ''}
+            ${subtitle ? `<p class="article-dark-deck">${escapeHtml(subtitle)}</p>` : ''}
 
-      <section class="critic-review-body-section" aria-label="Review content">
-        <div class="critic-review-cover-bleed" aria-label="Album cover">
-          <img src="${escapeHtml(safeCoverUrl)}" alt="${escapeHtml(review.album || review.title || 'Album cover')}">
-        </div>
-
-        <div class="critic-review-inner">
-          <div class="critic-review-prose">
-            <div class="critic-review-body">
-              ${paragraphsHtmlWithDropcapAndQuote}
+            <div class="article-meta article-meta--dark">
+              <span class="article-meta-author article-meta-author--dark">Rolling Stone Music Desk</span>
+              <div class="article-meta-divider article-meta-divider--dark"></div>
+              <span class="article-meta-date article-meta-date--dark">${escapeHtml(formatDate(publishedAt))}</span>
             </div>
-
-            <button class="critic-review-end-back-btn" type="button" onclick="backToCritics()">← Back to Critics</button>
           </div>
+
+          <div class="critic-review-header-divider" aria-hidden="true"></div>
+        </header>
+
+        ${heroHtml}
+
+        <div class="article-body article-body--dark">
+          ${paragraphsHtmlWithDropcapAndQuote}
         </div>
-      </section>
-    </article>
+      </div>
+    </div>
   `;
 }
 
