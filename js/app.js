@@ -3787,6 +3787,8 @@ function renderCriticReview(review) {
   const safeAlbumTitle = String(review.album || review.title || '').trim();
   const safeArtist = String(review.artist || '').trim();
 
+  const safeRollingStoneLogoUrl = sanitizeUrl('https://images.seeklogo.com/logo-png/42/1/rolling-stone-logo-png_seeklogo-427429.png') || '';
+
   const verdictCoverHtml = `
     <div class="critic-review-verdict-cover-wrap vinyl-tier-${escapeHtml(vinylTier)}" aria-label="Album cover">
       <div class="critic-review-verdict-cover">
@@ -3797,6 +3799,9 @@ function renderCriticReview(review) {
 
   container.innerHTML = `
     <div class="article-dark-surface critic-review-surface">
+      ${safeRollingStoneLogoUrl ? `
+        <img class="critic-review-rs-logo" src="${escapeHtml(safeRollingStoneLogoUrl)}" alt="Rolling Stone" decoding="async" loading="eager">
+      ` : ''}
       <button class="article-back-btn article-back-btn--dark" onclick="backToCritics()">← Back to Critics</button>
 
       <div class="article-dark">

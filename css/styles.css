@@ -300,8 +300,21 @@
       box-shadow: none;
       border: none;
       background: #0a0a0a;
+      position: relative;
       padding-top: 2.05rem;
       padding-bottom: 2.35rem;
+    }
+
+    .critic-review-rs-logo {
+      position: absolute;
+      top: 1.35rem;
+      right: 2.5rem;
+      height: 34px;
+      width: auto;
+      z-index: 5;
+      opacity: 0.95;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,0.55));
     }
 
     @media (max-width: 768px) {
@@ -309,12 +322,24 @@
         padding-top: 1.85rem;
         padding-bottom: 2.2rem;
       }
+
+      .critic-review-rs-logo {
+        top: 1.25rem;
+        right: 2rem;
+        height: 30px;
+      }
     }
 
     @media (max-width: 480px) {
       .critic-review-surface {
         padding-top: 1.6rem;
         padding-bottom: 2rem;
+      }
+
+      .critic-review-rs-logo {
+        top: 1.05rem;
+        right: 1.25rem;
+        height: 26px;
       }
     }
 
