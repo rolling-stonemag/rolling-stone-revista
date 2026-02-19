@@ -472,6 +472,9 @@
       justify-content: center;
       --disc-right: -58px;
       --disc-size: 165px;
+      --seal-left: calc(100% - 6px);
+      --seal-width: 176px;
+      --seal-height: 44px;
     }
 
     .critic-review-verdict-cover-wrap {
@@ -564,78 +567,17 @@
     }
 
     .critic-review-verdict-cover-wrap.no-vinyl::after {
-      border-radius: 0;
-      clip-path: polygon(
-        50% 0%,
-        60% 6%,
-        72% 4%,
-        79% 15%,
-        96% 18%,
-        88% 32%,
-        100% 50%,
-        88% 68%,
-        96% 82%,
-        79% 85%,
-        72% 96%,
-        60% 94%,
-        50% 100%,
-        40% 94%,
-        28% 96%,
-        21% 85%,
-        4% 82%,
-        12% 68%,
-        0% 50%,
-        12% 32%,
-        4% 18%,
-        21% 15%,
-        28% 4%,
-        40% 6%
-      );
+      right: auto;
+      left: var(--seal-left);
+      width: var(--seal-width);
+      height: var(--seal-height);
+      border-radius: 999px;
+      z-index: 2;
       background:
-        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.78) 0 18%, rgba(255,255,255,0.00) 60%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.10) 0 55%, rgba(0,0,0,0.00) 56% 100%),
-        radial-gradient(circle at 50% 50%, #fff7db 0%, #f5dc98 34%, #e0bf5f 54%, #c89c33 72%, rgba(0,0,0,0.00) 73%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.22) 0 58%, rgba(0,0,0,0.20) 58% 60%, rgba(255,255,255,0.00) 60% 100%),
-        conic-gradient(from -8deg,
-          #b10d12 0deg 10deg,
-          #e0181f 10deg 20deg,
-          #a70c10 20deg 30deg,
-          #e0181f 30deg 40deg,
-          #b10d12 40deg 50deg,
-          #e0181f 50deg 60deg,
-          #a70c10 60deg 70deg,
-          #e0181f 70deg 80deg,
-          #b10d12 80deg 90deg,
-          #e0181f 90deg 100deg,
-          #a70c10 100deg 110deg,
-          #e0181f 110deg 120deg,
-          #b10d12 120deg 130deg,
-          #e0181f 130deg 140deg,
-          #a70c10 140deg 150deg,
-          #e0181f 150deg 160deg,
-          #b10d12 160deg 170deg,
-          #e0181f 170deg 180deg,
-          #a70c10 180deg 190deg,
-          #e0181f 190deg 200deg,
-          #b10d12 200deg 210deg,
-          #e0181f 210deg 220deg,
-          #a70c10 220deg 230deg,
-          #e0181f 230deg 240deg,
-          #b10d12 240deg 250deg,
-          #e0181f 250deg 260deg,
-          #a70c10 260deg 270deg,
-          #e0181f 270deg 280deg,
-          #b10d12 280deg 290deg,
-          #e0181f 290deg 300deg,
-          #a70c10 300deg 310deg,
-          #e0181f 310deg 320deg,
-          #b10d12 320deg 330deg,
-          #e0181f 330deg 340deg,
-          #a70c10 340deg 350deg,
-          #e0181f 350deg 360deg
-        );
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+      border: 1px solid color-mix(in srgb, var(--red) 38%, rgba(255,255,255,0));
       box-shadow:
-        0 12px 28px rgba(0,0,0,0.34),
+        0 12px 28px rgba(0,0,0,0.26),
         inset 0 0 0 1px rgba(255,255,255,0.18);
     }
 
@@ -643,22 +585,23 @@
       content: attr(data-seal);
       position: absolute;
       top: 50%;
-      right: var(--disc-right);
-      width: var(--disc-size);
-      height: var(--disc-size);
+      right: auto;
+      left: var(--seal-left);
+      width: var(--seal-width);
+      height: var(--seal-height);
       transform: translateY(-50%);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 18px;
+      padding: 0 16px;
       text-align: center;
       font-family: 'DM Sans', sans-serif;
       font-weight: 900;
-      font-size: 0.92rem;
-      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(55, 30, 12, 0.92);
-      z-index: 1;
+      color: var(--red);
+      z-index: 3;
       pointer-events: none;
       user-select: none;
       line-height: 1.1;
@@ -725,6 +668,9 @@
         height: 146px;
         --disc-right: -46px;
         --disc-size: 130px;
+        --seal-left: calc(100% - 6px);
+        --seal-width: 136px;
+        --seal-height: 38px;
       }
 
       .critic-review-verdict-cover {
