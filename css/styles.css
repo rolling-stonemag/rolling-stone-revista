@@ -6,6 +6,12 @@
       --text-light: #666666;
       --red: #dc2626;
       --border: #e5e5e5;
+
+      --bronze: #b87333;
+      --silver: #c0c0c0;
+      --gold: #d4af37;
+      --platinum: #e5e4e2;
+      --diamond: #b9f2ff;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -416,6 +422,7 @@
       --vinyl-sparkle-a: 0;
       --vinyl-shadow-a: 0.34;
       --vinyl-inset-a: 0.06;
+      --vinyl-accent: var(--red);
     }
 
     .critic-review-verdict-cover-wrap.vinyl-tier-bronze,
@@ -424,6 +431,7 @@
       --vinyl-sheen-a: 0.10;
       --vinyl-sheen-mid-a: 0.025;
       --vinyl-sparkle-a: 0;
+      --vinyl-accent: var(--bronze);
     }
 
     .critic-review-verdict-cover-wrap.vinyl-tier-silver {
@@ -431,6 +439,7 @@
       --vinyl-sheen-a: 0.13;
       --vinyl-sheen-mid-a: 0.04;
       --vinyl-sparkle-a: 0;
+      --vinyl-accent: var(--silver);
     }
 
     .critic-review-verdict-cover-wrap.vinyl-tier-gold,
@@ -439,6 +448,7 @@
       --vinyl-sheen-a: 0.16;
       --vinyl-sheen-mid-a: 0.06;
       --vinyl-sparkle-a: 0;
+      --vinyl-accent: var(--gold);
     }
 
     .critic-review-verdict-cover-wrap.vinyl-tier-platinum {
@@ -446,6 +456,7 @@
       --vinyl-sheen-a: 0.18;
       --vinyl-sheen-mid-a: 0.075;
       --vinyl-sparkle-a: 0.02;
+      --vinyl-accent: var(--platinum);
     }
 
     .critic-review-verdict-cover-wrap.vinyl-tier-diamond {
@@ -453,6 +464,7 @@
       --vinyl-sheen-a: 0.20;
       --vinyl-sheen-mid-a: 0.09;
       --vinyl-sparkle-a: 0.055;
+      --vinyl-accent: var(--diamond);
     }
 
     .critic-review-verdict-cover-wrap::after {
@@ -466,7 +478,9 @@
       border-radius: 999px;
       background:
         radial-gradient(circle at 50% 50%, transparent 0 7px, rgba(0,0,0,0.92) 7px 8px, transparent 8px 100%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0 7px, rgba(255,255,255,0.10) 7px 8px, var(--red) 8px 25px, rgba(255,255,255,0.14) 25px 26px, rgba(0,0,0,0.34) 26px 27px, transparent 27px 100%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.08) 0 7px, rgba(255,255,255,0.10) 7px 8px, var(--vinyl-accent) 8px 25px, rgba(255,255,255,0.14) 25px 26px, rgba(0,0,0,0.34) 26px 27px, transparent 27px 100%),
+        radial-gradient(circle at 62% 26%, rgba(255,255,255,0.10) 0 18%, transparent 54%),
+        radial-gradient(circle at 62% 26%, color-mix(in srgb, var(--vinyl-accent) 22%, transparent) 0 22%, transparent 60%),
         radial-gradient(circle at 74% 18%, rgba(255,255,255,var(--vinyl-sparkle-a)) 0 2px, transparent 3px),
         radial-gradient(circle at 66% 34%, rgba(255,255,255,calc(var(--vinyl-sparkle-a) * 0.8)) 0 1.5px, transparent 3px),
         radial-gradient(circle at 82% 32%, rgba(255,255,255,calc(var(--vinyl-sparkle-a) * 0.7)) 0 1.6px, transparent 3px),
