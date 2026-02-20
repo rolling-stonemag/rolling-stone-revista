@@ -576,7 +576,7 @@
       position: absolute;
       top: 50%;
       right: var(--seal-right, var(--disc-right));
-      width: calc(var(--disc-size) * 0.36);
+      width: calc(var(--disc-size) * 0.27);
       height: calc(var(--disc-size) * 0.86);
       transform: translateY(-50%);
       z-index: 0;
@@ -585,13 +585,12 @@
       align-items: center;
       justify-content: center;
       isolation: isolate;
-      border-radius: 999px;
+      border-radius: 0;
       background:
-        linear-gradient(90deg,
-          rgba(0,0,0,0.88) 0%,
-          rgba(0,0,0,0.94) 74%,
-          color-mix(in srgb, var(--red) 92%, #000000) 74%,
-          color-mix(in srgb, var(--red) 92%, #000000) 100%
+        linear-gradient(180deg,
+          rgba(20,20,20,0.92) 0%,
+          rgba(0,0,0,0.92) 55%,
+          rgba(0,0,0,0.86) 100%
         );
       box-shadow:
         0 14px 26px rgba(0,0,0,0.34),
@@ -603,7 +602,7 @@
       content: '';
       position: absolute;
       inset: 2px;
-      border-radius: 999px;
+      border-radius: 0;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.00) 48%, rgba(0,0,0,0.30));
       opacity: 0.9;
