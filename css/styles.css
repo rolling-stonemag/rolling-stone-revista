@@ -317,6 +317,8 @@
       height: 80px;
       border-radius: 999px;
       overflow: hidden;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      mask-image: radial-gradient(circle, #000 99%, transparent 100%);
       background: rgba(255,255,255,0.92);
       border: 1px solid rgba(255,255,255,0.14);
       box-shadow: 0 14px 28px rgba(0,0,0,0.50);
@@ -325,6 +327,7 @@
       justify-content: center;
       z-index: 5;
       pointer-events: none;
+      transform: translateZ(0);
     }
 
     .critic-review-rs-logo {
@@ -332,8 +335,10 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 999px;
+      -webkit-clip-path: circle(50% at 50% 50%);
+      clip-path: circle(50% at 50% 50%);
       opacity: 0.98;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
     }
 
     @media (max-width: 768px) {
