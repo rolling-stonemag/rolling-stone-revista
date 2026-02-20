@@ -575,8 +575,8 @@
       position: absolute;
       top: 50%;
       right: var(--disc-right);
-      width: calc(var(--disc-size) * 0.42);
-      height: calc(var(--disc-size) * 0.96);
+      width: calc(var(--disc-size) * 0.36);
+      height: calc(var(--disc-size) * 0.86);
       transform: translateY(-50%);
       z-index: 0;
       pointer-events: none;
@@ -612,13 +612,13 @@
 
     .critic-review-seal-pill-star {
       position: absolute;
-      left: 37%;
+      left: 50%;
       transform: translateX(-50%);
       z-index: 1;
       color: var(--red);
       font-family: 'DM Sans', sans-serif;
       font-weight: 900;
-      font-size: clamp(14px, calc(var(--disc-size) * 0.16), 24px);
+      font-size: clamp(10px, calc(var(--disc-size) * 0.11), 16px);
       line-height: 1;
       text-shadow:
         0 6px 14px rgba(0,0,0,0.40),
@@ -628,11 +628,11 @@
     }
 
     .critic-review-seal-pill-star--top {
-      top: 16px;
+      top: 12px;
     }
 
     .critic-review-seal-pill-star--bottom {
-      bottom: 16px;
+      bottom: 12px;
     }
 
     .critic-review-seal-pill-text {
@@ -643,7 +643,7 @@
       transform: rotate(180deg);
       font-family: 'DM Sans', sans-serif;
       font-weight: 900;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.92);
