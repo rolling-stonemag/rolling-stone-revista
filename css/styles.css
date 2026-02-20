@@ -285,6 +285,10 @@
       gap: 2rem;
     }
 
+    #page-critics .page-content {
+      background: #000;
+    }
+
     body.hide-site-header #hero-header,
     body.hide-site-header #nav-bar {
       display: none !important;
