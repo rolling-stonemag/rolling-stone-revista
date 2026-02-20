@@ -3755,7 +3755,7 @@ function renderCriticReview(review) {
   const releaseTypeLabel = formatCriticReleaseType(releaseTypeRaw) || 'ALBUM';
   const isAlbumReview = releaseType === 'album';
   const reviewKicker = releaseType === 'single' ? 'SINGLE REVIEW' : releaseType === 'ep' ? 'EP REVIEW' : 'ALBUM REVIEW';
-  const sealText = releaseType === 'single' ? 'TRACK' : releaseType === 'ep' ? 'EP' : '';
+  const sealText = releaseType === 'single' ? 'SINGLE' : releaseType === 'ep' ? 'EP' : '';
 
   const pullQuoteAttrib = String(review.author || '').trim();
   const pullQuoteHtml = pullQuote ? `
