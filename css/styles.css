@@ -472,6 +472,7 @@
       justify-content: center;
       --disc-right: -58px;
       --disc-size: 165px;
+      --seal-right: calc(var(--disc-right) + 36px);
     }
 
     .critic-review-verdict-cover-wrap {
@@ -574,7 +575,7 @@
     .critic-review-seal-pill {
       position: absolute;
       top: 50%;
-      right: var(--disc-right);
+      right: var(--seal-right, var(--disc-right));
       width: calc(var(--disc-size) * 0.36);
       height: calc(var(--disc-size) * 0.86);
       transform: translateY(-50%);
@@ -707,6 +708,7 @@
         height: 146px;
         --disc-right: -46px;
         --disc-size: 130px;
+        --seal-right: calc(var(--disc-right) + 30px);
       }
 
       .critic-review-verdict-cover {
