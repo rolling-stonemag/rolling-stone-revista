@@ -472,7 +472,7 @@
       justify-content: center;
       --disc-right: -58px;
       --disc-size: 165px;
-      --seal-right: calc(var(--disc-right) + 36px);
+      --seal-right: calc(var(--disc-right) + 14px);
     }
 
     .critic-review-verdict-cover-wrap {
@@ -708,7 +708,7 @@
         height: 146px;
         --disc-right: -46px;
         --disc-size: 130px;
-        --seal-right: calc(var(--disc-right) + 30px);
+        --seal-right: calc(var(--disc-right) + 14px);
       }
 
       .critic-review-verdict-cover {
