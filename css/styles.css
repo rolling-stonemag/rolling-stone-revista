@@ -576,7 +576,7 @@
       position: absolute;
       top: 50%;
       right: var(--seal-right, var(--disc-right));
-      width: calc(var(--disc-size) * 0.27);
+      width: calc(var(--disc-size) * 0.23);
       height: calc(var(--disc-size) * 0.86);
       transform: translateY(-50%);
       z-index: 0;
