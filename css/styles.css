@@ -577,7 +577,7 @@
       top: 50%;
       right: var(--seal-right, var(--disc-right));
       width: calc(var(--disc-size) * 0.23);
-      height: calc(var(--disc-size) * 0.86);
+      height: calc(var(--disc-size) * 0.76);
       transform: translateY(-50%);
       z-index: 0;
       pointer-events: none;
@@ -628,11 +628,11 @@
     }
 
     .critic-review-seal-pill-star--top {
-      top: 12px;
+      top: 10px;
     }
 
     .critic-review-seal-pill-star--bottom {
-      bottom: 12px;
+      bottom: 10px;
     }
 
     .critic-review-seal-pill-text {
