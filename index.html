@@ -790,6 +790,23 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
    </div>
   </div>
 
+  <!-- Critics Archive Preview Modal -->
+  <div class="demo-modal-overlay" id="critic-archive-modal-overlay" onclick="closeCriticArchiveModalOnOverlay(event)">
+   <div class="demo-modal" onclick="event.stopPropagation()" style="max-width: 760px;">
+    <div class="demo-modal-header">
+     <h2 class="demo-modal-title"><span class="admin-modal-title-icon"><svg class="admin-panel-title-svg" aria-hidden="true"><use href="#i-review"></use></svg></span><span id="critic-archive-modal-title">Critic Preview</span></h2>
+     <p class="demo-modal-subtitle" id="critic-archive-modal-subtitle">View the full review and choose whether to edit</p>
+    </div>
+    <div class="demo-modal-body">
+     <div id="critic-archive-modal-body"></div>
+    </div>
+    <div class="demo-modal-footer">
+     <button class="demo-modal-btn secondary" type="button" onclick="closeCriticsArchivePreview()">Fechar</button>
+     <button class="demo-modal-btn primary" type="button" id="critic-archive-modal-edit-btn">Editar</button>
+    </div>
+   </div>
+  </div>
+
   <script>
     window.ROLLINGSTONE_FIREBASE = {
       config: {
@@ -815,7 +832,7 @@ Use double line breaks to create new paragraphs." required style="min-height: 18
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-  <script defer src="js/app.js?v=20260222-1"></script>
+  <script defer src="js/app.js?v=20260222-2"></script>
  </body>
 </html>
 

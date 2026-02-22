@@ -3726,6 +3726,105 @@ function showAdminPanel(section) {
 
 let CRITICS_ARCHIVE_READY = false;
 let CRITICS_ARCHIVE_CACHE = null;
+let CRITICS_ARCHIVE_PREVIEW_ITEM = null;
+
+function closeCriticsArchivePreview() {
+  const overlay = document.getElementById('critic-archive-modal-overlay');
+  if (overlay) overlay.classList.remove('active');
+  CRITICS_ARCHIVE_PREVIEW_ITEM = null;
+
+  const bodyEl = document.getElementById('critic-archive-modal-body');
+  if (bodyEl) bodyEl.textContent = '';
+}
+
+function closeCriticArchiveModalOnOverlay(event) {
+  if (event && event.target && event.target.id === 'critic-archive-modal-overlay') {
+    closeCriticsArchivePreview();
+  }
+}
+
+function openCriticsArchivePreview(item, { feedIds } = {}) {
+  if (!item) return;
+  const overlay = document.getElementById('critic-archive-modal-overlay');
+  const bodyEl = document.getElementById('critic-archive-modal-body');
+  const titleEl = document.getElementById('critic-archive-modal-title');
+  const subtitleEl = document.getElementById('critic-archive-modal-subtitle');
+  const editBtn = document.getElementById('critic-archive-modal-edit-btn');
+
+  if (!overlay || !bodyEl || !editBtn) return;
+
+  CRITICS_ARCHIVE_PREVIEW_ITEM = item;
+
+  const album = String(item?.album || item?.title || '').trim();
+  const artist = String(item?.artist || '').trim();
+  const releaseTypeLabel = formatCriticReleaseType(item?.releaseType || item?.format || item?.kind || '');
+
+  const scoreValue = Number(item?.score);
+  const scoreDisplay = Number.isFinite(scoreValue) ? scoreValue.toFixed(1) : '';
+
+  const publishedAt = item?.publishedAt || item?.date || item?.timestamp || item?.createdAt;
+  const coverUrl = sanitizeUrl(item?.coverImageUrl || item?.imageUrl || item?.heroImageUrl) || sanitizeUrl(PLACEHOLDER_COVER_IMAGE);
+
+  const content = String(item?.content || item?.review || '').trim();
+  const paragraphs = content
+    ? content.split('\n\n').map(p => p.trim()).filter(Boolean)
+    : [];
+
+  const pullQuote = String(item?.pullQuote || item?.quote || '').trim();
+  const pullQuoteAttrib = String(item?.author || '').trim();
+
+  const id = getCriticArchiveId(item);
+  const inFeed = id && feedIds instanceof Set ? feedIds.has(id) : false;
+
+  if (titleEl) titleEl.textContent = album || 'Critic Preview';
+  if (subtitleEl) subtitleEl.textContent = artist ? artist : (inFeed ? 'FEED' : 'ARCHIVE');
+
+  const metaParts = [];
+  if (scoreDisplay) metaParts.push(`SCORE ${scoreDisplay}`);
+  if (releaseTypeLabel) metaParts.push(releaseTypeLabel);
+  metaParts.push(formatDate(publishedAt));
+  metaParts.push(inFeed ? 'FEED' : 'ARCHIVE');
+
+  const paragraphsHtml = paragraphs.length > 0
+    ? paragraphs
+      .map(p => `<p style="font-family: 'Lora', serif; font-size: 0.95rem; color: var(--text); line-height: 1.7; margin: 0 0 0.9rem;">${escapeHtml(p)}</p>`)
+      .join('')
+    : '<p style="font-family: \'Lora\', serif; font-size: 0.95rem; color: var(--text-light); margin: 0;">(Sem conteúdo)</p>';
+
+  const quoteHtml = pullQuote
+    ? `
+      <div style="border-left: 3px solid var(--red); padding: 0.2rem 0 0.2rem 1rem; margin: 1rem 0;">
+        <p style="font-family: 'Lora', serif; font-size: 1rem; color: var(--text); margin: 0;">${escapeHtml(pullQuote)}</p>
+        ${pullQuoteAttrib ? `<p style="font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text-light); margin: 0.4rem 0 0;">— ${escapeHtml(pullQuoteAttrib)}</p>` : ''}
+      </div>
+    `.trim()
+    : '';
+
+  bodyEl.innerHTML = `
+    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+      <div style="width: 120px; flex: 0 0 120px;">
+        <img src="${escapeHtml(coverUrl)}" alt="${escapeHtml(album || 'Cover')}" style="width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--border);">
+      </div>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-family: 'Playfair Display', serif; font-weight: 900; color: var(--text); font-size: 1.3rem; line-height: 1.2; margin-bottom: 0.2rem;">${escapeHtml(album || '(Sem título)')}</div>
+        ${artist ? `<div style="font-family: 'Lora', serif; color: var(--text-light); font-size: 0.95rem; margin-bottom: 0.35rem;">${escapeHtml(artist)}</div>` : ''}
+        <div style="font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light);">${escapeHtml(metaParts.filter(Boolean).join(' • '))}</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.25rem;">
+      ${quoteHtml}
+      ${paragraphsHtml}
+    </div>
+  `;
+
+  editBtn.onclick = () => {
+    closeCriticsArchivePreview();
+    beginEditFromManager(item);
+  };
+
+  overlay.classList.add('active');
+}
 
 function getCriticComparableDate(item) {
   const t = item?.publishedAt || item?.createdAt || 0;
@@ -3838,7 +3937,7 @@ function renderCriticsArchive(items, options) {
 
     info.appendChild(title);
     info.appendChild(meta);
-    info.addEventListener('click', () => beginEditFromManager(item));
+    info.addEventListener('click', () => openCriticsArchivePreview(item, { feedIds }));
 
     const actions = document.createElement('div');
     actions.style.display = 'flex';
