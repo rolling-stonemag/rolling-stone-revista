@@ -3727,6 +3727,120 @@ function showAdminPanel(section) {
 let CRITICS_ARCHIVE_READY = false;
 let CRITICS_ARCHIVE_CACHE = null;
 let CRITICS_ARCHIVE_PREVIEW_ITEM = null;
+let CRITICS_ARCHIVE_PAGING_LAST_DOC = null;
+let CRITICS_ARCHIVE_PAGING_EXHAUSTED = false;
+let CRITICS_ARCHIVE_PAGING_LOADING = false;
+let CRITICS_ARCHIVE_FEED_IDS = null;
+
+const CRITICS_ARCHIVE_PAGE_SIZE = 12;
+
+function setCriticsArchiveLoadMoreUi({ visible, disabled, hint }) {
+  const btn = document.getElementById('critic-archive-load-more');
+  const hintEl = document.getElementById('critic-archive-load-hint');
+  if (btn) {
+    btn.style.display = visible ? 'inline-flex' : 'none';
+    btn.disabled = Boolean(disabled);
+    btn.classList.toggle('loading', Boolean(disabled));
+  }
+  if (hintEl) {
+    hintEl.style.display = visible ? 'block' : 'none';
+    if (hint != null) hintEl.textContent = String(hint);
+  }
+}
+
+async function firebaseFetchCriticsFeedIds() {
+  if (!ensureFirebaseInit()) return new Set();
+
+  try {
+    const snap = await __fbDb
+      .collection('critics')
+      .orderBy('publishedAt', 'desc')
+      .limit(6)
+      .get();
+
+    const ids = new Set();
+    (snap?.docs || []).forEach((doc) => {
+      const data = doc?.data ? doc.data() : null;
+      const id = getCriticArchiveId(data);
+      if (id) ids.add(id);
+    });
+    return ids;
+  } catch (e) {
+    if (isDebugMode()) console.warn('[FIREBASE] feed ids failed', e);
+    return new Set();
+  }
+}
+
+async function firebaseFetchCriticsNextPage(pageSize) {
+  if (!ensureFirebaseInit()) return { items: [], lastDoc: null, exhausted: true };
+
+  try {
+    let query = __fbDb
+      .collection('critics')
+      .orderBy('publishedAt', 'desc')
+      .limit(Number(pageSize || CRITICS_ARCHIVE_PAGE_SIZE));
+
+    if (CRITICS_ARCHIVE_PAGING_LAST_DOC) {
+      query = query.startAfter(CRITICS_ARCHIVE_PAGING_LAST_DOC);
+    }
+
+    const snap = await query.get();
+    const docs = Array.isArray(snap?.docs) ? snap.docs : [];
+    const items = docs.map(d => (d && d.data ? d.data() : null)).filter(Boolean);
+    const lastDoc = docs.length > 0 ? docs[docs.length - 1] : CRITICS_ARCHIVE_PAGING_LAST_DOC;
+    const exhausted = docs.length < Number(pageSize || CRITICS_ARCHIVE_PAGE_SIZE);
+    return { items, lastDoc, exhausted };
+  } catch (e) {
+    if (isDebugMode()) console.warn('[FIREBASE] critics next page failed', e);
+    return { items: [], lastDoc: CRITICS_ARCHIVE_PAGING_LAST_DOC, exhausted: true };
+  }
+}
+
+function resetCriticsArchivePaging() {
+  CRITICS_ARCHIVE_PAGING_LAST_DOC = null;
+  CRITICS_ARCHIVE_PAGING_EXHAUSTED = false;
+  CRITICS_ARCHIVE_PAGING_LOADING = false;
+  CRITICS_ARCHIVE_FEED_IDS = null;
+  CRITICS_ARCHIVE_CACHE = [];
+}
+
+async function loadMoreCriticsArchive() {
+  if (!firebaseEnabled()) return;
+  if (CRITICS_ARCHIVE_PAGING_LOADING) return;
+  if (CRITICS_ARCHIVE_PAGING_EXHAUSTED) return;
+
+  CRITICS_ARCHIVE_PAGING_LOADING = true;
+  setCriticsArchiveLoadMoreUi({
+    visible: true,
+    disabled: true,
+    hint: 'Loading…'
+  });
+
+  try {
+    if (!CRITICS_ARCHIVE_FEED_IDS) {
+      CRITICS_ARCHIVE_FEED_IDS = await firebaseFetchCriticsFeedIds();
+    }
+
+    const { items, lastDoc, exhausted } = await firebaseFetchCriticsNextPage(CRITICS_ARCHIVE_PAGE_SIZE);
+    CRITICS_ARCHIVE_PAGING_LAST_DOC = lastDoc;
+    CRITICS_ARCHIVE_PAGING_EXHAUSTED = Boolean(exhausted);
+
+    const current = Array.isArray(CRITICS_ARCHIVE_CACHE) ? CRITICS_ARCHIVE_CACHE : [];
+    const seen = new Set(current.map(getCriticArchiveId).filter(Boolean));
+    const next = [...current];
+    items.forEach((it) => {
+      const id = getCriticArchiveId(it);
+      if (id && seen.has(id)) return;
+      next.push(it);
+      if (id) seen.add(id);
+    });
+    CRITICS_ARCHIVE_CACHE = next;
+  } finally {
+    CRITICS_ARCHIVE_PAGING_LOADING = false;
+  }
+
+  refreshCriticsArchive({ forceReload: false });
+}
 
 function closeCriticsArchivePreview() {
   const overlay = document.getElementById('critic-archive-modal-overlay');
@@ -3992,6 +4106,63 @@ async function refreshCriticsArchive({ forceReload } = {}) {
   const sortMode = String(sortEl?.value || 'newest');
   const includeFeed = Boolean(includeFeedEl?.checked);
 
+  // Firebase: use paged loading to avoid fetching everything at once.
+  if (firebaseEnabled()) {
+    if (forceReload) {
+      resetCriticsArchivePaging();
+    }
+
+    if (!Array.isArray(CRITICS_ARCHIVE_CACHE)) {
+      CRITICS_ARCHIVE_CACHE = [];
+    }
+
+    if (!CRITICS_ARCHIVE_FEED_IDS || forceReload) {
+      CRITICS_ARCHIVE_FEED_IDS = await firebaseFetchCriticsFeedIds();
+    }
+
+    // initial page
+    if (CRITICS_ARCHIVE_CACHE.length === 0 && !CRITICS_ARCHIVE_PAGING_EXHAUSTED && !CRITICS_ARCHIVE_PAGING_LOADING) {
+      listEl.textContent = '';
+      const loading = document.createElement('div');
+      loading.className = 'post-item';
+      loading.innerHTML = '<div class="post-item-info"><div class="post-item-title">Loading…</div><div class="post-item-meta">Fetching critic reviews</div></div>';
+      listEl.appendChild(loading);
+      await loadMoreCriticsArchive();
+    }
+
+    const feedIds = CRITICS_ARCHIVE_FEED_IDS instanceof Set ? CRITICS_ARCHIVE_FEED_IDS : new Set();
+    const all = Array.isArray(CRITICS_ARCHIVE_CACHE) ? CRITICS_ARCHIVE_CACHE : [];
+
+    let filtered = all
+      .filter((it) => criticMatchesReleaseType(it, releaseFilter))
+      .filter((it) => criticMatchesArchiveQuery(it, query));
+
+    if (!includeFeed) {
+      filtered = filtered.filter((it) => {
+        const id = getCriticArchiveId(it);
+        return id ? !feedIds.has(id) : true;
+      });
+    }
+
+    filtered.sort(sortMode === 'oldest' ? sortCriticsOldestFirst : sortCriticsNewestFirst);
+
+    renderCriticsArchive(filtered, { feedIds });
+
+    const showLoadMore = !CRITICS_ARCHIVE_PAGING_EXHAUSTED;
+    setCriticsArchiveLoadMoreUi({
+      visible: showLoadMore,
+      disabled: CRITICS_ARCHIVE_PAGING_LOADING,
+      hint: showLoadMore
+        ? (CRITICS_ARCHIVE_PAGING_LOADING ? 'Loading…' : `Loaded ${all.length} — click to load more`)
+        : `Loaded ${all.length} — end of list`
+    });
+
+    return;
+  }
+
+  // Non-Firebase fallback: keep previous behavior (fetch all).
+  setCriticsArchiveLoadMoreUi({ visible: false, disabled: true });
+
   if (!CRITICS_ARCHIVE_CACHE || forceReload) {
     listEl.textContent = '';
     const loading = document.createElement('div');
@@ -4036,9 +4207,10 @@ function setupCriticsArchive() {
   const sortEl = document.getElementById('critic-archive-sort');
   const includeFeedEl = document.getElementById('critic-archive-include-feed');
   const refreshBtn = document.getElementById('critic-archive-refresh');
+  const loadMoreBtn = document.getElementById('critic-archive-load-more');
   const listEl = document.getElementById('critics-archive-list');
 
-  if (!searchEl || !releaseEl || !sortEl || !includeFeedEl || !refreshBtn || !listEl) return;
+  if (!searchEl || !releaseEl || !sortEl || !includeFeedEl || !refreshBtn || !loadMoreBtn || !listEl) return;
 
   const handler = () => refreshCriticsArchive({ forceReload: false });
   searchEl.addEventListener('input', handler);
@@ -4046,6 +4218,7 @@ function setupCriticsArchive() {
   sortEl.addEventListener('change', handler);
   includeFeedEl.addEventListener('change', handler);
   refreshBtn.addEventListener('click', () => refreshCriticsArchive({ forceReload: true }));
+  loadMoreBtn.addEventListener('click', () => loadMoreCriticsArchive());
 
   CRITICS_ARCHIVE_READY = true;
 }
